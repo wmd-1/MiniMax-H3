@@ -1,0 +1,103 @@
+# MiniMax-H3 (SGLang Diffusion) 服务编排 —— 4× NVIDIA A100 40GB 省显存方案
+#
+# ⚠️ 为何原 fastest 配方在 A100 40G 上 OOM（在 4×H100 80GB 上可行）：
+#   - transformer 权重 ~61.7 GiB(bf16)，TP2 仅对半切 → 每卡 ~30.9 GiB
+#   - text_encoder(Qwen3VL) 权重 ~62.1 GiB(bf16)，TP2 → 每卡 ~31.1 GiB
+#   - vae ~9.7 GiB
+#   - Ulysses 只切「序列/激活」、不切「权重」！故 TP2+Ulysses2 每卡权重仍是约 1/2(~31G)，
+#     并非旧注释所写“1/4(~20G)”。30.9+31.1+9.7+激活/上下文 ≈ 75G >> A100 40G，
+#     在 80G H100 上也仅勉强塞下。
+#
+# 修复：沿用 2 卡版已验证的 40G 配方，开启 layerwise-offload 把 dit/text_encoder/vae
+# 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G；4 卡借 Ulysses2 保留吞吐。
+# （层卸载不可与 --encoder-parallel / FSDP / Cache-Dit 混用，故本文件不写 --encoder-parallel）
+#
+# 前置条件：
+#   - 已构建镜像 minimax-h3-sglang:latest（见同目录 Dockerfile）
+#   - 模型已下载到宿主机 /model_nas/models/MiniMax-H3（完整仓库，含 fl2va/ref2va 变体目录）
+#   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
+#   - 宿主机空闲内存 ≥ 约 256 GiB（理想 384 GiB+）：bf16 模型总量约 134 GiB，
+#     需足以承载卸载层；不足会 swap 到磁盘、极慢甚至 OOM-kill
+#   - 离线环境：先跑一次 scripts/setup-offline-hf-cache.sh，把本地仓库登记为
+#     HF 离线缓存快照(/model_nas/hf_cache)，sglang 才能用 MiniMaxAI/MiniMax-H3 离线解析。
+#     （关键：不可把 --model-path 直接指向本地目录，否则 sglang 回退到原生 diffusers，
+#      而 diffusers 无 MiniMaxH3DiTModel，会 AttributeError 并引发 NCCL 级联崩溃）
+#
+# 启动：  bash scripts/setup-offline-hf-cache.sh && docker compose -f docker-compose.4xa100.yml up -d
+# 日志：  docker compose -f docker-compose.4xa100.yml logs -f minimax-h3
+# 停止：  docker compose -f docker-compose.4xa100.yml down
+
+services:
+  minimax-h3:
+    image: minimax-h3-sglang:latest
+    container_name: minimax-h3-sglang
+    ipc: host
+    pid: host
+    shm_size: 512gb
+    restart: unless-stopped
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - MiniMaxAI/MiniMax-H3       # 用仓库 ID 触发 sglang 原生 MiniMax-H3 实现；
+                                   # 离线缓存(见下)提供文件，避免回退到原生 diffusers 报
+                                   # AttributeError: MiniMaxH3DiTModel
+      - --pipeline-class-name
+      - MiniMaxH3Pipeline           # 必须显式指定：model_index.json 的 _class_name 是
+                                    # diffusers 侧的 MiniMaxH3ModularPipeline，与 sglang
+                                    # 注册表键 MiniMaxH3Pipeline 不一致；不指定会静默回退
+                                    # 到通用 diffusers 后端，而 diffusers 0.37.0 无该类，
+                                    # 最终报 HFValidationError
+      - --model-variant
+      - fl2va                       # weights=fl2va
+      - --num-gpus
+      - "4"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "2"
+      - --performance-mode
+      - memory                     # 40G 显存紧张，改用省显存放置策略
+      - --layerwise-offload-components
+      - dit,text_encoder,vae       # 层卸载到主机内存(lossless)，绕开 40G 显存墙
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"                       # A100 比 5090 多 8G：可按 nvidia-smi 余量上调到 24~28
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    ports:
+      - "30010:30010"
+
+    volumes:
+      # 模型本体：只读挂到 /models/MiniMax-H3，作为下方 HF 离线缓存 symlink 的解析目标
+      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+      # HuggingFace 离线缓存：sglang 用 MiniMaxAI/MiniMax-H3 解析目录映射，文件来自
+      # scripts/setup-offline-hf-cache.sh 生成的 snapshots symlink（指向 /models/MiniMax-H3）。
+      # 必须 rw：sglang 会在缓存里写 lock / refs 等元数据。
+      - /model_nas/hf_cache:/root/.cache/huggingface:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - HF_HUB_OFFLINE=1
+      - TRANSFORMERS_OFFLINE=1
+      - HF_HOME=/root/.cache/huggingface
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 600s
