@@ -3,23 +3,43 @@
 # ⚠️ 2×A100 40GB 的显存墙（来自仓库权重实测，非估算）：
 #   - transformer 权重 ~61.7 GiB(bf16)，TP2 仅对半切 → 每卡 ~30.9 GiB
 #   - text_encoder(Qwen3VL) 权重 ~62.1 GiB(bf16)，TP2 → 每卡 ~31.1 GiB
-#   - vae ~9.7 GiB
+#   - vae ~9.7 GiB（其中 video VAE encoder / audio VAE 强制常驻，不卸载）
 #   - Ulysses 只切「序列/激活」、不切「权重」！故 TP2+Ulysses1 每卡权重仍是约 1/2(~31G)，
-#     30.9+31.1+9.7+激活/上下文 >> A100 40G，必须开 layerwise-offload 把
-#     dit/text_encoder/vae 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G。
+#     30.9(只卸载 dit 部分常驻)+31.1+9.7+激活/上下文 >> A100 40G，必须开 layerwise-offload 把
+#     dit/text_encoder(vae decoder) 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G。
 #   （层卸载不可与 --encoder-parallel / FSDP 混用）
+#   官方 RTX 5090 32GB 实测：同 recipe 每卡采样峰值 26.3 GiB（1344×768, 50步）。
+#   A100 40GB 比 5090 多 8GB，故可用更高 dit-layerwise-resident-layers 吃满余量（见 command 段实测计划）。
 #
-# 参数映射（来自官方 5090 配方 + 适配 A100 40G，2026-08-11 实测）：
-#   weights=fl2va  -> --model-variant fl2va（同时可服务 t2va / fl2va 请求）
-#   quant=bf16     -> 默认精度，不添加 --quantization
-#   TP2 + Ulysses1 -> 仅 2 卡时最合理的并行划分
-#   performance-mode memory + layerwise-offload -> 40G 装不下 TP2 半量权重(~41G)，必须层卸载
+# 参数映射（来自官方 RTX 5090 配方，2026-08-11 复核）：
+#   官方已验证 2×RTX 5090 32GB recipe（377 GiB host，建议 384 GiB-class）：
+#     --tp-size 2 --ulysses-degree 1 --performance-mode memory
+#     --layerwise-offload-components dit,text_encoder,vae
+#     --dit-offload-prefetch-size 1 --dit-layerwise-resident-layers 20
+#     --enable-torch-compile false
+#   以下参数官方已明确验证，无需再质疑，本方案核心方向成立：
+#     weights=fl2va  -> --model-variant fl2va（同时可服务 t2va / fl2va 请求）
+#     quant=bf16     -> 默认精度，不添加 --quantization
+#     TP2 + Ulysses1 -> 仅 2 卡时最合理的并行划分
+#     performance-mode memory + layerwise-offload -> 40G 装不下 TP2 半量权重，必须层卸载
+#   仅 --dit-layerwise-resident-layers 为 A100 40GB 适配值（非官方验证值），需实测（见下）。
+#
+# ⚠️ 关于 layerwise-offload-components=vae 的重要澄清（官方说明）：
+#   不要把 "vae" 理解为「整个 VAE 全部卸载」。官方明确：
+#     - Video VAE Decoder blocks：one-layer prefetch + ZERO resident layers（卸载）
+#     - Video VAE Encoder：STAYS RESIDENT（其 down blocks 无法承载 layerwise hooks，必须常驻）
+#     - Audio VAE（约 577 MiB）：STAYS RESIDENT（卸载只增传输开销）
+#     - Text Encoder：one-layer prefetch + ZERO resident（卸载）
+#   即「vae」只控制 decoder 的卸载策略，encoder/audio VAE 由 sglang 内部强制常驻。
 #
 # ⚠️ 模型来源与离线解析（已实测确认，2026-08-11）：
-#   正式方案 = --model-path MiniMaxAI/MiniMax-H3 + SGLANG_USE_MODELSCOPE=true
+#   当前方案 = --model-path MiniMaxAI/MiniMax-H3（HF 根 ID）+ SGLANG_USE_MODELSCOPE=true
 #             + MODELSCOPE_CACHE=/root/.cache/modelscope
 #   ModelScope 1.39.0 经 legacy cache 离线复用，容器内日志打印：
 #     "Found legacy cache at /root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3, reusing."
+#   官方文档推荐 ModelScope 根模型 ID 为 MiniMax/MiniMax-H3（非 MiniMaxAI/ 前缀）；
+#   若改用官方 ModelScope ID，需把 --model-path 换为 MiniMax/MiniMax-H3 并同步挂载路径。
+#   本文件保持已验证的 legacy cache 复用方案（挂载 MiniMaxAI/MiniMax-H3）。
 #   【已废弃、不再使用】HF fake cache / scripts/register-modelscope-cache.sh /
 #   fake revision(0000...0000) / --model-path /models/MiniMax-H3 /
 #   --pipeline-class-name MiniMaxH3Pipeline
@@ -36,8 +56,9 @@
 #   - 模型已在宿主机 /model_nas/models/MiniMax-H3，且离线 legacy cache 已存在于
 #     /model_nas/modelscope_cache（ModelScope 1.39.0 已能离线复用，无需 register 脚本）。
 #   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
-#   - 宿主机空闲内存 ≥ 约 256 GiB（理想 384 GiB+）：bf16 模型总量约 134 GiB，
-#     需足以承载卸载层；不足会 swap 到磁盘、极慢甚至 OOM-kill
+#   - 宿主机内存 ≥ 384 GiB-class（官方 2×RTX 5090 配方即 377 GiB host，建议 384 GiB 级）。
+#     bf16 模型总量约 134 GiB 需足以承载卸载层；不足会 swap，极慢甚至 OOM-kill。
+#     mem_limit=384g / memswap_limit=386g 已把 SWAP 硬上限锁在 2G，故宿主机 RAM 必须 ≥ 384G 才不触 swap。
 #
 # 启动（实测可用的起法）：
 #   1) docker compose up -d
@@ -50,6 +71,12 @@
 #   hits = [os.path.join(d, f) for d, _, fs in os.walk(root) for f in fs if "minimax" in f.lower()]
 #   print("MINIMAX FILES:", hits or "NONE -> 镜像不含 native MiniMax-H3 backend")
 #   PY
+# 验证 SWAP 硬限制是否真正生效（cgroup v2）：
+#   CID=$(docker inspect -f '{{.Id}}' minimax-h3-sglang)
+#   docker exec -T minimax-h3-sglang cat /sys/fs/cgroup/memory.max          # 应 = 384G (412316860416)
+#   docker exec -T minimax-h3-sglang cat /sys/fs/cgroup/memory.swap.max      # 应 = 2G  (2147483648)
+#   docker exec -T minimax-h3-sglang cat /sys/fs/cgroup/memory.swap.current  # 实测 SWAP 占用，应 < 2G
+#   docker stats --no-stream minimax-h3-sglang                               # 宿主侧佐证
 
 services:
   minimax-h3:
@@ -75,28 +102,32 @@ services:
       - sglang
       - serve
       - --model-path
-      - MiniMaxAI/MiniMax-H3       # 仓库 ID：触发 sglang 原生 MiniMax-H3 backend；
-                                   # 文件经 ModelScope resolver 从下方缓存路径解析
+      - MiniMaxAI/MiniMax-H3       # HF 根 ID：触发 sglang 原生 MiniMax-H3 backend；
+                                   # 文件经 ModelScope resolver 从下方缓存路径解析（legacy cache 复用）
       - --model-variant
-      - fl2va                       # weights=fl2va
+      - fl2va                       # weights=fl2va（官方 recipe，同时服务 t2va / fl2va）
       - --num-gpus
       - "2"
       - --tp-size
-      - "2"
+      - "2"                         # 官方 recipe：TP2
       - --ulysses-degree
-      - "1"
+      - "1"                         # 官方 recipe：Ulysses1
       - --performance-mode
-      - memory                     # 40G 显存紧张，改用省显存放置策略
+      - memory                     # 官方 recipe：memory（省显存放置）
       - --layerwise-offload-components
-      - dit,text_encoder,vae       # 层卸载到主机内存(lossless)，绕开 40G 显存墙
+      - dit,text_encoder,vae       # 官方 recipe（lossless 层卸载到主机内存）。
+                                   # 注：vae 仅控制 decoder 卸载；encoder/audio VAE 由 sglang 强制常驻。
       - --dit-offload-prefetch-size
-      - "1"
+      - "1"                         # 官方 recipe：prefetch 1
+      - --enable-torch-compile
+      - "false"                     # 官方 recipe：关闭 torch.compile（5090 配方明确验证）
       - --dit-layerwise-resident-layers
-      - "40"                       # 显存预算基准 = nvidia-smi 真实峰值(30G)，非程序内统计(25G)。
-                                   # 目标真实峰值 36~38G；可用余量约 6~8G。
-                                   # 经验：24层→真实~30G，每+1层约+0.4G真实显存；
-                                   # 24→40(+16) ≈ +6.4G → 真实峰值~36.4G，留缓冲防触顶40G。
-                                   # 若 nvidia-smi 实测仍<36G可继续上调到 42~44；若>38G则回调到 38~40
+      - "40"                       # ⚠️ A100 40GB 适配值（非官方验证值；官方 5090 用 20）。
+                                   # 显存预算基准 = nvidia-smi 真实峰值(当前实测~30G)，非程序内统计(25G)。
+                                   # 目标真实峰值 < 38G 且性能最优。实测计划：
+                                   #   24 档 / 32 档 / 40 档 三档各跑一次，以两张卡 nvidia-smi 真实峰值为准，
+                                   #   选「真实峰值<38G 且吞吐最好」的档位。当前暂置 40（约+6.4G→真实~36.4G）。
+                                   # 若实测>38G 则回调到 32~38；若仍<36G 且性能更好可上探 42~44。
       - --host
       - 0.0.0.0
       - --port
