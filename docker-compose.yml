@@ -1,31 +1,55 @@
-# MiniMax-H3 (SGLang Diffusion) 服务编排 —— 4× NVIDIA A100 40GB 省显存方案
+# MiniMax-H3 (SGLang Diffusion) 服务编排 —— 2× NVIDIA A100 40GB 省显存方案（实测可用）
 #
-# ⚠️ 为何原 fastest 配方在 A100 40G 上 OOM（在 4×H100 80GB 上可行）：
+# ⚠️ 2×A100 40GB 的显存墙（来自仓库权重实测，非估算）：
 #   - transformer 权重 ~61.7 GiB(bf16)，TP2 仅对半切 → 每卡 ~30.9 GiB
 #   - text_encoder(Qwen3VL) 权重 ~62.1 GiB(bf16)，TP2 → 每卡 ~31.1 GiB
 #   - vae ~9.7 GiB
-#   - Ulysses 只切「序列/激活」、不切「权重」！故 TP2+Ulysses2 每卡权重仍是约 1/2(~31G)，
-#     并非旧注释所写“1/4(~20G)”。30.9+31.1+9.7+激活/上下文 ≈ 75G >> A100 40G，
-#     在 80G H100 上也仅勉强塞下。
+#   - Ulysses 只切「序列/激活」、不切「权重」！故 TP2+Ulysses1 每卡权重仍是约 1/2(~31G)，
+#     30.9+31.1+9.7+激活/上下文 >> A100 40G，必须开 layerwise-offload 把
+#     dit/text_encoder/vae 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G。
+#   （层卸载不可与 --encoder-parallel / FSDP 混用）
 #
-# 修复：沿用 2 卡版已验证的 40G 配方，开启 layerwise-offload 把 dit/text_encoder/vae
-# 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G；4 卡借 Ulysses2 保留吞吐。
-# （层卸载不可与 --encoder-parallel / FSDP / Cache-Dit 混用，故本文件不写 --encoder-parallel）
+# 参数映射（来自官方 5090 配方 + 适配 A100 40G，2026-08-11 实测）：
+#   weights=fl2va  -> --model-variant fl2va（同时可服务 t2va / fl2va 请求）
+#   quant=bf16     -> 默认精度，不添加 --quantization
+#   TP2 + Ulysses1 -> 仅 2 卡时最合理的并行划分
+#   performance-mode memory + layerwise-offload -> 40G 装不下 TP2 半量权重(~41G)，必须层卸载
+#
+# ⚠️ 模型来源与离线解析（已实测确认，2026-08-11）：
+#   正式方案 = --model-path MiniMaxAI/MiniMax-H3 + SGLANG_USE_MODELSCOPE=true
+#             + MODELSCOPE_CACHE=/root/.cache/modelscope
+#   ModelScope 1.39.0 经 legacy cache 离线复用，容器内日志打印：
+#     "Found legacy cache at /root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3, reusing."
+#   【已废弃、不再使用】HF fake cache / scripts/register-modelscope-cache.sh /
+#   fake revision(0000...0000) / --model-path /models/MiniMax-H3 /
+#   --pipeline-class-name MiniMaxH3Pipeline
+#
+# 挂载策略（实测可用）：
+#   - 模型本体 bind 到 /root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3
+#     （与 MODELSCOPE_CACHE 同根，sglang 直接复用该 legacy cache，无需 register 脚本）
+#   - modelscope_cache 元数据目录需 rw（写 lock/refs）；模型文件本身只读访问，
+#     若实测稳定可尝试将模型本体挂载改 :ro，本文件保留 rw 以兼容首次解析写元数据。
+#   - /models/MiniMax-H3:ro 为兜底挂载（当前 --model-path 走仓库 ID 实际不依赖它）。
 #
 # 前置条件：
-#   - 已构建镜像 minimax-h3-sglang:latest（见同目录 Dockerfile）
-#   - 模型已下载到宿主机 /model_nas/models/MiniMax-H3（完整仓库，含 fl2va/ref2va 变体目录）
+#   - 已构建镜像 minimax-h3-sglang:latest（见同目录 Dockerfile，需含 sglang diffusion 后端）
+#   - 模型已在宿主机 /model_nas/models/MiniMax-H3，且离线 legacy cache 已存在于
+#     /model_nas/modelscope_cache（ModelScope 1.39.0 已能离线复用，无需 register 脚本）。
 #   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
 #   - 宿主机空闲内存 ≥ 约 256 GiB（理想 384 GiB+）：bf16 模型总量约 134 GiB，
 #     需足以承载卸载层；不足会 swap 到磁盘、极慢甚至 OOM-kill
-#   - 离线环境：先跑一次 scripts/setup-offline-hf-cache.sh，把本地仓库登记为
-#     HF 离线缓存快照(/model_nas/hf_cache)，sglang 才能用 MiniMaxAI/MiniMax-H3 离线解析。
-#     （关键：不可把 --model-path 直接指向本地目录，否则 sglang 回退到原生 diffusers，
-#      而 diffusers 无 MiniMaxH3DiTModel，会 AttributeError 并引发 NCCL 级联崩溃）
 #
-# 启动：  bash scripts/setup-offline-hf-cache.sh && docker compose up -d
-# 日志：  docker compose logs -f minimax-h3
-# 停止：  docker compose down
+# 启动（实测可用的起法）：
+#   1) docker compose up -d
+#   2) 日志：docker compose logs -f minimax-h3
+#   3) 停止：docker compose down
+# 验证 SGLang 是否含 MiniMax-H3 native backend（必要时）：
+#   docker compose exec -T minimax-h3 python - <<'PY'
+#   import os, sglang
+#   root = os.path.dirname(sglang.__file__)
+#   hits = [os.path.join(d, f) for d, _, fs in os.walk(root) for f in fs if "minimax" in f.lower()]
+#   print("MINIMAX FILES:", hits or "NONE -> 镜像不含 native MiniMax-H3 backend")
+#   PY
 
 services:
   minimax-h3:
@@ -40,23 +64,16 @@ services:
       - sglang
       - serve
       - --model-path
-      - MiniMaxAI/MiniMax-H3       # 用仓库 ID 触发 sglang 原生 MiniMax-H3 实现；
-                                   # 离线缓存(见下)提供文件，避免回退到原生 diffusers 报
-                                   # AttributeError: MiniMaxH3DiTModel
-      - --pipeline-class-name
-      - MiniMaxH3Pipeline           # 必须显式指定：model_index.json 的 _class_name 是
-                                    # diffusers 侧的 MiniMaxH3ModularPipeline，与 sglang
-                                    # 注册表键 MiniMaxH3Pipeline 不一致；不指定会静默回退
-                                    # 到通用 diffusers 后端，而 diffusers 0.37.0 无该类，
-                                    # 最终报 HFValidationError
+      - MiniMaxAI/MiniMax-H3       # 仓库 ID：触发 sglang 原生 MiniMax-H3 backend；
+                                   # 文件经 ModelScope resolver 从下方缓存路径解析
       - --model-variant
       - fl2va                       # weights=fl2va
       - --num-gpus
-      - "4"
+      - "2"
       - --tp-size
       - "2"
       - --ulysses-degree
-      - "2"
+      - "1"
       - --performance-mode
       - memory                     # 40G 显存紧张，改用省显存放置策略
       - --layerwise-offload-components
@@ -74,30 +91,32 @@ services:
       - "30010:30010"
 
     volumes:
-      # 模型本体：只读挂到 /models/MiniMax-H3，作为下方 HF 离线缓存 symlink 的解析目标
+      # 兜底挂载：模型本体只读挂到 /models/MiniMax-H3（当前 --model-path 走仓库 ID 不依赖它）
       - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
-      # HuggingFace 离线缓存：sglang 用 MiniMaxAI/MiniMax-H3 解析目录映射，文件来自
-      # scripts/setup-offline-hf-cache.sh 生成的 snapshots symlink（指向 /models/MiniMax-H3）。
-      # 必须 rw：sglang 会在缓存里写 lock / refs 等元数据。
-      - /model_nas/hf_cache:/root/.cache/huggingface:rw
+      # ModelScope 离线 cache 元数据目录：必须 rw（sglang/ModelScope 写 lock / refs）
+      - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
+      # 模型本体直接 bind 为 legacy cache 目标，sglang 经 SGLANG_USE_MODELSCOPE=true
+      # 复用该目录（实测日志："Found legacy cache at .../MiniMax-H3, reusing."）
+      # 模型文件本身只读访问；保留 rw 以兼容首次解析写元数据，后续可试 :ro
+      - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
       - /data/minimax-h3:/data/minimax-h3:ro
 
     environment:
-      - HF_HUB_OFFLINE=1
-      - TRANSFORMERS_OFFLINE=1
-      - HF_HOME=/root/.cache/huggingface
+      - SGLANG_USE_MODELSCOPE=true
+      - MODELSCOPE_CACHE=/root/.cache/modelscope
+      - HF_HUB_OFFLINE=1            # 双保险：禁止 sglang 走 HF 网络回退
 
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 4
+              count: 2
               capabilities: [gpu]
 
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 2
       start_period: 600s
