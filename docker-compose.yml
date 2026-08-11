@@ -60,6 +60,17 @@ services:
     shm_size: 512gb
     restart: unless-stopped
 
+    # ── 内存 / SWAP 硬限制（service 级，Docker Compose 原生支持）─────────────
+    # 目标：SWAP 硬上限严格 < 2.5G。
+    #   mem_limit     = RAM 上限 384G
+    #   memswap_limit = RAM+SWAP 总上限 386G → SWAP 硬上限 = 386-384 = 2G < 2.5G
+    #   mem_swappiness = 0 → 尽量不落盘，仅在 OOM 临界才 swap
+    # 语义：SWAP 为硬性上限（非倾向），由 memswap_limit-mem_limit 直接约束。
+    mem_limit: 384g
+    memswap_limit: 386g
+    mem_swappiness: 0
+    mem_reservation: 256g        # 仅为 soft reservation（保底不被挤占），非 SWAP 限制
+
     command:
       - sglang
       - serve
@@ -81,7 +92,11 @@ services:
       - --dit-offload-prefetch-size
       - "1"
       - --dit-layerwise-resident-layers
-      - "24"                       # A100 比 5090 多 8G：可按 nvidia-smi 余量上调到 24~28
+      - "40"                       # 显存预算基准 = nvidia-smi 真实峰值(30G)，非程序内统计(25G)。
+                                   # 目标真实峰值 36~38G；可用余量约 6~8G。
+                                   # 经验：24层→真实~30G，每+1层约+0.4G真实显存；
+                                   # 24→40(+16) ≈ +6.4G → 真实峰值~36.4G，留缓冲防触顶40G。
+                                   # 若 nvidia-smi 实测仍<36G可继续上调到 42~44；若>38G则回调到 38~40
       - --host
       - 0.0.0.0
       - --port
@@ -109,10 +124,13 @@ services:
     deploy:
       resources:
         reservations:
+          memory: 256g              # soft reservation（与 service 级 mem_reservation 一致），仅保底不被挤占，非 SWAP 限制
           devices:
             - driver: nvidia
               count: 2
               capabilities: [gpu]
+        # 注：SWAP 硬限制由 service 级 mem_limit/memswap_limit 实现（见上方），
+        # 此处不再设 limits.memory，避免与 service 级 mem_limit 语义冲突。
 
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
