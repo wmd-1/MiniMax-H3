@@ -1,0 +1,61 @@
+# MiniMax-H3 (vLLM-Omni) —— 基于官方 vLLM 镜像构建，适配 2× RTX 5090 32GB
+#
+# 官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, Updated 2026-08-09）说明：
+#   - 推荐 Datacenter / RTX 等 NVIDIA GPU 使用镜像 vllm/vllm-omni:minimax-h3
+#   - 该发布标签早于 vLLM-Omni #5720 的模块化流水线，需另克隆当前 main 分支源码
+#   - 运行时将 vllm-omni 源码挂到 PYTHONPATH 前置
+#
+# 本 Dockerfile 把上述「拉镜像 + 克隆源码 + 设置 PYTHONPATH」固化进镜像，
+# 省去运行期挂载。2× RTX 5090 走分布式层卸载（DLO）低显存 TP2 路径，仅加载 FL2VA DiT。
+
+FROM vllm/vllm-omni:minimax-h3
+
+# ── 构建期参数 ───────────────────────────────────────────────────────────────
+ARG VLLM_OMNI_REPO=https://github.com/vllm-project/vllm-omni.git
+ARG VLLM_OMNI_REF=main
+ARG VLLM_OMNI_DIR=/opt/vllm-omni
+
+# ── 依赖补充（ffmpeg / 视频编解码，官方 ROCm 镜像已含，NVIDIA 镜像按需补）─────
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+# ── 拉取 vLLM-Omni main 分支源码（模块化流水线所需，#5720 之后）──────────────
+RUN git clone --depth 1 --branch "${VLLM_OMNI_REF}" \
+        "${VLLM_OMNI_REPO}" "${VLLM_OMNI_DIR}" || \
+    git clone --depth 1 "${VLLM_OMNI_REPO}" "${VLLM_OMNI_DIR}"
+
+# 若使用 release 标签拉到的源码缺子模块/补丁，可在此按需补：
+#   RUN --mount=type=cache,target=/root/.cache/pip pip install -e "${VLLM_OMNI_DIR}"
+
+# ── 运行时环境 ───────────────────────────────────────────────────────────────
+# 将 vllm-omni 源码路径前置到 PYTHONPATH（官方 recipe 要求）
+ENV PYTHONPATH="${VLLM_OMNI_DIR}:${PYTHONPATH}"
+# 2× RTX 5090 32GB 显存墙：20 resident DiT 层 + 起始形状 1344×768
+ENV DLO_RESIDENT_LAYERS=20
+ENV WIDTH=1344
+ENV HEIGHT=768
+
+WORKDIR /workspace
+
+# ── 默认启动命令（可被 docker run / compose 覆盖）────────────────────────────
+# 仅加载 FL2VA DiT 的 DLO 低显存 TP2 路径（官方 2× RTX 5090 recipe）
+CMD ["sh", "-c", "\
+CUDA_VISIBLE_DEVICES=0,1 \
+VLLM_WORKER_MULTIPROC_METHOD=spawn \
+VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400 \
+vllm serve /models/MiniMax-H3 \
+  --omni --task-type fl2va --host 0.0.0.0 --port 8000 \
+  --trust-remote-code --num-gpus 2 --tensor-parallel-size 2 \
+  --usp 1 --ring 1 --text-encoder-tp-size 2 \
+  --vae-patch-parallel-size 2 --vae-parallel-mode tile --vae-use-tiling \
+  --enable-distributed-layerwise-offload --dlo-no-use-allgather \
+  --dlo-resident-layers \"${DLO_RESIDENT_LAYERS}\" \
+  --enforce-eager --diffusion-attention-backend CUDNN_ATTN"]
+
+# 构建：
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:latest .
+# 运行（模型本体只读挂到 /models/MiniMax-H3）：
+#   docker run --gpus all --ipc=host --shm-size=512gb \
+#     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
+#     -p 8000:8000 minimax-h3-vllm:latest

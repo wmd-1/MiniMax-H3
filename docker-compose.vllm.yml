@@ -1,0 +1,106 @@
+# MiniMax-H3 (vLLM-Omni) —— 2× RTX 5090 32GB 省显存方案（DLO 低显存 TP2 路径）
+#
+# 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:minimax-h3）。
+# serve 参数映射自官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, hardware=rtx_5090_2x）：
+#   - 仅加载 FL2VA DiT，分布式层卸载（DLO）20 resident 层
+#   - TP2 + text-encoder-tp 2 + vae tile 并行 2，Ulysses SP1 / ring1
+#   - CUDNN_ATTN 后端，enforce-eager，无需 FlashAttention-4
+#
+# 前置条件：
+#   - 已构建镜像 minimax-h3-vllm:latest（docker build -f Dockerfile.vllm -t minimax-h3-vllm:latest .）
+#   - 模型已在宿主机 /model_nas/models/MiniMax-H3（只读 bind 进容器 /models/MiniMax-H3）
+#   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
+#   - 宿主机内存 ≥ 384 GiB-class（官方 2×RTX 5090 配方 377 GiB host，建议 384 GiB 级）
+#     bf16 模型总量约 134 GiB 需足以承载卸载层；不足会 swap，极慢甚至 OOM-kill。
+#     mem_limit=384g / memswap_limit=386g 已把 SWAP 硬上限锁在 2G。
+#
+# 启动：
+#   1) docker compose -f docker-compose.vllm.yml up -d
+#   2) 日志：docker compose -f docker-compose.vllm.yml logs -f minimax-h3
+#   3) 停止：docker compose -f docker-compose.vllm.yml down
+# 验证 SWAP 硬限制（cgroup v2）：
+#   docker exec -T minimax-h3-vllm cat /sys/fs/cgroup/memory.max        # 应 = 384G
+#   docker exec -T minimax-h3-vllm cat /sys/fs/cgroup/memory.swap.max   # 应 = 2G
+
+services:
+  minimax-h3:
+    image: minimax-h3-vllm:latest
+    container_name: minimax-h3-vllm
+    ipc: host
+    pid: host
+    shm_size: 512gb
+    restart: unless-stopped
+
+    # ── 内存 / SWAP 硬限制 ────────────────────────────────────────────────
+    mem_limit: 384g
+    memswap_limit: 386g
+    mem_swappiness: 0
+    mem_reservation: 256g
+
+    command:
+      - vllm
+      - serve
+      - /models/MiniMax-H3
+      - --omni
+      - --task-type
+      - fl2va                      # 仅加载 FL2VA DiT（官方 2×5090 recipe）
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --trust-remote-code
+      - --num-gpus
+      - "2"
+      - --tensor-parallel-size
+      - "2"                        # TP2
+      - --usp
+      - "1"                        # Ulysses SP1
+      - --ring
+      - "1"
+      - --text-encoder-tp-size
+      - "2"
+      - --vae-patch-parallel-size
+      - "2"
+      - --vae-parallel-mode
+      - tile
+      - --vae-use-tiling
+      - --enable-distributed-layerwise-offload
+      - --dlo-no-use-allgather
+      - --dlo-resident-layers
+      - "20"                       # 2×RTX 5090 32GB 官方验证值
+      - --enforce-eager
+      - --diffusion-attention-backend
+      - CUDNN_ATTN
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      # 模型本体只读挂到 /models/MiniMax-H3（Dockerfile 默认 serve 路径）
+      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - CUDA_VISIBLE_DEVICES=0,1
+      - VLLM_WORKER_MULTIPROC_METHOD=spawn
+      - VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400
+      - DLO_RESIDENT_LAYERS=20
+      - WIDTH=1344
+      - HEIGHT=768
+      - HF_HUB_OFFLINE=1           # 离线：禁止 vllm 走 HF 网络回退
+
+    deploy:
+      resources:
+        reservations:
+          memory: 256g
+          devices:
+            - driver: nvidia
+              count: 2
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 2
+      start_period: 600s
