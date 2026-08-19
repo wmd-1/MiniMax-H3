@@ -1,11 +1,50 @@
 {
   "version": 1,
   "skills": {
+    "3d-animation-short-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "c92817843da37e0eb217c0187fa288b5dc28b2a30cfa161c75b1da8fadb3b133"
+    },
+    "brand-promo-video-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "b37c9eaa5e8a7dc5a69692114d85b2ae7f193e1c720b533161900badec3e9dc9"
+    },
+    "co-op-game-intro-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "27cd6fd96599c2143f051124051c6e0e23dc9b66749cdb3ab84d7ee752a6a112"
+    },
     "h3-prompt-writing": {
-      "source": "MiniMax-AI/MiniMax-H3",
-      "sourceType": "github",
-      "skillPath": "skills/h3-prompt-writing/SKILL.md",
-      "computedHash": "3d01859464bc9438585c8fdbf7fcd4b4c54404fadd3f1a64ab7970ae8877d086"
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "438cb21bc76d72a026750f471d344d9523c22d0950c9311b2581671244bfb07a"
+    },
+    "handdrawn-live-video-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "c0b8035d272bd60d2cb019f4277010c074c4ac85fa49e0ca532becaa2d4e8283"
+    },
+    "minimalist-product-ad-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "7e17ea490a33c1aeb931a1a2ed45abf50befb75973e75e690e852070ac4c2f8f"
+    },
+    "music-video-subtitle-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "78379449996ba0598ac55c5b08416d05f4c4681a6cce8dc82894f71197915ad1"
+    },
+    "paper-collage-explainer-generator": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "0175b31e2af81d43be818e66daec188a854797b12a96b4ff39eedf241e27a22e"
+    },
+    "papercraft-stop-motion-explainer": {
+      "source": ".",
+      "sourceType": "local",
+      "computedHash": "fa4c9f0490fce8ee7a8de32f7d4da1b2d210f2dcdacda438fd5eb04cb55b97ff"
     }
   }
 }

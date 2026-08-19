@@ -1,61 +1,145 @@
-# MiniMax-H3 (vLLM-Omni) —— 基于官方 vLLM 镜像构建，适配 2× RTX 5090 32GB
+# MiniMax-H3 (vLLM-Omni)
+# 2× NVIDIA A100 40GB
 #
-# 官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, Updated 2026-08-09）说明：
-#   - 推荐 Datacenter / RTX 等 NVIDIA GPU 使用镜像 vllm/vllm-omni:minimax-h3
-#   - 该发布标签早于 vLLM-Omni #5720 的模块化流水线，需另克隆当前 main 分支源码
-#   - 运行时将 vllm-omni 源码挂到 PYTHONPATH 前置
+# 目标：
+# - TP2
+# - FL2VA
+# - Distributed Layerwise Offload (DLO)
+# - 尽可能利用 A100 40GB 的额外显存
+# - 降低 CPU offload / Swap 压力
 #
-# 本 Dockerfile 把上述「拉镜像 + 克隆源码 + 设置 PYTHONPATH」固化进镜像，
-# 省去运行期挂载。2× RTX 5090 走分布式层卸载（DLO）低显存 TP2 路径，仅加载 FL2VA DiT。
+# 基于官方 MiniMax-H3 vLLM recipe：
+# https://recipes.vllm.ai/MiniMaxAI/MiniMax-H3
+#
+# 注意：
+# 官方 2× RTX 5090 32GB recipe 使用 DLO_RESIDENT_LAYERS=20。
+# A100 40GB 有更多显存，因此这里先从 24 层开始，
+# 后续根据实际显存峰值继续提高（24 → 28 → 32 ...）。
+# 不建议一开始直接拉满。
 
 FROM vllm/vllm-omni:minimax-h3
 
-# ── 构建期参数 ───────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------
+# Build arguments
+# ----------------------------------------------------------------------
+
 ARG VLLM_OMNI_REPO=https://github.com/vllm-project/vllm-omni.git
+# ⚠️ 生产 reproducibility 风险：main 仍在快速变化，今天 build 与下周 rebuild 可能得到
+#    不同镜像，即使本 Dockerfile 一字未改。
+#    生产镜像务必固定到「已验证」的具体 commit，构建时传入：
+#      docker build -f Dockerfile.vllm \
+#        --build-arg VLLM_OMNI_REF=<已验证的commit> \
+#        -t minimax-h3-vllm:a100 .
+#    本地/验证用可保持 main。
 ARG VLLM_OMNI_REF=main
 ARG VLLM_OMNI_DIR=/opt/vllm-omni
 
-# ── 依赖补充（ffmpeg / 视频编解码，官方 ROCm 镜像已含，NVIDIA 镜像按需补）─────
+# ----------------------------------------------------------------------
+# Runtime dependencies
+# ----------------------------------------------------------------------
+
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get install -y --no-install-recommends \
+        git \
+        ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
-# ── 拉取 vLLM-Omni main 分支源码（模块化流水线所需，#5720 之后）──────────────
-RUN git clone --depth 1 --branch "${VLLM_OMNI_REF}" \
-        "${VLLM_OMNI_REPO}" "${VLLM_OMNI_DIR}" || \
-    git clone --depth 1 "${VLLM_OMNI_REPO}" "${VLLM_OMNI_DIR}"
+# ----------------------------------------------------------------------
+# vLLM-Omni
+#
+# minimax-h3 发布镜像早于模块化 pipeline，
+# 因此需要 checkout 当前 vLLM-Omni 源码。
+# ----------------------------------------------------------------------
 
-# 若使用 release 标签拉到的源码缺子模块/补丁，可在此按需补：
-#   RUN --mount=type=cache,target=/root/.cache/pip pip install -e "${VLLM_OMNI_DIR}"
+RUN git clone --depth 1 \
+    --branch "${VLLM_OMNI_REF}" \
+    "${VLLM_OMNI_REPO}" \
+    "${VLLM_OMNI_DIR}"
 
-# ── 运行时环境 ───────────────────────────────────────────────────────────────
-# 将 vllm-omni 源码路径前置到 PYTHONPATH（官方 recipe 要求）
-ENV PYTHONPATH="${VLLM_OMNI_DIR}:${PYTHONPATH}"
-# 2× RTX 5090 32GB 显存墙：20 resident DiT 层 + 起始形状 1344×768
-ENV DLO_RESIDENT_LAYERS=20
+# 官方 recipe 要求运行时优先使用该源码
+ENV PYTHONPATH="${VLLM_OMNI_DIR}:${PYTHONPATH:-}"
+
+# ----------------------------------------------------------------------
+# pip install -e —— 暂不加，做三级验证后再决定
+#
+# vllm-omni 是标准 Python package（pyproject.toml 声明 name="vllm-omni"），
+# 从 packaging 角度 pip install -e 是正规安装方式；但已前置 PYTHONPATH，
+# 对「源码 import」通常已足够。故先不加，按以下三级验证判断是否需要：
+#
+#   Tier 1  import:
+#     docker run --rm minimax-h3-vllm:a100 python -c "import vllm_omni; print(vllm_omni.__file__)"
+#   Tier 2  serve --help（验证 vllm 入口/插件能识别 vllm-omni）:
+#     docker run --rm minimax-h3-vllm:a100 vllm serve --help
+#   Tier 3  实际启动 MiniMax-H3 并发 FL2VA 首请求
+#
+# 判断：
+#   - Tier 1 失败                      → 取消注释下方 pip install -e 重建
+#   - Tier 2/3 报「找不到 vllm-omni 的 entrypoint / 插件未注册」类错误
+#                                   → 同样取消注释 pip install -e 重建
+#   - 三级全过                         → 保持不加（更轻、源码即改即生效）
+#
+# RUN --mount=type=cache,target=/root/.cache/pip \
+#     pip install -e "${VLLM_OMNI_DIR}"
+
+# ----------------------------------------------------------------------
+# MiniMax-H3 / A100 40GB profile
+# ----------------------------------------------------------------------
+
+# 5090 32GB 官方 profile：
+#   20 resident layers
+#
+# A100 40GB：
+#   先提高到 24（裸跑默认；compose 可覆盖为更高值逐步实测）
+#
+# 后续如果实测显存还有余量，可以尝试：
+#   28
+#   32
+#
+# 不建议一开始直接拉满。
+# 注：本 ENV 仅为「裸 docker run」默认值；
+#     compose 部署通过 environment: DLO_RESIDENT_LAYERS 覆盖（见 docker-compose.vllm*.yml）。
+ENV DLO_RESIDENT_LAYERS=24
+
+# 官方 5090 profile 的起始分辨率
 ENV WIDTH=1344
 ENV HEIGHT=768
 
 WORKDIR /workspace
 
-# ── 默认启动命令（可被 docker run / compose 覆盖）────────────────────────────
-# 仅加载 FL2VA DiT 的 DLO 低显存 TP2 路径（官方 2× RTX 5090 recipe）
+# ----------------------------------------------------------------------
+# MiniMax-H3 FL2VA
+# ----------------------------------------------------------------------
+
 CMD ["sh", "-c", "\
 CUDA_VISIBLE_DEVICES=0,1 \
 VLLM_WORKER_MULTIPROC_METHOD=spawn \
 VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400 \
 vllm serve /models/MiniMax-H3 \
-  --omni --task-type fl2va --host 0.0.0.0 --port 8000 \
-  --trust-remote-code --num-gpus 2 --tensor-parallel-size 2 \
-  --usp 1 --ring 1 --text-encoder-tp-size 2 \
-  --vae-patch-parallel-size 2 --vae-parallel-mode tile --vae-use-tiling \
-  --enable-distributed-layerwise-offload --dlo-no-use-allgather \
-  --dlo-resident-layers \"${DLO_RESIDENT_LAYERS}\" \
-  --enforce-eager --diffusion-attention-backend CUDNN_ATTN"]
+  --omni \
+  --task-type fl2va \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --trust-remote-code \
+  --num-gpus 2 \
+  --tensor-parallel-size 2 \
+  --usp 1 \
+  --ring 1 \
+  --text-encoder-tp-size 2 \
+  --vae-patch-parallel-size 2 \
+  --vae-parallel-mode tile \
+  --vae-use-tiling \
+  --enable-distributed-layerwise-offload \
+  --dlo-no-use-allgather \
+  --dlo-resident-layers ${DLO_RESIDENT_LAYERS} \
+  --enforce-eager \
+  --diffusion-attention-backend CUDNN_ATTN \
+"]
 
-# 构建：
-#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:latest .
+# 构建（验证用，main）：
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:a100 .
+# 构建（生产，固定 commit）：
+#   docker build -f Dockerfile.vllm --build-arg VLLM_OMNI_REF=<commit> -t minimax-h3-vllm:a100 .
 # 运行（模型本体只读挂到 /models/MiniMax-H3）：
 #   docker run --gpus all --ipc=host --shm-size=512gb \
 #     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
-#     -p 8000:8000 minimax-h3-vllm:latest
+#     -p 8000:8000 minimax-h3-vllm:a100

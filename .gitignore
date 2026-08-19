@@ -1,2 +1,4 @@
 *.safetensors
 .codebuddy/
+agent/
+.agents/

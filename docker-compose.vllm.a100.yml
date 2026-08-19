@@ -1,100 +1,116 @@
-# MiniMax-H3 (vLLM-Omni) —— 2× A100 40GB 省显存方案（DLO 低显存 TP2 路径）
-#                                 + 生产环境 16GB SWAP 作溢出缓冲
+# MiniMax-H3 (vLLM-Omni)
+# 2× NVIDIA A100 40GB
 #
-# 与 docker-compose.vllm.yml（2×RTX 5090 32GB）的差异：
-#   - GPU：A100 40GB 每卡比 5090 多 8GB 显存 → dlo-resident-layers 由 20 上调到 40
-#          （与 SGLang 版 A100 适配思路一致；官方仅验证 5090=20，本值需 nvidia-smi 真实峰值实测调档）
-#   - 生产环境宿主机已配置 16GB SWAP → 放开 SWAP 硬上限到 16G（5090 版为禁用 2G），
-#     作为层卸载溢出到磁盘的最后兜底；正常应驻留主机 RAM，仅在 RAM 临界才落 swap。
+# 第一阶段：
+# - TP2
+# - FL2VA
+# - DLO
+# - DLO_RESIDENT_LAYERS=24
+# - 容器 RAM 硬上限 384G
+# - 容器 Swap 硬上限 16G
 #
-# serve 参数仍映射自官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, 2× RTX 5090 轮廓），
-# A100 40GB 仅调 dlo-resident-layers 与 SWAP 限制，其余并行划分保持一致。
-#
-# 前置条件：
-#   - 已构建镜像 minimax-h3-vllm:latest（docker build -f Dockerfile.vllm -t minimax-h3-vllm:latest .）
-#   - 模型已在宿主机 /model_nas/models/MiniMax-H3（只读 bind 进容器 /models/MiniMax-H3）
-#   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
-#   - 生产环境：宿主机 RAM 建议 ≥ 384 GiB-class（bf16 模型 ~134 GiB 需承载卸载层）
-#     + 已配置 16GB SWAP 作溢出缓冲（memswap_limit = mem_limit + 16G）
-#
-# 启动：
-#   1) docker compose -f docker-compose.vllm.a100.yml up -d
-#   2) 日志：docker compose -f docker-compose.vllm.a100.yml logs -f minimax-h3
-#   3) 停止：docker compose -f docker-compose.vllm.a100.yml down
-# 验证 SWAP 硬限制（cgroup v2）：
-#   docker exec -T minimax-h3-vllm-a100 cat /sys/fs/cgroup/memory.max        # 应 = 384G
-#   docker exec -T minimax-h3-vllm-a100 cat /sys/fs/cgroup/memory.swap.max   # 应 = 16G
+# 24 层不是官方 A100 验证值。
+# 官方 2× RTX 5090 32GB profile 为 20 层；
+# A100 40GB 需要通过真实 nvidia-smi / RAM / Swap 数据逐档调优。
 
 services:
   minimax-h3:
     image: minimax-h3-vllm:latest
     container_name: minimax-h3-vllm-a100
+
     ipc: host
-    pid: host
-    shm_size: 512gb
+    shm_size: 64gb
+
     restart: unless-stopped
 
-    # ── 内存 / SWAP 限制 ──────────────────────────────────────────────────
-    # mem_limit     = RAM 上限 384G
-    # memswap_limit = RAM+SWAP 总上限 400G → SWAP 硬上限 = 400-384 = 16G（生产环境 16GB swap）
-    # mem_swappiness = 10 → 优先驻留 RAM，仅在 RAM 临界才落盘（16GB swap 仅作溢出兜底，非常态）
+    # ------------------------------------------------------------
+    # Container memory / swap ceiling
+    #
+    # RAM <= 384 GiB
+    # RAM + SWAP <= 400 GiB
+    # => container SWAP <= 16 GiB
+    # ------------------------------------------------------------
     mem_limit: 384g
     memswap_limit: 400g
     mem_swappiness: 10
+
     mem_reservation: 256g
 
     command:
       - vllm
       - serve
       - /models/MiniMax-H3
+
       - --omni
       - --task-type
-      - fl2va                      # 仅加载 FL2VA DiT（官方 2× GPU recipe）
+      - t2va
+
       - --host
       - 0.0.0.0
       - --port
       - "8000"
+
       - --trust-remote-code
+
+      # TP2
       - --num-gpus
       - "2"
       - --tensor-parallel-size
-      - "2"                        # TP2
+      - "2"
+
+      # Ulysses / Ring
       - --usp
-      - "1"                        # Ulysses SP1
+      - "1"
       - --ring
       - "1"
+
+      # Text encoder
       - --text-encoder-tp-size
       - "2"
+
+      # VAE
       - --vae-patch-parallel-size
       - "2"
       - --vae-parallel-mode
       - tile
       - --vae-use-tiling
+
+      # DLO
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
+
+      # A100 第一阶段保守值
       - --dlo-resident-layers
-      - "40"                       # ⚠️ A100 40GB 适配值（非官方验证值；官方 5090 用 20，每卡多 8GB 显存故上调）
-                                   # 以两张卡 nvidia-smi 真实峰值为准调档：>38G 回调 32~38，<36G 且性能更好可上探 42~44
+      - "24"
+
+      # 稳定性优先
       - --enforce-eager
+
+      # 官方双卡 RTX profile 使用 CUDNN_ATTN
+      # A100 需要实际启动验证兼容性
       - --diffusion-attention-backend
-      - CUDNN_ATTN                 # A100 走 cuDNN 注意力后端（5090 同款；如 vLLM 不支持可改 TRTLLM_ATTN/FA2 并实测）
+      - CUDNN_ATTN
 
     ports:
       - "8000:8000"
 
     volumes:
-      # 模型本体只读挂到 /models/MiniMax-H3（Dockerfile 默认 serve 路径）
       - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
       - /data/minimax-h3:/data/minimax-h3:ro
 
     environment:
-      - CUDA_VISIBLE_DEVICES=0,1
-      - VLLM_WORKER_MULTIPROC_METHOD=spawn
-      - VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400
-      - DLO_RESIDENT_LAYERS=40
-      - WIDTH=1344
-      - HEIGHT=768
-      - HF_HUB_OFFLINE=1           # 离线：禁止 vllm 走 HF 网络回退
+      CUDA_VISIBLE_DEVICES: "0,1"
+      VLLM_WORKER_MULTIPROC_METHOD: spawn
+      VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
+
+      # 仅作为环境记录，不作为 CLI 参数来源
+      DLO_RESIDENT_LAYERS: "24"
+
+      WIDTH: "1344"
+      HEIGHT: "768"
+
+      # 生产环境离线运行
+      HF_HUB_OFFLINE: "1"
 
     deploy:
       resources:
@@ -103,10 +119,17 @@ services:
           devices:
             - driver: nvidia
               count: 2
-              capabilities: [gpu]
+              capabilities:
+                - gpu
 
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200 else 1)"
+        ]
       interval: 30s
       timeout: 10s
       retries: 2
