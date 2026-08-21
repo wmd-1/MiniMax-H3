@@ -1,17 +1,26 @@
 # MiniMax-H3 (vLLM-Omni)
 # 2× NVIDIA A100 40GB
 #
-# 第一阶段：
-# - TP2
-# - FL2VA
-# - DLO
-# - DLO_RESIDENT_LAYERS=24
-# - 容器 RAM 硬上限 384G
-# - 容器 Swap 硬上限 16G
+# 第一阶段（实测基线）：
+# - TP2 / FL2VA / DLO
+# - DLO_RESIDENT_LAYERS=24 时：idle 2G，生成峰值 24G/卡（已确认）
+# - 容器 RAM 硬上限 384G，Swap 硬上限 16G
 #
-# 24 层不是官方 A100 验证值。
-# 官方 2× RTX 5090 32GB profile 为 20 层；
-# A100 40GB 需要通过真实 nvidia-smi / RAM / Swap 数据逐档调优。
+# A100 40G 逐档调优（线性模型，基于正确基线反推）：
+#   基线：vLLM 24 层 → idle 2G / 峰值 24G（用户确认）
+#   DiT 每层每卡权重 = 66.3/52/2 = 0.6375 G；非DiT峰值基线 ≈ 24−24×0.6375 = 8.7 G
+#   峰值(N) ≈ 8.7 + 0.6375×N  (GB/卡)
+#     24→24.0G | 32→29.1G | 40→34.2G(实测~34G,余~6G) |
+#     44→36.8G | 46→38.0G(顶配目标,余~2G) | 48→39.3G(几乎无余量) |
+#     52→41.9G(超40G,不可行)
+#   交叉验证：sglang 40层全常驻=峰值38G，佐证40层全权重装得下但余量小；
+#            vLLM 40层(DLO)仅~34G，比 sglang 全常驻少~4G=DLO窗口化收益。
+#   用户实测 40 层峰值 ~34G，与模型吻合；现上探 46 层目标 ~38G 峰值（余~2G）。
+#   => 安全极限 40(余6G)；顶配 46(余2G,VAE突发需盯峰值)；52 确定超40G不可行。
+#   启动后用 nvidia-smi --query-gpu=memory.used --loop=1 抓峰值确认 ≤39G；
+#   若 VAE 突发致顶到 40G+ OOM 则回退 44。
+#
+# 官方 2× RTX 5090 32GB profile 为 20 层；A100 40GB 下列设为顶配 46。
 
 services:
   minimax-h3:
@@ -79,9 +88,9 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
 
-      # A100 第一阶段保守值
+      # A100 顶配：40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
       - --dlo-resident-layers
-      - "24"
+      - "46"
 
       # 稳定性优先
       - --enforce-eager
@@ -104,7 +113,7 @@ services:
       VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
 
       # 仅作为环境记录，不作为 CLI 参数来源
-      DLO_RESIDENT_LAYERS: "24"
+      DLO_RESIDENT_LAYERS: "46"
 
       WIDTH: "1344"
       HEIGHT: "768"

@@ -128,6 +128,10 @@ services:
                                    #   24 档 / 32 档 / 40 档 三档各跑一次，以两张卡 nvidia-smi 真实峰值为准，
                                    #   选「真实峰值<38G 且吞吐最好」的档位。当前暂置 40（约+6.4G→真实~36.4G）。
                                    # 若实测>38G 则回调到 32~38；若仍<36G 且性能更好可上探 42~44。
+      - --watchdog-timeout
+      - "3600"                     # 关键修复：层卸载下「单个 forward（整段视频生成）」常 > 默认 300s，
+                                   # sglang 看门狗会因此崩溃（日志 "scheduler did not respond in time"）
+                                   # 并触发 restart: unless-stopped 死循环。拉到 1h 避免长视频/分镜被误杀。
       - --host
       - 0.0.0.0
       - --port
@@ -151,6 +155,8 @@ services:
       - SGLANG_USE_MODELSCOPE=true
       - MODELSCOPE_CACHE=/root/.cache/modelscope
       - HF_HUB_OFFLINE=1            # 双保险：禁止 sglang 走 HF 网络回退
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120   # 放宽服务端 /health 自检超时（默认 20s），
+                                          # 避免层卸载忙时 /health 被误判不健康。
 
     deploy:
       resources:
@@ -166,6 +172,6 @@ services:
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
       interval: 30s
-      timeout: 10s
+      timeout: 30s
       retries: 2
       start_period: 600s

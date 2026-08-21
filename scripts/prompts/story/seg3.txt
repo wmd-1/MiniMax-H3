@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 董小宝, the financial-education promotional expert, defined by reference image dxb.png, carrying a folding paper fan.
+<Subject 2> is 徽小融, the financial-education promotional expert, defined by reference image hxr.png.
+<Subject 3> is the brand logo from logo.png, displayed persistently as a semi-transparent watermark in the top-right corner of every shot.
+
+summary:
+[reference generation] Segment 3 (30.00–45.00s) covers the scam-trap reveal (第四幕) and the three-step unblocking guide (第五幕). <Subject 1> blocks the scam link; <Subject 2> presents the three-step card. <Subject 3> stays top-right.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - 董小宝's appearance from dxb.png is retained; uses the fan to block the phone.
+<Subject 2> (appears in [Shot 2]): fully_preserved - 徽小融's appearance from hxr.png is retained; hands over a printed guide.
+<Subject 3> (appears in all shots): fully_preserved - the logo.png overlay remains in the top-right corner.
+
+detailed_description:
+The target video keeps the live-action, fast-paced style with a sharper, warning-toned cut in the scam beat.
+[Shot 1] A medium shot frames 王阿姨's phone screen suddenly lighting up with a popup reading "一键解冻" and a tapable link; 王阿姨 (S1) reaches to tap it. <Subject 1>, 董小宝 from dxb.png, snaps his folded fan across to block the phone. 王阿姨 (S1) says: <d>[Chinese] 哎！短信说能"一键解冻"！</d> <Subject 1> (S2), sternly, declares: <d>[Chinese] 停！银行从不发链接解冻，更不收钱。凡是收费解冻、要验证码的，全是诈骗！</d> A red "✕" cross-mark graphic slams over the link as an alarm sound effect rings. <Subject 3>'s logo stays top-right.
+[Shot 2] At 00:08.000, the camera cuts to <Subject 2>, 徽小融 from hxr.png, handing 王阿姨 a printed "明白纸" while a side-panel "三步走" animation pops up. <Subject 2> (S3), clear and guiding, says: <d>[Chinese] 卡真的被管控了怎么办？三步走——一看：看手机银行弹窗或短信提示原因。二问：打卡背面客服电话或去网点问清楚。三办：信息过期App内更新，交易异常本人带身份证和银行卡去网点核实，调额记得带流水合同，当天办妥不收费。</d> An on-screen banner reads "解控三步走：一看、二问、三办"; the three steps pop up in sequence. <Subject 3>'s logo remains top-right.
+
+overall_soundscape: A phone notification chime, a sharp fan-snap impact, a warning alarm beep, and paper rustle as the guide is handed over; soft pop sounds for the step animation.
+
+non_diegetic_music: A tense pulsing synth motif during the scam beat that resolves into a brighter, confident melodic phrase as the three-step guide appears.

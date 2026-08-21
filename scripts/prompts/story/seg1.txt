@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 董小宝, the financial-education promotional expert, whose on-screen appearance, costume, and visual identity are defined by reference image dxb.png (董小宝形象图); he carries a folding paper fan as a signature prop.
+<Subject 2> is 徽小融, the financial-education promotional expert, whose on-screen appearance, costume, and visual identity are defined by reference image hxr.png (徽小融形象图).
+<Subject 3> is the brand logo from logo.png, displayed persistently as a semi-transparent watermark in the top-right corner of every shot.
+
+summary:
+[reference generation] Segment 1 (0.00–15.00s) depicts the conflict eruption (第一幕) and the opening of the account-classification reveal (第二幕). <Subject 1> and <Subject 2> enter as the experts who begin explaining. <Subject 3> stays in the top-right corner throughout.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - 董小宝's appearance from dxb.png is retained; holds the folding fan.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - 徽小融's appearance from hxr.png is retained.
+<Subject 3> (appears in all shots): fully_preserved - the logo.png overlay remains in the top-right corner across the whole segment.
+
+detailed_description:
+The target video uses a live-action, fast-paced, life-conflict-plus-education style with bright daytime lighting and quick cuts.
+[Shot 1] A medium-wide shot frames 王阿姨, a stressed middle-aged woman, sweating and rapidly tapping her smartphone with both thumbs, stamping one foot in frustration on a city sidewalk. 陈大爷, an elderly man carrying a birdcage, passes by, then leans in with a helpless look. 王阿姨 (S1), in a tearful, urgent voice, cries: <d>[Chinese] 卡里明明有5万，给儿子转个首付就是转不出去！</d> 陈大爷 (S2), sighing, replies: <d>[Chinese] 老姐姐，我也一样！就转个钱，卡直接被停了！</d> A bold on-screen subtitle reads "卡里有钱却用不了？！". The logo from <Subject 3> sits in the top-right corner.
+[Shot 2] At 00:06.000, the camera cuts to a medium shot as <Subject 1>, 董小宝 from dxb.png, and <Subject 2>, 徽小融 from hxr.png, step into frame; <Subject 1> raises a folded paper fan and points it at the phone screen. <Subject 1> (S3), in a clear, confident teaching voice, says: <d>[Chinese] 先看第一道门——您的卡是几类户？Ⅰ类户全能转，Ⅱ类户日限1万，Ⅲ类户日限2千！Ⅱ类户转5万？那确实转不出去。</d>
+[Shot 3] At 00:11.000, the shot cuts to a graphic insert where three account-type icons (Ⅰ类户, Ⅱ类户, Ⅲ类户) pop up in sequence with a soft chime; an on-screen banner reads "①看账户类型 ②看非柜面额度". <Subject 3>'s logo remains in the top-right corner.
+
+overall_soundscape: Rapid phone-tap clicks and hurried footsteps on pavement, a racing heartbeat sound effect, and a sharp "叮" alarm beep; a soft chime accompanies the icon pop-ups.
+
+non_diegetic_music: A brisk upbeat electronic track at a fast tempo with a driving kick and light synth plucks, sustaining the comedic-urgent tone.

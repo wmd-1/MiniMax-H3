@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 董小宝, the financial-education promotional expert, defined by reference image dxb.png, carrying a folding paper fan.
+<Subject 2> is 徽小融, the financial-education promotional expert, defined by reference image hxr.png.
+<Subject 3> is the brand logo from logo.png, displayed persistently as a semi-transparent watermark in the top-right corner of every shot.
+
+summary:
+[reference generation] Segment 4 (45.00–60.00s) is the mnemonic summary (第六幕): <Subject 1> raises three fingers with the "查、问、办" mantra, <Subject 2> delivers the anti-scam line, and the video freezes on the closing frame. <Subject 3> stays top-right.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - 董小宝's appearance from dxb.png is retained; raises three fingers.
+<Subject 2> (appears in [Shot 2]): fully_preserved - 徽小融's appearance from hxr.png is retained.
+<Subject 3> (appears in all shots): fully_preserved - the logo.png overlay remains in the top-right corner, also present on the freeze frame.
+
+detailed_description:
+The target video uses the live-action, upbeat-education style and ends on a held freeze frame.
+[Shot 1] A medium-wide shot frames <Subject 1>, 董小宝 from dxb.png, raising three fingers; 王阿姨 and 陈大爷 (the latter holding his birdcage) nod while holding the "明白纸". <Subject 1> (S1), bright and emphatic, says: <d>[Chinese] 记住口诀——查、问、办。转账受限先查账户类型和额度；卡被管控问清原因；带齐证件和材料到正规渠道办恢复。关注@董小宝 @徽小融，带你避坑！</d> <Subject 3>'s logo sits top-right.
+[Shot 2] At 00:08.000, the camera holds on <Subject 2>, 徽小融 from hxr.png, speaking to camera. <Subject 2> (S2), warm and urgent, says: <d>[Chinese] 记住——不借不卖不租卡，要钱要码全是骗。转发，救救身边那个乱点链接的朋友！</d> The video then freezes on a final frame with a centered on-screen title reading "清朗金融网络 守护安心消费", while <Subject 3>'s logo remains in the top-right corner.
+
+overall_soundscape: Light celebratory ambient tone, a small bird chirp from 陈大爷's cage, and a soft page rustle from the "明白纸"; the freeze frame holds in silence.
+
+non_diegetic_music: An uplifting, warm outro theme with a simple piano melody and a gentle string swell that sustains through the freeze frame.

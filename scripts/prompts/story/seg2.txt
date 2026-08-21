@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 董小宝, the financial-education promotional expert, defined by reference image dxb.png, carrying a folding paper fan.
+<Subject 2> is 徽小融, the financial-education promotional expert, defined by reference image hxr.png.
+<Subject 3> is the brand logo from logo.png, displayed persistently as a semi-transparent watermark in the top-right corner of every shot.
+
+summary:
+[reference generation] Segment 2 (15.00–30.00s) covers the non-counter limit explanation (第二幕 second door) and the risk-control reasons (第三幕). <Subject 1> and <Subject 2> explain to 王阿姨 and 陈大爷. <Subject 3> stays top-right.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - 董小宝's appearance from dxb.png is retained; holds the fan.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - 徽小融's appearance from hxr.png is retained.
+<Subject 3> (appears in all shots): fully_preserved - the logo.png overlay remains in the top-right corner.
+
+detailed_description:
+The target video continues the live-action, fast-paced education style with bright lighting and quick cuts.
+[Shot 1] A medium shot frames <Subject 2>, 徽小融 from hxr.png, addressing 王阿姨 beside her phone. <Subject 2> (S1), in a warm, clear teaching voice, says: <d>[Chinese] 就算您是Ⅰ类户，还有第二道门——非柜面限额。银行为了防电诈，给手机银行、微信支付这些不用去柜台的渠道设置了限制共用额度。不过非柜面限额是公用的，比如微信花了3千，转账额度就少了3千。</d> 王阿姨 (S2), suddenly realizing, exclaims: <d>[Chinese] 原来我的卡是Ⅱ类户，难怪转不了！</d>
+[Shot 2] At 00:06.000, the camera cuts to a close two-shot of 陈大爷 with a wronged expression and <Subject 1>, 董小宝 from dxb.png, patiently explaining; <Subject 1> holds the folding fan. 陈大爷 (S3) asks: <d>[Chinese] 那我呢？我卡怎么直接停了？</d> <Subject 1> (S4), calmly, replies: <d>[Chinese] 陈大爷，您多年只去柜台取钱，突然在手机上一次性转走全部余额——系统判定“交易习惯重大变化”，触发风控拦截，怕是非本人操作。</d>
+[Shot 3] At 00:11.000, the shot cuts to <Subject 2>, 徽小融, continuing as 陈大爷 listens. <Subject 2> (S1) says: <d>[Chinese] 银行是帮您守门，不是刁难。身份证过期、长期不用的卡突然活跃，也会触发风控。</d> An on-screen subtitle reads "交易习惯突变=触发风控". <Subject 3>'s logo remains top-right.
+
+overall_soundscape: Soft indoor street ambience with light fabric movement; a gentle reassuring tone under the dialogue; no harsh impacts.
+
+non_diegetic_music: A steady mid-tempo acoustic-guitar pattern with a soft kick, keeping an informational and reassuring feel.
