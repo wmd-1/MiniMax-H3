@@ -2,3 +2,4 @@
 .codebuddy/
 agent/
 .agents/
+*.zip

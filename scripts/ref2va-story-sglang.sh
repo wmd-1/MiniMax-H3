@@ -175,7 +175,7 @@ build_body() {  # $1=prompt_file  -> $TMPD/body.json
 #     - 仅当服务端掉线（curl 拿不到状态、job 丢失）→ 才重提该段。
 gen_one() {  # $1=prompt_file $2=output
   local pf="$1" out="$2"
-  local vid st elapsed http_code resubmits=0
+  local vid="" st="" elapsed=0 http_code="" resubmits=0
 
   while true; do
     # 1) 确保服务端在线
