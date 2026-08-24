@@ -54,13 +54,13 @@ The remaining eight are style-specific video generation skills built for the Min
 </table>
 
 ## Online API
-Use MiniMax\-H3 directly via API\. 
-- Global: [platform\.minimax\.io](https://platform.minimax.io/docs/api-reference/video-generation-v2-create) \| CN: [platform\.minimaxi\.com](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
+Use MiniMax-H3 directly via API. 
+- Global: [platform.minimax.io](https://platform.minimax.io/docs/api-reference/video-generation-v2-create) | CN: [platform.minimaxi.com](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
 
 ## Online App
-Use MiniMax\-H3 directly via App\.
-- WebApp Global: [hailuoai\.video](https://hailuoai.video/tools/minimax-h3) \| CN: [hailuoai\.com](https://hailuoai.com/)
-- Desktop Global: [hub\.minimax\.io](https://hub.minimax.io/) \| CN: [hub\.minimaxi\.com](https://hub.minimaxi.com/)
+Use MiniMax-H3 directly via App.
+- WebApp Global: [hailuoai.video](https://hailuoai.video/tools/minimax-h3) | CN: [hailuoai.com](https://hailuoai.com/)
+- Desktop Global: [hub.minimax.io](https://hub.minimax.io/) | CN: [hub.minimaxi.com](https://hub.minimaxi.com/)
 
 
 ## System Overview
@@ -82,7 +82,7 @@ H3 supports the following input and output specifications:
 | Model Variant | Input Mode | Specifications |
 |---|---|---|
 | H3-Base-FL2VA | First-and-last-frame mode | Supports zero, one, or two input images. <br><br>- No image input: Text-to-video mode <br>- One image input: First-frame-to-video or last-frame-to-video generation <br>- Two image inputs: First-and-last-frame-to-video generation |
-| H3-Base-Ref2VA | Omni-reference mode | Supports multi-modal reference inputs: <br><br>- **Images:** ≤ 9 images <br>- **Videos:** ≤ 3 clips; each clip must be 2–15 seconds long; total duration ≤ 15 seconds <br>- **Audio:** ≤ 3 clips; audio must be accompanied by image or video input and cannot be used as the sole input; each clip must be 2–15 seconds long; total duration ≤ 15 seconds <br>- **Mixed inputs:** Maximum number of files across all input types is 12 |
+| H3-Base-Ref2VA | Omni-reference mode | Supports multi-modal reference inputs: <br><br>- **Images:** ≤ 9 images <br>- **Videos:** ≤ 3 clips; each clip must be 2–15 seconds long; total duration ≤ 15 seconds <br>- **Audio:** ≤ 3 clips; each clip must be 2–15 seconds long; total duration ≤ 15 seconds <br>- **Mixed inputs:** Maximum number of files across all input types is 12 |
 
 ![Image](assets/overview.png)
 
@@ -267,7 +267,29 @@ The following three use cases T2VA, FL2VA, and Ref2VA demonstrate how to reprodu
 | FL2VA | [View script](scripts/readme/reproducible-768p-fl2va-request.sh) | [fl2va.mp4](assets/fl2va.mp4) |
 | Ref2VA | [View script](scripts/readme/reproducible-768p-ref2va-request.sh) | [ref2va.mp4](assets/ref2va.mp4) |
 
-### Full 2K\-Workflow
+#### Using a local image/video instead of a remote URL
+
+The reproducible scripts above reference `conditions[].uri` values hosted on a public CDN so they work out of the box, but `uri` is not limited to `http(s)://`. For local testing you can point it at a `file://` path instead — for example, to swap the FL2VA keyframe for your own image:
+
+```json
+"conditions": [
+  {
+    "type": "image",
+    "uri": "file:///data/minimax-h3/my-keyframe.png",
+    "role": "keyframe",
+    "frame_index": 0
+  }
+]
+```
+
+The path is resolved by the SGLang server process, not by the machine running `curl`, so it must point to a file the server can actually see:
+
+- If `sglang serve` runs natively on the host, any absolute path readable by that process works.
+- If it runs in a container, the file must live inside a directory you mounted into the container (e.g. mount a host folder to `/data/minimax-h3` and reference `file:///data/minimax-h3/...`).
+
+See the [MiniMax-H3 SGLang cookbook](https://docs.sglang.io/cookbook/diffusion/MiniMax/MiniMax-H3) for the full list of supported condition/media options.
+
+### Full 2K Workflow
 
 This section explains how to combine a locally deployed SGLang service with the official **H3\-Context\-IR** and **H3\-Regenerate\-2K** APIs to reproduce the quality of 2K videos generated directly by the MiniMax API\.
 Before you begin, configure the SGLang endpoint and your MiniMax API credentials:
