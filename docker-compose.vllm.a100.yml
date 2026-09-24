@@ -52,7 +52,8 @@ services:
 
       - --omni
       - --task-type
-      - t2va
+      # - t2va
+      - ref2va
 
       - --host
       - 0.0.0.0
@@ -88,7 +89,10 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
 
-      # A100 顶配：40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
+      # # A100 顶配：t2va，40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
+      # - --dlo-resident-layers
+      # - "46"
+      # A100 顶配：ref2va，40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
       - --dlo-resident-layers
       - "46"
 
@@ -108,7 +112,7 @@ services:
       - /data/minimax-h3:/data/minimax-h3:ro
 
     environment:
-      CUDA_VISIBLE_DEVICES: "0,1"
+      # CUDA_VISIBLE_DEVICES: "0,1"
       VLLM_WORKER_MULTIPROC_METHOD: spawn
       VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
 
@@ -127,7 +131,8 @@ services:
           memory: 256g
           devices:
             - driver: nvidia
-              count: 2
+              # count: 2
+              device_ids: [2, 3]
               capabilities:
                 - gpu
 
@@ -139,7 +144,7 @@ services:
           "-c",
           "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200 else 1)"
         ]
-      interval: 30s
+      interval: 300s
       timeout: 10s
       retries: 2
       start_period: 600s

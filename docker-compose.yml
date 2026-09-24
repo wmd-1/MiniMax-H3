@@ -164,14 +164,15 @@ services:
           memory: 256g              # soft reservation（与 service 级 mem_reservation 一致），仅保底不被挤占，非 SWAP 限制
           devices:
             - driver: nvidia
-              count: 2
+              # count: 2
+              device_ids: [2, 3]
               capabilities: [gpu]
         # 注：SWAP 硬限制由 service 级 mem_limit/memswap_limit 实现（见上方），
         # 此处不再设 limits.memory，避免与 service 级 mem_limit 语义冲突。
 
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
-      interval: 30s
+      interval: 300s
       timeout: 30s
       retries: 2
       start_period: 600s
