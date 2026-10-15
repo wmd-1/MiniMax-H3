@@ -1,0 +1,21 @@
+subject_definitions:
+<Picture 1> is the top-of-screen enterprise switcher (image3.png), shown as the video's opening frame, depicting the multi-enterprise switching control.
+<Picture 2> is the 交薪通 home page showing the application entry grid (image2.png), used as the transition source that scales away at the end.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on the enterprise switcher <Picture 1>, then cuts to the home page <Picture 2> which scales away in a fade-out as the next-episode caption appears, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1]): fully_preserved - the enterprise switcher layout is retained during the opening hold.
+<Picture 2> ([Shot 2]): partially_preserved - the home page layout is retained as the transition source, then scaled and faded out before the ending.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and 交薪通 rendered as plain text only.
+[Shot 1] The video opens on <Picture 1>, the top of the screen showing the enterprise switcher with the current enterprise name and the switching control. A large caption "切换企业" is fixed near the top with wide margins. The narrator (S1), a steady Chinese business voice at a moderate pace, says, <d>[Chinese] 身兼多企的，点顶部切换企业。</d> The frame holds on the switcher with a short reading pause.
+[Shot 2] At 00:07.000, the shot cuts to <Picture 2>, the 交薪通 home page with its application entry grid. The narrator (S1) continues, <d>[Chinese] 后面我们逐个看，每个功能怎么用。</d> As the line finishes, the home page scales up gently and fades out in a soft transition, while a large caption "下一集：首页与个人中心" fades in and holds centered with wide margins; the closing caption remains on screen calmly to the final frame.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A

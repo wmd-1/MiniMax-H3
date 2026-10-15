@@ -1,0 +1,18 @@
+subject_definitions:
+<Picture 1> is the administrator's web-based employee roster page (image133.png), shown as the video's opening frame, depicting the 花名册录入 interface on a desktop browser layout.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on a slow pan-and-push over the administrator roster page <Picture 1>, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1]): fully_preserved - the roster page layout and its form fields are retained throughout the pan-and-push.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and 交薪通 rendered as plain text only.
+[Shot 1] The video opens on <Picture 1>, the administrator's web-based employee roster page shown in a desktop browser layout, framed within the vertical canvas with clear margins. The camera pans laterally and pushes in very slowly across the roster form, keeping the name, phone-number, and ID-number fields readable as it moves, and settles on the completed roster fields in the final seconds. A large caption "第一步：将员工录入花名册" is fixed near the top with wide margins. The narrator (S1), a steady Chinese business voice at a moderate pace, says, <d>[Chinese] 员工要登录，管理员先做准备。在网页花名册录入员工信息。姓名、手机号、身份证都要填。</d> Short reading pauses separate the sentences. The frame holds on the roster fields to the end.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A

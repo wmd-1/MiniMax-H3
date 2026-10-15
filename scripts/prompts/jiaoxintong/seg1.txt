@@ -1,0 +1,24 @@
+subject_definitions:
+<Picture 1> is the unified opening title card (first_shot.png) provided by the user, used as the first frame of the target video.
+<Picture 2> is the first page of the external-channel registration flow (image4.png), showing the 交薪通 channel registration page layout.
+<Picture 3> is the second page of the external-channel login flow (image5.png), showing the phone-number and verification-code login form.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on <Picture 1> with a Chinese title sliding in, then demonstrates the external-channel registration and verification-code login of the 交薪通 employee mini-program, using <Picture 2> and <Picture 3> as concrete screen anchors, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1] first frame): fully_preserved - the title-card composition is retained as the video's first frame before the animated title takes over.
+<Picture 2> ([Shot 2]): fully_preserved - the registration page layout and content are retained during the slow push-in.
+<Picture 3> ([Shot 3]): fully_preserved - the verification-code login page is retained during the cross-fade and final hold.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and the name 交薪通 always rendered as plain text without imitating any official logo.
+[Shot 1] The video begins from <Picture 1>, the unified title card held as a static full-frame image. The Chinese title "快速上手与扫码入职" slides up from the bottom edge into the lower third, settles with a slight scale-down snap, and stays locked with a calm reading pause. No narration yet; only quiet room tone.
+[Shot 2] At 00:04.000, the title card dissolves into <Picture 2>, the first page of the external-channel registration flow displayed full-frame. The camera pushes in slowly and evenly, keeping every form field readable. A large caption "交薪通渠道登记" is fixed near the top with wide margins. The narrator (S1), a steady Chinese business voice at a moderate pace, says, <d>[Chinese] 在外部渠道看到交薪通。点击链接进入登记页。</d>
+[Shot 3] At 00:09.500, a gentle cross-fade brings in <Picture 3>, the second page of the external-channel login showing the phone-number and verification-code fields. The push-in settles and the frame holds on the login page; the caption "交薪通渠道登记" remains. The narrator (S1) continues with a brief reading pause before the line, <d>[Chinese] 用手机号和验证码登录。</d> The frame holds to the end.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A

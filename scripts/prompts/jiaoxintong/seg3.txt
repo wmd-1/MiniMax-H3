@@ -1,0 +1,21 @@
+subject_definitions:
+<Picture 1> is the scan-to-onboard phone-number verification page (image8.png), shown as the video's opening frame, depicting the 手机号验证 step of the onboarding flow.
+<Picture 2> is the onboarding application form page (image9.png), showing the 入职申请信息填写 layout.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on the onboarding verification page <Picture 1> with a zoom push-in, then slides in the onboarding form page <Picture 2>, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1]): fully_preserved - the verification page layout is retained during the zoom push-in.
+<Picture 2> ([Shot 2]): fully_preserved - the onboarding form page layout is retained during the slide-in and hold.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and 交薪通 rendered as plain text only.
+[Shot 1] The video opens on <Picture 1>, the scan-to-onboard phone-number verification page displayed full-frame. The camera zooms in smoothly and moderately, keeping the verification fields centered and readable. A large caption "扫码入职" is fixed near the top with wide margins. The narrator (S1), a steady Chinese business voice at a moderate pace, says, <d>[Chinese] 待入职的员工，扫码进入入职流程。先验证手机号。</d>
+[Shot 2] At 00:08.000, <Picture 2>, the onboarding application form page, slides in from the right and settles full-frame, showing the 入职申请信息填写 layout with its form fields and material-upload areas. The caption "扫码入职" remains. The narrator (S1) continues with a short reading pause, <d>[Chinese] 再填写入职信息和材料。</d> The frame holds on the form page to the end.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A

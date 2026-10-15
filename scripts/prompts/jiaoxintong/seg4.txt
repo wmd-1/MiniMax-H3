@@ -1,0 +1,18 @@
+subject_definitions:
+<Picture 1> is the onboarding application form page (image9.png), shown as the video's opening frame and held statically throughout, depicting the 入职申请信息填写 layout.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on a static hold of the onboarding form page <Picture 1> while tip callouts fade in one after another, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1]): fully_preserved - the form page layout is retained statically; only overlaid tip callouts are added on top.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and 交薪通 rendered as plain text only.
+[Shot 1] The video opens on <Picture 1>, the onboarding application form page, which stays completely static and full-frame for the whole clip. A concise tip callout "保存可继续编辑" fades in over the lower area with wide margins around 00:02.000. The narrator (S1), a steady Chinese business voice at a deliberate, moderate pace, says, <d>[Chinese] 注意，保存后还能继续编辑。</d> A second callout "提交后不可改" fades in below it around 00:07.000, and the narrator (S1) continues after a short reading pause, <d>[Chinese] 提交后就不能再修改了。</d> Nothing on the page itself moves; the static frame with both callouts holds calmly to the end.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A

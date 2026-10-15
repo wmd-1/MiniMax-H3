@@ -1,0 +1,21 @@
+subject_definitions:
+<Picture 1> is the 了解交薪通 product-introduction page (image6.png), shown as the video's opening frame.
+<Picture 2> is the 联系客户经理 QR-code dialog (image7.png); the QR-code area inside it is blurred and treated as demo data, never shown as a scannable real QR code.
+
+summary:
+[keyframe completion + reference generation] The target video is a vertical 9:16 corporate product-demonstration clip. It opens on the product-introduction page <Picture 1> and then cuts to the customer-manager QR-code dialog <Picture 2> with its code area blurred, narrated by a steady Chinese business voice (S1).
+
+retention_analysis:
+<Picture 1> ([Shot 1]): fully_preserved - the introduction page layout is retained during the fade-in and hold.
+<Picture 2> ([Shot 2]): partially_preserved - the dialog layout is retained, but the QR-code area is blurred as demo data instead of shown as a scannable code.
+
+detailed_description:
+The target video is a vertical 9:16 corporate product-demonstration clip in a clean, formal business style: flat real UI screens, generous safe margins, large legible captions, no HUD, no exaggerated glow, and 交薪通 rendered as plain text only.
+[Shot 1] The video opens on <Picture 1>, the 了解交薪通 product-introduction page, fading in gently and holding steady for several seconds so the page can be read at leisure. A large caption "了解交薪通" is fixed near the top with wide margins. The narrator (S1), a steady Chinese business voice at a moderate pace, says, <d>[Chinese] 想了解产品，点'了解交薪通'。想咨询，输入企业名称。</d>
+[Shot 2] At 00:08.000, the shot cuts to <Picture 2>, the 联系客户经理 dialog floating over a dimmed background; the QR-code area inside the dialog is clearly blurred as demo data and is never presented as a scannable real code. The caption changes to "联系客户经理". The narrator (S1) continues with a short reading pause, <d>[Chinese] 点'联系客户经理'扫码沟通。二维码已做演示处理。</d> The frame holds on the blurred dialog to the end.
+
+overall_soundscape:
+Clean studio-quiet room tone throughout, with no ambience effects and no UI sounds.
+
+non_diegetic_music:
+N/A
