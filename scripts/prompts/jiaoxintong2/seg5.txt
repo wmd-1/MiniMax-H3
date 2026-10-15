@@ -1,0 +1,18 @@
+subject_definitions:
+<Picture 1> is a screenshot of the administrator's web-based employee roster (花名册) page, used as the concrete frame pushed in from the right, with a roster table, an add button, and a form modal containing name, phone-number and ID-number fields.
+
+summary:
+[keyframe completion + reference generation] The target video is a 12-second vertical 9:16 product-demo segment for 交薪通. The previous frame slides out to the left and <Picture 1> pushes in from the right without any rotation, showing an administrator entering an employee into the roster via a form modal. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] pushed-in page): fully_preserved - the roster page layout, add button, form modal and its name, phone and ID fields are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography, cursor press feedback and field-focus highlight rings.
+[Shot 1] The frame performs a transition: the current view slides out to the left, and <Picture 1>, the administrator's web roster page, pushes in from the right in a flat, upright motion with no rotation. The scene simulates an administrator operating on the web page. The cursor moves to the roster's add (新增) button and clicks it with a press feedback; at about 00:04.000, a form modal slides in from the right side of the screen. The cursor fills the fields in sequence: first the 姓名 (name) field, then the 手机号 (phone number) field, then the 身份证 (ID number) field. Each time a field gains focus, its border lights up in a clear highlight before the characters are typed in. A caption "第一步：将员工录入花名册" appears in large clean type at the top. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 员工要登录，管理员先做准备。</d> then <d>[Chinese] 在网页花名册录入员工信息。</d> and finally <d>[Chinese] 姓名、手机号、身份证都要填。</d>, pausing briefly as each field lights up.
+
+overall_soundscape:
+Quiet office-like room tone; soft UI clicks and a gentle modal-slide whoosh.
+
+non_diegetic_music:
+N/A

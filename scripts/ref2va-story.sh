@@ -17,7 +17,8 @@ echo "[log] start    : $(date '+%F %T')"
 # =========================
 #
 # 读取 4 段分镜提示词 + 3 张参考图（dxb/hxr/logo，分别对应 <Subject 1/2/3>），
-# 逐段调用 /v1/videos/sync 生成视频。每段一张 MP4：story_seg1.mp4 ... story_seg4.mp4。
+# 逐段调用 /v1/videos/sync 生成视频。每段一张 MP4，名称 = OUTPUT_PREFIX + 段提示词文件名
+# （如 seg3.txt -> story_seg3.mp4），不再按循环序号命名。
 #
 # 重要：本提示词里 3 张参考图是按「角色 subject」锚定的，不是按段落锚定的——
 # 每一段都同时引用 <Subject 1>(dxb) / <Subject 2>(hxr) / <Subject 3>(logo) 三个主体。
@@ -43,6 +44,7 @@ echo "[log] start    : $(date '+%F %T')"
 # 其它可调环境变量：DURATION(每段秒,默认15) / ASPECT_RATIO(默认adaptive) /
 #   SHORT_EDGE(768) / FPS(24) / STEPS(50) / FLOW_SHIFT(12) /
 #   AUDIO_FLOW_SHIFT(3) / SEED(3100) / HOST / PORT。
+#   OUTPUT_PREFIX(story_)  输出名 = 前缀 + 段提示词文件名 stem，如 seg3.txt -> story_seg3.mp4
 #
 # 注：服务端需以 --task-type ref2va 启动。
 
@@ -58,6 +60,7 @@ STEPS="${STEPS:-50}"
 FLOW_SHIFT="${FLOW_SHIFT:-12}"
 AUDIO_FLOW_SHIFT="${AUDIO_FLOW_SHIFT:-3}"
 SEED="${SEED:-3100}"
+OUTPUT_PREFIX="${OUTPUT_PREFIX:-story_}"
 
 # 单段同步请求最长等待时间（秒），默认 3 小时
 REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
@@ -69,18 +72,17 @@ if [ -z "${SEGMENT_FILES:-}" ]; then
   for i in 1 2 3 4; do
     SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt")
   done
-fi
-# 支持空格分隔字符串或已展开的数组
-if [ "${#SEGMENT_FILES[@]}" -eq 1 ]; then
-  read -ra SEGMENT_FILES <<< "${SEGMENT_FILES[0]}"
+else
+  # 环境里传的是空格分隔字符串（bash 数组无法经环境传递），直接切分成数组。
+  # 不要对这种标量用 ${#VAR[@]} 或 ${VAR[0]}：set -u 下会报 unbound variable。
+  read -ra SEGMENT_FILES <<< "${SEGMENT_FILES}"
 fi
 
 # ---------- 参考图（按 subject：默认 3 张） ----------
 if [ -z "${REF_IMAGES:-}" ]; then
   REF_IMAGES=("dxb.png" "hxr.png" "logo.png")
-fi
-if [ "${#REF_IMAGES[@]}" -eq 1 ]; then
-  read -ra REF_IMAGES <<< "${REF_IMAGES[0]}"
+else
+  read -ra REF_IMAGES <<< "${REF_IMAGES}"
 fi
 
 N_SEG=${#SEGMENT_FILES[@]}
@@ -149,15 +151,27 @@ gen_one() {  # $1=prompt_file $2=output
   echo "    end  : $(date '+%F %T')"
 }
 
+# 输出名由段提示词文件名推导（不用循环序号）：stem(seg3.txt)=seg3 -> ${OUTPUT_PREFIX}seg3.mp4
+# 这样单独重跑某一阶段（SEGMENT_FILES=.../seg3.txt）时，输出名不会变成 seg1 而错位/覆盖。
+seg_out() {  # $1=prompt_file
+  local stem; stem="$(basename "$1")"; stem="${stem%.*}"
+  printf '%s%s.mp4' "${OUTPUT_PREFIX}" "${stem}"
+}
+
+OUT_FILES=()
 for ((s=0; s<N_SEG; s++)); do
-  out="story_seg$((s+1)).mp4"
-  echo "[$((s+1))/$((N_SEG+1))] 段$((s+1)) (${N_REF}张参考图) -> ${out}"
+  out="$(seg_out "${SEGMENT_FILES[s]}")"
+  echo "[$((s+1))/$((N_SEG+1))] ${out} <- ${SEGMENT_FILES[s]} (${N_REF}张参考图)"
   gen_one "${SEGMENT_FILES[s]}" "${out}"
   ls -lh "${out}"
+  OUT_FILES+=("${out}")
 done
 
 echo
 echo "========================================"
-echo "All segments completed"
+echo "All segments completed:"
+for o in "${OUT_FILES[@]}"; do echo "  ${o}"; done
+echo "如需顺序拼接为整片："
+echo "  ffmpeg -y -f concat -safe 0 -i <(printf \"file '%s'\\n\" ${OUT_FILES[*]}) -c copy ${OUTPUT_PREFIX}full.mp4"
 echo "========================================"
 echo "[log] end      : $(date '+%F %T')"

@@ -1,0 +1,24 @@
+subject_definitions:
+<Picture 1> is a screenshot of the WeChat search page where "交通银行" is searched to find the mini program, used as the concrete frame after the zoom-through transition back to the phone.
+<Picture 2> is a screenshot of the mini program page containing the 交薪通 entry, pushed in from the right.
+<Picture 3> is a screenshot of the 交薪通 mini-program login page with a phone-number input, a verification-code input and a login button, pushed in next.
+<Picture 4> is a screenshot of the employee's logged-in 交薪通 home page, popping in at the end.
+
+summary:
+[keyframe completion + reference generation] The target video is a 15-second vertical 9:16 product-demo segment for 交薪通. After a zoom-through transition back to the phone, it shows the WeChat search <Picture 1>, the mini-program entry <Picture 2>, the login page <Picture 3>, and the logged-in home <Picture 4> in strict order. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] search page): fully_preserved - the WeChat search page layout and search box are retained.
+<Picture 2> ([Shot 2] entry page): fully_preserved - the mini-program page and the 交薪通 entry are retained.
+<Picture 3> ([Shot 3] login page): fully_preserved - the login page layout, inputs and login button are retained.
+<Picture 4> ([Shot 3] home page): fully_preserved - the logged-in home layout is retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography, cursor press feedback and ripples, staggered list reveals, and push/pull transitions.
+[Shot 1] The frame zooms through a scale transition back onto the phone screen, landing on <Picture 1>, the WeChat search page. The cursor clicks the search box with a press feedback; the keyboard rises; the text "交通银行" types in; the search-result list floats up from below, items appearing one after another. At about 00:05.500, the cursor clicks the mini-program icon and <Picture 2>, the mini-program page, pushes in from the right. The cursor clicks the "交薪通" entry with a press ripple. At about 00:09.000, <Picture 3>, the login page, pushes in. The cursor clicks the phone-number input, the number fills in, the verification code rolls in, and the cursor clicks the login button with a clear press feedback. At about 00:13.000, <Picture 4>, the logged-in home page, pops in with a soft scale settle and holds through the end. A caption "登录交薪通" appears in large clean type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 录入完成后，员工打开微信。</d> then <d>[Chinese] 搜索交通银行小程序。</d> then <d>[Chinese] 找到交薪通入口。</d> and finally <d>[Chinese] 用手机号和验证码登录。</d>, pausing briefly at each screen change.
+
+overall_soundscape:
+Quiet room tone; soft UI clicks, keyboard ticks, a list-rise swish and a gentle push-in whoosh.
+
+non_diegetic_music:
+N/A

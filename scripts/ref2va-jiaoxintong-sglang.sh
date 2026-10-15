@@ -49,7 +49,7 @@ command -v jq >/dev/null 2>&1 || {
 # 默认：竖屏 9:16、每段 15s、段提示词 scripts/prompts/jiaoxintong/seg{1..8}.txt。
 # 其它：DURATION(15) / SHORT_EDGE(768) / ASPECT_RATIO(9:16) / SEED(3101) / HOST / PORT(30010)
 #   FLOW_SHIFT(12.0) / AUDIO_FLOW_SHIFT(3.0) / STEPS(50) / NUM_OUTPUTS(1) / MODEL(MiniMaxAI/MiniMax-H3)
-#   OUTPUT_PREFIX(jiaoxintong_seg)  输出为 ${OUTPUT_PREFIX}{i}.mp4
+#   OUTPUT_PREFIX(jiaoxintong_)  输出名 = 前缀 + 段提示词文件名 stem，如 seg3.txt -> jiaoxintong_seg3.mp4
 #
 # 覆盖段/图（高级）：
 #   SEGMENT_FILES="a.txt b.txt"                    # 空格分隔的段提示词文件
@@ -69,26 +69,30 @@ FLOW_SHIFT="${FLOW_SHIFT:-12.0}"
 AUDIO_FLOW_SHIFT="${AUDIO_FLOW_SHIFT:-3.0}"
 NUM_OUTPUTS="${NUM_OUTPUTS:-1}"
 SEED="${SEED:-3101}"
-OUTPUT_PREFIX="${OUTPUT_PREFIX:-jiaoxintong_seg}"
+OUTPUT_PREFIX="${OUTPUT_PREFIX:-jiaoxintong_}"
 IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/}"
 
 # -------------------------
-# 每段参考图（内置默认；顺序即 <Picture 1..N>；只写文件名，脚本自动拼到 IMAGE_PREFIX 下）
+# 每段参考图：按「段号」索引（段号取自提示词文件名 stem，如 seg5.txt -> 5）
+#   顺序即 <Picture 1..N>；只写文件名，脚本自动拼到 IMAGE_PREFIX 下。
+#   按段号取值的好处：只重跑其中一段时，参考图依然对得上。
 # -------------------------
-SEG_IMG_1="first_shot.png image4.png image5.png"
-SEG_IMG_2="image6.png image7.png"
-SEG_IMG_3="image8.png image9.png"
-SEG_IMG_4="image9.png"
-SEG_IMG_5="image133.png"
-SEG_IMG_6="image134.png image135.png image1.png image136.png"
-SEG_IMG_7="image1.png image2.png"
-SEG_IMG_8="image3.png image2.png"
+declare -A SEG_IMG_BY_IDX=(
+  [1]="first_shot.png image4.png image5.png"
+  [2]="image6.png image7.png"
+  [3]="image8.png image9.png"
+  [4]="image9.png"
+  [5]="image133.png"
+  [6]="image134.png image135.png image1.png image136.png"
+  [7]="image1.png image2.png"
+  [8]="image3.png image2.png"
+)
 
-if [ -z "${SEGMENT_IMAGES_STR:-}" ]; then
-  SEG_IMG_LIST=( "$SEG_IMG_1" "$SEG_IMG_2" "$SEG_IMG_3" "$SEG_IMG_4" "$SEG_IMG_5" "$SEG_IMG_6" "$SEG_IMG_7" "$SEG_IMG_8" )
+# 显式覆盖（用 | 逐段给定，须与段数一致）；不覆盖则按段号查上面的表
+if [ -n "${SEGMENT_IMAGES_STR:-}" ]; then
+  IFS='|' read -ra SEG_IMG_LIST <<< "${SEGMENT_IMAGES_STR}"; IMG_OVERRIDE=1
 else
-  # 用 | 分隔每段
-  IFS='|' read -ra SEG_IMG_LIST <<< "${SEGMENT_IMAGES_STR}"
+  SEG_IMG_LIST=(); IMG_OVERRIDE=0
 fi
 
 # -------------------------
@@ -98,15 +102,16 @@ if [ -z "${SEGMENT_FILES:-}" ]; then
   SEGMENT_DIR="${SEGMENT_DIR:-scripts/prompts/jiaoxintong}"
   SEGMENT_FILES=()
   for i in 1 2 3 4 5 6 7 8; do SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt"); done
+else
+  # 环境里传的是空格分隔字符串（bash 数组无法经环境传递），直接切分成数组。
+  # 不要对这种标量用 ${#VAR[@]} 或 ${VAR[0]}：set -u 下会报 unbound variable。
+  read -ra SEGMENT_FILES <<< "${SEGMENT_FILES}"
 fi
-[ "${#SEGMENT_FILES[@]}" -eq 1 ] && read -ra SEGMENT_FILES <<< "${SEGMENT_FILES[0]}"
 
 N_SEG=${#SEGMENT_FILES[@]}
-N_IMG=${#SEG_IMG_LIST[@]}
 
-if [ "$N_SEG" -ne "$N_IMG" ]; then
-  echo "错误：段数(${N_SEG}) 与 参考图分组数(${N_IMG}) 不一致。"
-  echo "      请检查 SEGMENT_FILES 与 SEGMENT_IMAGES_STR（用 | 分隔每段）是否对应。"
+if [ "$IMG_OVERRIDE" -eq 1 ] && [ "$N_SEG" -ne "${#SEG_IMG_LIST[@]}" ]; then
+  echo "错误：段数(${N_SEG}) 与 SEGMENT_IMAGES_STR 的分组数(${#SEG_IMG_LIST[@]}) 不一致（用 | 分隔每段）。"
   exit 1
 fi
 
@@ -187,6 +192,27 @@ build_body() {  # $1=prompt_file  $2=conditions_json  -> stdout = body.json
     "$1"
 }
 
+# 从段提示词文件名推段号：seg5.txt -> 5；取不到数字时回退为位置序号
+seg_idx() {  # $1=prompt_file  $2=0-based position
+  local stem num
+  stem="$(basename "$1")"; stem="${stem%.*}"
+  num="$(printf '%s' "$stem" | grep -oE '[0-9]+' | tail -1 || true)"
+  if [ -n "$num" ]; then printf '%s' "$((10#$num))"; else printf '%s' "$(( $2 + 1 ))"; fi
+}
+
+# 取某段参考图（显式覆盖走位置序号，否则走段号查表）
+seg_imgs() {  # $1=prompt_file  $2=0-based position
+  if [ "$IMG_OVERRIDE" -eq 1 ]; then printf '%s' "${SEG_IMG_LIST[$2]}"; return; fi
+  printf '%s' "${SEG_IMG_BY_IDX[$(seg_idx "$1" "$2")]:-}"
+}
+
+# 输出名由段提示词文件名推导（不用循环序号）：stem(seg3.txt)=seg3 -> ${OUTPUT_PREFIX}seg3.mp4
+# 这样单独重跑某一阶段（SEGMENT_FILES=.../seg3.txt）时，输出名不会变成 seg1 而错位/覆盖。
+seg_out() {  # $1=prompt_file
+  local stem; stem="$(basename "$1")"; stem="${stem%.*}"
+  printf '%s%s.mp4' "${OUTPUT_PREFIX}" "${stem}"
+}
+
 echo "========================================"
 echo "MiniMax-H3 sglang Ref2VA —— 交薪通 8 段分镜（每段独立参考图）"
 echo "========================================"
@@ -195,18 +221,25 @@ echo "Model      : ${MODEL}"
 echo "ImagePrefix: ${IMAGE_PREFIX:-<空/相对当前目录>}"
 echo "Duration   : ${DURATION}s/段 (seconds=${SECONDS_INT})"
 echo "Aspect     : ${ASPECT_RATIO}  ShortEdge: ${SHORT_EDGE}"
-echo "Steps/Flow : ${STEPS}/${FLOW_SHIFT}/${AUDIO_FLOW_SHIFT}  Seed: ${SEED}  Out: ${OUTPUT_PREFIX}{i}.mp4"
+echo "Steps/Flow : ${STEPS}/${FLOW_SHIFT}/${AUDIO_FLOW_SHIFT}  Seed: ${SEED}  Out: ${OUTPUT_PREFIX}<段名>.mp4"
 echo "Log file   : ${LOG_FILE}"
 echo "段数       : ${N_SEG}"
 echo "----------------------------------------"
 for ((s=0; s<N_SEG; s++)); do
-  echo "  段$((s+1)) <- ${SEGMENT_FILES[s]}   参考图: ${SEG_IMG_LIST[s]:-<空>}"
+  read -ra _chk <<< "$(seg_imgs "${SEGMENT_FILES[s]}" "$s")"
+  echo "  段$((s+1)) <- ${SEGMENT_FILES[s]}   参考图: $(seg_imgs "${SEGMENT_FILES[s]}" "$s")  (${#_chk[@]} 张)"
 done
 echo "========================================"
 
-# 先做一次全量参考图存在性校验，避免跑到中途才失败
+# 先做一次全量参考图校验（缺图/查不到段号对应图则立即中止，避免跑到中途才失败）
 for ((s=0; s<N_SEG; s++)); do
-  read -ra _imgs <<< "${SEG_IMG_LIST[s]:-}"
+  _imgs_i="$(seg_imgs "${SEGMENT_FILES[s]}" "$s")"
+  if [ -z "${_imgs_i// /}" ]; then
+    echo "错误：${SEGMENT_FILES[s]} 未解析到参考图（段号 $(seg_idx "${SEGMENT_FILES[s]}" "$s") 不在内置表里）。"
+    echo "      请用 SEGMENT_IMAGES_STR=\"图1 图2|图3\" 显式指定每段参考图。"
+    exit 1
+  fi
+  read -ra _imgs <<< "${_imgs_i}"
   validate_images "${_imgs[@]}"
 done
 
@@ -347,28 +380,33 @@ gen_one() {
 
 # ===== 主循环：任一段失败也不中止整个脚本 =====
 FAILED=()
+OUT_FILES=()
 for ((s=0; s<N_SEG; s++)); do
-  out="${OUTPUT_PREFIX}$((s+1)).mp4"
-  read -ra _imgs <<< "${SEG_IMG_LIST[s]:-}"
+  out="$(seg_out "${SEGMENT_FILES[s]}")"
+  imgs_i="$(seg_imgs "${SEGMENT_FILES[s]}" "$s")"
+  read -ra _imgs <<< "${imgs_i}"
   cond_json="$(build_conditions "${_imgs[@]}")"
-  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}   (参考图 ${#_imgs[@]} 张: ${SEG_IMG_LIST[s]:-<空>}  开始 $(date '+%F %T'))"
+  echo "[$((s+1))/${N_SEG}] ${out} <- ${SEGMENT_FILES[s]}   (参考图 ${#_imgs[@]} 张: ${imgs_i:-<空>}  开始 $(date '+%F %T'))"
   if gen_one "${SEGMENT_FILES[s]}" "${cond_json}" "${out}"; then
     ls -lh "${out}" 2>/dev/null || true
     echo "    完成时刻: $(date '+%F %T')"
+    OUT_FILES+=("${out}")
   else
-    echo "  !!! 段$((s+1)) 最终失败（$(date '+%F %T')），继续下一段..."
-    FAILED+=("$((s+1))")
+    echo "  !!! ${out} 最终失败（$(date '+%F %T')），继续下一段..."
+    FAILED+=("${out}")
   fi
 done
 
 echo
 echo "========================================"
 if [ "${#FAILED[@]}" -eq 0 ]; then
-  echo "All ${N_SEG} segments completed -> ${OUTPUT_PREFIX}1.mp4 ... ${OUTPUT_PREFIX}${N_SEG}.mp4"
+  echo "All ${N_SEG} segments completed:"
+  for o in "${OUT_FILES[@]}"; do echo "  ${o}"; done
   echo "如需拼接为整片（顺序拼接，全部同规格 9:16/768 短边）："
-  echo "  ffmpeg -y -f concat -safe 0 -i <(for i in \$(seq 1 ${N_SEG}); do echo \"file '${OUTPUT_PREFIX}\$i.mp4'\"; done) -c copy ${OUTPUT_PREFIX}full.mp4"
+  echo "  ffmpeg -y -f concat -safe 0 -i <(printf \"file '%s'\\n\" ${OUT_FILES[*]}) -c copy ${OUTPUT_PREFIX}full.mp4"
 else
-  echo "完成，但以下段失败：${FAILED[*]}（可单独用 SEGMENT_FILES / SEGMENT_IMAGES_STR 重跑对应段）"
+  echo "完成，但以下段失败：${FAILED[*]}"
+  echo "  可单独重跑对应段（输出名跟段提示词文件名走，不会错位）：SEGMENT_FILES=<该段.txt> bash $0"
 fi
 echo "========================================"
 echo "[log] end      : $(date '+%F %T')"

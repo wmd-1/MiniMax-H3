@@ -1,0 +1,20 @@
+subject_definitions:
+<Picture 1> is a screenshot of the "了解交薪通" product-introduction page, used as the concrete frame the camera pushes into, with an introduction button, an enterprise-name input and a "联系客户经理" button.
+<Picture 2> is a screenshot of the customer-manager contact popup containing a QR code; the QR-code area must be rendered blurred as demonstration data and must never appear as a scannable real code.
+
+summary:
+[keyframe completion + reference generation] The target video is a 15-second vertical 9:16 product-demo segment for 交薪通. The camera pushes into <Picture 1>, demonstrates scrolling the introduction feed, typing an enterprise name, and opening the contact popup <Picture 2> whose QR code stays blurred. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] focus target): fully_preserved - the introduction page layout, buttons and input field are retained.
+<Picture 2> ([Shot 2] popup content): partially_preserved - the popup layout is retained, but the QR-code area is intentionally blurred into demonstration data and never shown sharp.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography, cursor press feedback and ripples, staggered reveal on scroll, and push transitions.
+[Shot 1] The frame pushes in smoothly and converges onto <Picture 1>, the "了解交薪通" introduction page, its edges dimming slightly. A cursor moves to the "了解交薪通" button and clicks it; the button enlarges slightly with a ripple. The page then scrolls vertically and the introduction information blocks float in one after another, each block holding clearly legible for at least two seconds as the feed passes. At about 00:07.500, the view cuts back to the input area of <Picture 1>; the cursor clicks the enterprise-name input and the name is typed in character by character. The cursor then clicks the "联系客户经理" button with a press ripple. At about 00:11.500, a popup rises from the bottom of the screen showing <Picture 2>, the customer-manager contact card, with its QR-code area kept blurred as demonstration data; the popup settles and stays clearly visible through the end. A caption "了解交薪通 / 联系客户经理" appears in large clean type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 想了解产品，点'了解交薪通'。</d> then <d>[Chinese] 想咨询，输入企业名称。</d> then <d>[Chinese] 点'联系客户经理'扫码沟通。</d> and finally <d>[Chinese] 二维码已做演示处理。</d>, pausing briefly as each on-screen element settles.
+
+overall_soundscape:
+Quiet room tone; soft UI clicks, a light scroll swish, and a gentle popup-rise whoosh.
+
+non_diegetic_music:
+N/A

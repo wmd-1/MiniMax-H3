@@ -1,0 +1,18 @@
+subject_definitions:
+<Picture 1> is a screenshot of the onboarding application form page, held on screen with a "保存" button and a "提交" button, used as the concrete focus target of this segment.
+
+summary:
+[keyframe completion + reference generation] The target video is a 10-second vertical 9:16 product-demo segment for 交薪通. It holds on <Picture 1> and pushes in twice, first to the "保存" button area, then to the "提交" button, explaining the save-versus-submit rule. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] held page and focus target): fully_preserved - the form layout, the "保存" button and the "提交" button are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography and smooth push-in focus with slightly dimmed surroundings.
+[Shot 1] The frame stays on <Picture 1>, the onboarding application form, holding steady for a moment so the page is clearly readable. The camera then pushes in gently and focuses on the "保存" button area; a cursor moves in and hovers, and the button takes on a soft glow under the hover. At about 00:05.000, the camera pushes in further toward the "提交" button, the surrounding form dimming slightly as the button becomes the clear focal point. A caption "保存可继续编辑，提交后不可改" appears in large clean type near the buttons. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 注意，保存后还能继续编辑。</d> then <d>[Chinese] 提交后就不能再修改了。</d>, pausing between the two lines so the on-screen caption can be read.
+
+overall_soundscape:
+Quiet room tone; a subtle hover blip and a soft focus-push whoosh.
+
+non_diegetic_music:
+N/A

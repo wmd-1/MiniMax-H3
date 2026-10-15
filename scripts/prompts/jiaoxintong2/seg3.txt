@@ -1,0 +1,20 @@
+subject_definitions:
+<Picture 1> is a screenshot of the 交薪通 scan-to-onboard phone-verification page, with a verification-code input and a "下一步" button, used as the concrete frame after the scan animation.
+<Picture 2> is a screenshot of the onboarding application form page, used as the concrete frame that slides in vertically at the end.
+
+summary:
+[keyframe completion + reference generation] The target video is a 12-second vertical 9:16 product-demo segment for 交薪通's scan-to-onboard flow. A simulated scan animation leads into <Picture 1> for phone verification, then the page slides into <Picture 2> where form fields light up in sequence. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] focus target): fully_preserved - the verification page layout, code input and "下一步" button are retained.
+<Picture 2> ([Shot 2] slid-in page): fully_preserved - the onboarding form layout and its fields are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography, cursor press feedback and ripples, and vertical push/slide transitions.
+[Shot 1] The frame shows a simulated QR scan: a bright horizontal scanline sweeps slowly from top to bottom across the frame. At about 00:03.000, the scan finishes and the frame cuts into <Picture 1>, the phone-verification page of the scan-to-onboard flow. The cursor clicks the verification-code input with a press feedback; digits roll and fill into the field one by one. The cursor then clicks the "下一步" button, which shows a clear press-down state. At about 00:07.500, the page slides vertically and <Picture 2>, the onboarding application form, glides in from the bottom. On <Picture 2>, the form fields light up one after another in order, each highlighted field guiding the eye to fill in personal information and materials. A caption "扫码入职" appears in large clean type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 待入职的员工，扫码进入入职流程。</d> then <d>[Chinese] 先验证手机号。</d> and finally <d>[Chinese] 再填写入职信息和材料。</d>, leaving a short pause while each field lights up.
+
+overall_soundscape:
+Quiet room tone; a soft scan sweep tone, UI clicks, a light digit-roll tick, and a gentle page-slide whoosh.
+
+non_diegetic_music:
+N/A

@@ -1,0 +1,23 @@
+subject_definitions:
+<Picture 1> is the first frame of the target video, a supplied screenshot (first_shot.PNG) serving as the opening still of a vertical 9:16 product-demo video for the 交薪通 employee app.
+<Picture 2> is a screenshot of the 交薪通 external-channel registration first page, with a phone-number input field and a "获取验证码" button, used as the concrete frame the camera focuses into.
+<Picture 3> is a screenshot of the 交薪通 external-channel second page with a verification-code input and a login button, pushed in horizontally as the next screen.
+
+summary:
+[keyframe completion + reference generation] The target video is a 13-second vertical 9:16 product-demo segment for the 交薪通 employee app, formal, steady and clear. It opens on the supplied still <Picture 1> with a title card, then pushes into <Picture 2> for phone-number registration and cuts to <Picture 3> for code login. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] first frame): fully_preserved - the supplied screenshot remains a static still with only the title text animated over it.
+<Picture 2> ([Shot 2] focus target): fully_preserved - the registration page layout, phone-number field and "获取验证码" button are retained.
+<Picture 3> ([Shot 2] pushed-in screen): fully_preserved - the verification-code page layout and login button are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean large typography, generous safe margins, realistic cursor interaction (press feedback and click ripples), and push/pull transitions instead of static cuts.
+[Shot 1] The video opens on the static still <Picture 1>, held motionless as the opening frame. At about 00:00.500, the title text "快速上手与扫码入职" pops in from the bottom edge with a slight scale-down settle and holds, large, sharp and legible. No narration in this shot.
+[Shot 2] At 00:03.000, the whole frame zooms in smoothly from a global view and converges onto <Picture 2>, the external-channel registration page, settling on its phone-number input field while the surrounding edges dim slightly. A cursor moves in and clicks the input area with a soft press and ripple; the on-screen keyboard slides up from the bottom; a phone number types in digit by digit. The cursor then clicks the "获取验证码" button, which shows a press-down state and a subtle ripple. At about 00:08.000, the frame pushes out horizontally and <Picture 3>, the verification-code page, slides in from the right. The cursor clicks the code input, the code fills in, and the cursor clicks the login button with a clear press feedback. A caption "交薪通渠道登记" appears in clean large type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 在外部渠道看到交薪通。</d> then <d>[Chinese] 点击链接进入登记页。</d> and finally <d>[Chinese] 用手机号和验证码登录。</d>, leaving a short reading pause after each caption appears.
+
+overall_soundscape:
+Quiet room tone only; soft UI click sounds and a gentle keyboard tick accompany each cursor interaction.
+
+non_diegetic_music:
+N/A

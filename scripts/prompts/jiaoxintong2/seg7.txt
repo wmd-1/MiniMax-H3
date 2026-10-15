@@ -1,0 +1,18 @@
+subject_definitions:
+<Picture 1> is a screenshot of the 交薪通 login page containing the agreement-update prompt area with a "阅读协议" action, used as the concrete focus target.
+
+summary:
+[keyframe completion + reference generation] The target video is an 8-second vertical 9:16 product-demo segment for 交薪通. It pushes into <Picture 1>'s agreement-update area, where a prompt box pops in from the top and the cursor clicks "阅读协议". A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] focus target): fully_preserved - the login page and its agreement-update prompt area are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography and a smooth push-in focus with slightly dimmed surroundings.
+[Shot 1] The frame starts on <Picture 1>, the 交薪通 login page, then pushes in smoothly and focuses on the agreement-update prompt area near the login controls. At about 00:02.000, the prompt box pops in from the top with a soft settle, clearly legible. The cursor moves to the "阅读协议" action and clicks it with a press feedback and a subtle ripple. A caption "协议更新需先阅读" appears in large clean type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 如果协议有更新。</d> then <d>[Chinese] 要先阅读变更协议才能登录。</d>, pausing between the two lines so the caption can be read.
+
+overall_soundscape:
+Quiet room tone; a soft popup settle and a gentle UI click.
+
+non_diegetic_music:
+N/A

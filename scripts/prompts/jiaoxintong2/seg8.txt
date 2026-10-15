@@ -1,0 +1,20 @@
+subject_definitions:
+<Picture 1> is a screenshot of the 交薪通 home page showing the top company-name bar and the app entry area below it, used as the concrete frame this segment explores.
+<Picture 2> is a screenshot of the enterprise-switch dropdown menu opened from the top company name, appearing when the menu opens.
+
+summary:
+[keyframe completion + reference generation] The target video is a 13-second vertical 9:16 product-demo segment for 交薪通. It shows the <Picture 1> home-page panorama with a top-down reveal of the modules, then opens the enterprise-switch dropdown <Picture 2> and switches companies. A Chinese business narrator (S1) speaks in a measured pace. No background music.
+
+retention_analysis:
+<Picture 1> ([Shot 1] panorama): fully_preserved - the home page layout, top company-name bar and app entry modules are retained.
+<Picture 2> ([Shot 1] dropdown): fully_preserved - the dropdown menu layout and the enterprise entries are retained.
+
+detailed_description:
+The target video is a formal vertical 9:16 UI-demo segment with clean typography, cursor press feedback and ripples, and staggered module reveals.
+[Shot 1] The frame opens on the <Picture 1> home-page panorama. The camera pushes down vertically from the top app area, and the modules appear one after another as the view descends, each module clearly visible in turn. At about 00:06.000, the cursor moves to the company name at the top of <Picture 1> and clicks it with a press feedback; the dropdown menu opens, corresponding to <Picture 2>, sliding down with a soft settle under the company-name bar. At about 00:09.000, the cursor clicks another enterprise in the dropdown; the click shows a press ripple and the enterprise switches. A caption "首页 / 切换企业" appears in large clean type. The narrator (S1), a steady professional Chinese business voice at a moderate pace, says <d>[Chinese] 登录后进入首页。</d> then <d>[Chinese] 员工、假勤、协同办公都能用。</d> and finally <d>[Chinese] 身兼多企的，点顶部切换企业。</d>, pausing briefly as each module is revealed and again while the menu is open.
+
+overall_soundscape:
+Quiet room tone; a soft descending reveal swish, UI clicks and a gentle dropdown settle.
+
+non_diegetic_music:
+N/A

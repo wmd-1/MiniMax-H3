@@ -32,6 +32,7 @@ command -v jq >/dev/null 2>&1 || {
 # 不传参默认：段 scripts/prompts/story/seg{1..4}.txt；参考图 dxb.png/hxr.png/logo.png（当前目录）。
 # 其它：DURATION(15) / SHORT_EDGE(768) / ASPECT_RATIO(auto) / SEED(3101) / HOST / PORT(30010)
 #   FLOW_SHIFT(12.0) / AUDIO_FLOW_SHIFT(3.0) / STEPS(50) / NUM_OUTPUTS(1) / MODEL(MiniMaxAI/MiniMax-H3)
+#   OUTPUT_PREFIX(story_)  输出名 = 前缀 + 段提示词文件名 stem，如 seg3.txt -> story_seg3.mp4
 
 HOST="${HOST:-127.0.0.1}"
 PORT="${PORT:-30010}"
@@ -47,13 +48,17 @@ FLOW_SHIFT="${FLOW_SHIFT:-12.0}"
 AUDIO_FLOW_SHIFT="${AUDIO_FLOW_SHIFT:-3.0}"
 NUM_OUTPUTS="${NUM_OUTPUTS:-1}"
 SEED="${SEED:-3101}"
+OUTPUT_PREFIX="${OUTPUT_PREFIX:-story_}"
 
 if [ -z "${SEGMENT_FILES:-}" ]; then
   SEGMENT_DIR="${SEGMENT_DIR:-scripts/prompts/story}"
   SEGMENT_FILES=()
   for i in 1 2 3 4; do SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt"); done
+else
+  # 环境里传的是空格分隔字符串（bash 数组无法经环境传递），直接切分成数组。
+  # 不要对这种标量用 ${#VAR[@]} 或 ${VAR[0]}：set -u 下会报 unbound variable。
+  read -ra SEGMENT_FILES <<< "${SEGMENT_FILES}"
 fi
-[ "${#SEGMENT_FILES[@]}" -eq 1 ] && read -ra SEGMENT_FILES <<< "${SEGMENT_FILES[0]}"
 
 REF_IMAGE_URIS="${REF_IMAGE_URIS:-dxb.png hxr.png logo.png}"
 read -ra REF_URIS <<< "${REF_IMAGE_URIS}"
@@ -280,25 +285,38 @@ gen_one() {  # $1=prompt_file $2=output
 }
 
 # ===== 主循环：任一段失败也不中止整个脚本 =====
+# 输出名由段提示词文件名推导（不用循环序号）：stem(seg3.txt)=seg3 -> ${OUTPUT_PREFIX}seg3.mp4
+# 这样单独重跑某一阶段（SEGMENT_FILES=.../seg3.txt）时，输出名不会变成 seg1 而错位/覆盖。
+seg_out() {  # $1=prompt_file
+  local stem; stem="$(basename "$1")"; stem="${stem%.*}"
+  printf '%s%s.mp4' "${OUTPUT_PREFIX}" "${stem}"
+}
+
 FAILED=()
+OUT_FILES=()
 for ((s=0; s<N_SEG; s++)); do
-  out="story_seg$((s+1)).mp4"
-  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}  (开始 $(date '+%F %T'))"
+  out="$(seg_out "${SEGMENT_FILES[s]}")"
+  echo "[$((s+1))/${N_SEG}] ${out} <- ${SEGMENT_FILES[s]}  (开始 $(date '+%F %T'))"
   if gen_one "${SEGMENT_FILES[s]}" "${out}"; then
     ls -lh "${out}" 2>/dev/null || true
     echo "    完成时刻: $(date '+%F %T')"
+    OUT_FILES+=("${out}")
   else
-    echo "  !!! 段$((s+1)) 最终失败（$(date '+%F %T')），继续下一段..."
-    FAILED+=("$((s+1))")
+    echo "  !!! ${out} 最终失败（$(date '+%F %T')），继续下一段..."
+    FAILED+=("${out}")
   fi
 done
 
 echo
 echo "========================================"
 if [ "${#FAILED[@]}" -eq 0 ]; then
-  echo "All segments completed"
+  echo "All segments completed:"
+  for o in "${OUT_FILES[@]}"; do echo "  ${o}"; done
+  echo "如需顺序拼接为整片："
+  echo "  ffmpeg -y -f concat -safe 0 -i <(printf \"file '%s'\\n\" ${OUT_FILES[*]}) -c copy ${OUTPUT_PREFIX}full.mp4"
 else
-  echo "完成，但以下段失败：${FAILED[*]}（可单独用 SEGMENT_FILES=... 重跑）"
+  echo "完成，但以下段失败：${FAILED[*]}"
+  echo "  可单独重跑对应段（输出名跟段提示词文件名走，不会错位）：SEGMENT_FILES=<该段.txt> bash $0"
 fi
 echo "========================================"
 echo "[log] end      : $(date '+%F %T')"
