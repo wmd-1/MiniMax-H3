@@ -2,6 +2,17 @@
 set -euo pipefail
 
 # =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
+# =========================
 # MiniMax-H3 vLLM Ref2VA —— 4 段分镜 + 3 张参考图（按 subject 映射）批量生成
 # =========================
 #
@@ -48,6 +59,9 @@ FLOW_SHIFT="${FLOW_SHIFT:-12}"
 AUDIO_FLOW_SHIFT="${AUDIO_FLOW_SHIFT:-3}"
 SEED="${SEED:-3100}"
 
+# 单段同步请求最长等待时间（秒），默认 3 小时
+REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
+
 # ---------- 段提示词文件 ----------
 if [ -z "${SEGMENT_FILES:-}" ]; then
   SEGMENT_DIR="${SEGMENT_DIR:-scripts/prompts/story}"
@@ -88,6 +102,8 @@ echo "Server     : ${BASE_URL}"
 echo "段数 / 图数: ${N_SEG} / ${N_REF}"
 echo "Duration   : ${DURATION}s/段"
 echo "Aspect     : ${ASPECT_RATIO}  ShortEdge: ${SHORT_EDGE}"
+echo "Req timeout: ${REQUEST_TIMEOUT}s/段"
+echo "Log file   : ${LOG_FILE}"
 echo "----------------------------------------"
 for ((s=0; s<N_SEG; s++)); do
   echo "  段$((s+1)) <- ${SEGMENT_FILES[s]}  (引用 ${N_REF} 张参考图: ${REF_IMAGES[*]})"
@@ -104,7 +120,8 @@ gen_one() {  # $1=prompt_file $2=output
   local pf="$1" out="$2"
   local prompt
   prompt="$(cat "$pf")"
-  cmd=(curl -f -sS -X POST "${BASE_URL}/v1/videos/sync"
+  echo "    start: $(date '+%F %T')  (超时上限 ${REQUEST_TIMEOUT}s)"
+  cmd=(curl -f -sS --max-time "${REQUEST_TIMEOUT}" -X POST "${BASE_URL}/v1/videos/sync"
     -F "prompt=${prompt}"
     -F "aspect_ratio=${ASPECT_RATIO}"
     -F "short_edge=${SHORT_EDGE}"
@@ -129,6 +146,7 @@ gen_one() {  # $1=prompt_file $2=output
   done
   cmd+=(-o "${out}")
   "${cmd[@]}"
+  echo "    end  : $(date '+%F %T')"
 }
 
 for ((s=0; s<N_SEG; s++)); do
@@ -142,3 +160,4 @@ echo
 echo "========================================"
 echo "All segments completed"
 echo "========================================"
+echo "[log] end      : $(date '+%F %T')"

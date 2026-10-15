@@ -3,3 +3,5 @@
 agent/
 .agents/
 *.zip
+# scripts/*.sh 的运行日志（stdout/stderr 同步落盘）
+logs/

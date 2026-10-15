@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
 command -v jq >/dev/null 2>&1 || {
   echo "需要 jq。请先安装： apt-get install -y jq  或  brew install jq"; exit 1
 }
@@ -87,6 +98,7 @@ echo "Model      : ${MODEL}"
 echo "段数 / 图数: ${N_SEG} / ${N_REF}"
 echo "Duration   : ${DURATION}s/段 (seconds=${SECONDS_INT})"
 echo "Aspect     : ${ASPECT_RATIO}  ShortEdge: ${SHORT_EDGE}"
+echo "Log file   : ${LOG_FILE}"
 echo "----------------------------------------"
 for ((s=0; s<N_SEG; s++)); do
   echo "  段$((s+1)) <- ${SEGMENT_FILES[s]}  (${N_REF} 张参考图: ${REF_IMAGE_URIS})"; done
@@ -102,9 +114,12 @@ echo "========================================"
 # =========================
 MAX_RETRIES="${MAX_RETRIES:-5}"                 # 仅用于「服务端崩溃/job 丢失」时最多重提次数
 POLL_INTERVAL="${POLL_INTERVAL:-5}"             # 轮询间隔（秒）
-POLL_TIMEOUT="${POLL_TIMEOUT:-14400}"           # 单段最长等待（秒，默认 4h），覆盖 100+min 生成；超时则放弃该段（不重提）
+POLL_TIMEOUT="${POLL_TIMEOUT:-14400}"           # 单段最长等待（秒，默认 4h，已 ≥ 3h），覆盖 100+min 生成；超时则放弃该段（不重提）
+DOWNLOAD_TIMEOUT="${DOWNLOAD_TIMEOUT:-10800}"    # 单次视频下载上限（秒，默认 3h）
 SERVER_WAIT_RETRIES="${SERVER_WAIT_RETRIES:-90}" # 等待服务端重启的最大次数
 SERVER_WAIT_INTERVAL="${SERVER_WAIT_INTERVAL:-10}" # 每次等待间隔（秒）→ 最长约 15min 等模型重载
+
+echo "韧性配置   : 单段轮询上限 ${POLL_TIMEOUT}s / 下载上限 ${DOWNLOAD_TIMEOUT}s / 重提上限 ${MAX_RETRIES} 次"
 
 echo "[0/${N_SEG}] 等待服务端就绪（最长约 $((SERVER_WAIT_RETRIES*SERVER_WAIT_INTERVAL/60))min）..."
 wait_for_server() {
@@ -129,12 +144,12 @@ download_video() {  # $1=vid $2=out
   url=$(jq -r '.url // empty' "$TMPD/job_${vid}.json" 2>/dev/null || true)
   if [ -n "$url" ]; then
     echo "    下载 url: ${url}"
-    if curl -sS -L --max-time 600 "$url" -o "${out}" 2>/dev/null; then
+    if curl -sS -L --max-time "${DOWNLOAD_TIMEOUT}" "$url" -o "${out}" 2>/dev/null; then
       [ -s "${out}" ] && return 0
     fi
   fi
   echo "    下载 content 端点..."
-  if curl -sS -X GET --max-time 600 "${BASE_URL}/v1/videos/${vid}/content" -o "${out}" 2>/dev/null; then
+  if curl -sS -X GET --max-time "${DOWNLOAD_TIMEOUT}" "${BASE_URL}/v1/videos/${vid}/content" -o "${out}" 2>/dev/null; then
     [ -s "${out}" ] && return 0
   fi
   return 1
@@ -268,11 +283,12 @@ gen_one() {  # $1=prompt_file $2=output
 FAILED=()
 for ((s=0; s<N_SEG; s++)); do
   out="story_seg$((s+1)).mp4"
-  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}"
+  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}  (开始 $(date '+%F %T'))"
   if gen_one "${SEGMENT_FILES[s]}" "${out}"; then
     ls -lh "${out}" 2>/dev/null || true
+    echo "    完成时刻: $(date '+%F %T')"
   else
-    echo "  !!! 段$((s+1)) 最终失败，继续下一段..."
+    echo "  !!! 段$((s+1)) 最终失败（$(date '+%F %T')），继续下一段..."
     FAILED+=("$((s+1))")
   fi
 done
@@ -285,3 +301,4 @@ else
   echo "完成，但以下段失败：${FAILED[*]}（可单独用 SEGMENT_FILES=... 重跑）"
 fi
 echo "========================================"
+echo "[log] end      : $(date '+%F %T')"

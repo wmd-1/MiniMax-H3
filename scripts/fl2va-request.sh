@@ -2,6 +2,17 @@
 set -euo pipefail
 
 # =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
+# =========================
 # MiniMax-H3 vLLM FL2VA (首帧图 -> 视频 + 音频)
 # =========================
 #
@@ -31,6 +42,9 @@ DURATION="${DURATION:-5}"            # extra_params.duration（秒；小数也�
 SEED="${SEED:-1101}"
 OUTPUT="${OUTPUT:-minimax-h3-fl2va.mp4}"
 
+# 同步请求最长等待时间（秒），默认 3 小时
+REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
+
 # 临时下载首帧图（multipart 的 input_reference 只接受本地文件，不接受 URL）
 TMP_IMG="$(mktemp -t fl2va_frame.XXXXXX.png)"
 
@@ -44,6 +58,8 @@ echo "Steps       : ${STEPS}"
 echo "Duration    : ${DURATION}s"
 echo "Seed        : ${SEED}"
 echo "Output      : ${OUTPUT}"
+echo "Req timeout : ${REQUEST_TIMEOUT}s"
+echo "Log file    : ${LOG_FILE}"
 echo "========================================"
 
 # 1. 健康检查
@@ -57,9 +73,11 @@ curl -f -sS -L "${IMAGE_URI}" -o "${TMP_IMG}" || { echo "首帧图下载失败�
 
 # 3. 提交 FL2VA 任务（multipart，与官方 curl 对齐：input_reference=@本地文件;type=image/png）
 echo "Submitting FL2VA job (multipart)..."
+echo "  start: $(date '+%F %T')  (超时上限 ${REQUEST_TIMEOUT}s)"
 http_body_file="$(mktemp -t fl2va_resp.XXXXXX)"
 http_code=$(
   curl -sS -o "${http_body_file}" -w '%{http_code}' \
+    --max-time "${REQUEST_TIMEOUT}" \
     -X POST "${BASE_URL}/v1/videos/sync" \
     -F "prompt=${PROMPT}" \
     -F "fps=${FPS}" \
@@ -71,6 +89,7 @@ http_code=$(
     -o "${OUTPUT}"
 )
 echo "HTTP status: ${http_code}"
+echo "  end  : $(date '+%F %T')"
 if [ "${http_code}" != "200" ]; then
   echo "请求失败，服务端响应："
   cat "${http_body_file}"
@@ -92,3 +111,5 @@ if command -v ffprobe >/dev/null 2>&1; then
       -show_entries stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels \
       -of json "${OUTPUT}"
 fi
+
+echo "[log] end      : $(date '+%F %T')"

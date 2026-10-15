@@ -2,6 +2,17 @@
 set -euo pipefail
 
 # =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
+# =========================
 # MiniMax-H3 vLLM T2VA —— 长提示词「外置文件」版
 # =========================
 #
@@ -43,6 +54,9 @@ OUTPUT="${OUTPUT:-minimax-h3-t2va.mp4}"
 
 BASE_URL="http://${HOST}:${PORT}"
 
+# 同步请求最长等待时间（秒），默认 3 小时
+REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
+
 echo "========================================"
 echo "MiniMax-H3 vLLM T2VA (prompt from file)"
 echo "========================================"
@@ -57,6 +71,8 @@ echo "Audio Shift  : ${AUDIO_FLOW_SHIFT}"
 echo "Duration     : ${DURATION}s"
 echo "Seed         : ${SEED}"
 echo "Output       : ${OUTPUT}"
+echo "Req timeout  : ${REQUEST_TIMEOUT}s"
+echo "Log file     : ${LOG_FILE}"
 echo "========================================"
 
 # 1. 健康检查
@@ -67,6 +83,7 @@ echo "Server is healthy."
 # 2. T2VA 生成（multipart：prompt 直接作为表单字段，中文/换行由 curl 处理）
 echo "[2/2] Generating T2VA video..."
 curl -sS \
+  --max-time "${REQUEST_TIMEOUT}" \
   -X POST "${BASE_URL}/v1/videos/sync" \
   -F "prompt=${PROMPT}" \
   -F "width=${WIDTH}" \
@@ -93,3 +110,5 @@ if command -v ffprobe >/dev/null 2>&1; then
       -show_entries stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels \
       -of json "${OUTPUT}"
 fi
+
+echo "[log] end      : $(date '+%F %T')"

@@ -2,6 +2,17 @@
 set -euo pipefail
 
 # =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
+# =========================
 # MiniMax-H3 vLLM FL2VA —— 本地图片「内联上传」+ 长提示词「外置文件」版
 # =========================
 #
@@ -44,6 +55,9 @@ OUTPUT="${OUTPUT:-minimax-h3-fl2va.mp4}"
 WIDTH="${WIDTH:-}"
 HEIGHT="${HEIGHT:-}"
 
+# 同步请求最长等待时间（秒），默认 3 小时
+REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
+
 echo "========================================"
 echo "MiniMax-H3 vLLM FL2VA (inline upload, prompt from file)"
 echo "========================================"
@@ -55,6 +69,8 @@ echo "Steps       : ${STEPS}"
 echo "Duration    : ${DURATION}s"
 echo "Seed        : ${SEED}"
 echo "Output      : ${OUTPUT}"
+echo "Req timeout : ${REQUEST_TIMEOUT}s"
+echo "Log file    : ${LOG_FILE}"
 echo "========================================"
 
 [ -f "${IMAGE_PATH}" ] || { echo "错误：IMAGE_PATH 不存在：${IMAGE_PATH}"; exit 1; }
@@ -66,7 +82,7 @@ echo "Server is healthy."
 
 # 2. 内联上传首帧图并生成（同步返回 MP4）
 echo "[2/2] Generating FL2VA video (inline upload)..."
-cmd=(curl -f -sS -X POST "${BASE_URL}/v1/videos/sync"
+cmd=(curl -f -sS --max-time "${REQUEST_TIMEOUT}" -X POST "${BASE_URL}/v1/videos/sync"
   -F "prompt=${PROMPT}"
   -F "fps=${FPS}"
   -F "num_inference_steps=${STEPS}"
@@ -94,3 +110,5 @@ if command -v ffprobe >/dev/null 2>&1; then
       -show_entries stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels \
       -of json "${OUTPUT}"
 fi
+
+echo "[log] end      : $(date '+%F %T')"

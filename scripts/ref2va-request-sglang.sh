@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
 command -v jq >/dev/null 2>&1 || {
   echo "需要 jq。请先安装： apt-get install -y jq  或  brew install jq"; exit 1
 }
@@ -52,6 +63,11 @@ NUM_OUTPUTS="${NUM_OUTPUTS:-1}"
 SEED="${SEED:-3101}"
 OUTPUT="${OUTPUT:-ref2va_sglang.mp4}"
 
+# 超时配置（秒）：单任务轮询最长等 3 小时；单次 HTTP 请求上限也拉到 3 小时
+POLL_INTERVAL="${POLL_INTERVAL:-5}"
+POLL_TIMEOUT="${POLL_TIMEOUT:-10800}"
+REQUEST_TIMEOUT="${REQUEST_TIMEOUT:-10800}"
+
 TMPD="$(mktemp -d)"
 cleanup() { rm -rf "$TMPD"; }
 trap cleanup EXIT
@@ -88,6 +104,9 @@ echo "Duration      : ${DURATION}s (seconds=${SECONDS_INT})"
 echo "Steps/Flow/Aud: ${STEPS}/${FLOW_SHIFT}/${AUDIO_FLOW_SHIFT}"
 echo "Seed          : ${SEED}"
 echo "Output        : ${OUTPUT}"
+echo "Poll timeout  : ${POLL_TIMEOUT}s (interval ${POLL_INTERVAL}s)"
+echo "Req timeout   : ${REQUEST_TIMEOUT}s"
+echo "Log file      : ${LOG_FILE}"
 echo "========================================"
 
 # 1. 健康检查
@@ -124,7 +143,7 @@ jq -Rs --slurpfile cond <(printf '%s' "$conditions_json") \
   }' \
   "$PROMPT_FILE" > "$TMPD/body.json"
 
-status=$(curl -sS -o "$TMPD/resp_body.bin" -w '%{http_code}' \
+status=$(curl -sS -o "$TMPD/resp_body.bin" -w '%{http_code}' --max-time "${REQUEST_TIMEOUT}" \
   -X POST "${BASE_URL}/v1/videos" \
   --header 'Content-Type: application/json' \
   --data-binary @"$TMPD/body.json")
@@ -140,18 +159,25 @@ video_id=$(jq -er '.id' "$TMPD/resp_body.bin")
 echo "Job id: ${video_id}"
 
 # 3. 轮询 + 下载
-echo "[3/3] Waiting for completion..."
+echo "[3/3] Waiting for completion... (最长 ${POLL_TIMEOUT}s)"
+elapsed=0
 while true; do
-  status=$(curl -sS "${BASE_URL}/v1/videos/${video_id}" | jq -r '.status')
-  echo "  status: ${status}"
+  status=$(curl -sS --max-time 30 "${BASE_URL}/v1/videos/${video_id}" | jq -r '.status')
+  echo "  status: ${status}  (已等 ${elapsed}s)"
   case "$status" in
     completed) break ;;
     failed|error|cancelled) echo "Job ${status}."; exit 1 ;;
   esac
-  sleep 5
+  sleep "${POLL_INTERVAL}"
+  elapsed=$((elapsed + POLL_INTERVAL))
+  if [ "$elapsed" -ge "$POLL_TIMEOUT" ]; then
+    echo "[fail] 轮询超时 ${POLL_TIMEOUT}s（状态仍为 ${status}），已放弃等待。"
+    exit 1
+  fi
 done
+echo "  完成时刻: $(date '+%F %T')，开始下载"
 
-curl -sS -X GET "${BASE_URL}/v1/videos/${video_id}/content" -o "${OUTPUT}"
+curl -sS -X GET --max-time "${REQUEST_TIMEOUT}" "${BASE_URL}/v1/videos/${video_id}/content" -o "${OUTPUT}"
 
 echo
 echo "========================================"
@@ -166,3 +192,5 @@ if command -v ffprobe >/dev/null 2>&1; then
     -show_entries stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels \
     -of json "${OUTPUT}"
 fi
+
+echo "[log] end      : $(date '+%F %T')"

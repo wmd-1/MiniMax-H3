@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =========================
+# 日志：stdout/stderr 同步写入日志文件（可用 LOG_DIR / LOG_FILE 覆盖）
+# =========================
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_NAME="${LOG_NAME:-$(basename "$0" .sh)}"
+LOG_FILE="${LOG_FILE:-${LOG_DIR}/${LOG_NAME}-$(date +%Y%m%d-%H%M%S).log}"
+mkdir -p "$(dirname "${LOG_FILE}")"
+exec > >(tee -a "${LOG_FILE}") 2> >(tee -a "${LOG_FILE}" >&2)
+echo "[log] LOG_FILE : ${LOG_FILE}"
+echo "[log] start    : $(date '+%F %T')"
+
 command -v jq >/dev/null 2>&1 || {
   echo "需要 jq。请先安装： apt-get install -y jq  或  brew install jq"; exit 1
 }
@@ -185,6 +196,7 @@ echo "ImagePrefix: ${IMAGE_PREFIX:-<空/相对当前目录>}"
 echo "Duration   : ${DURATION}s/段 (seconds=${SECONDS_INT})"
 echo "Aspect     : ${ASPECT_RATIO}  ShortEdge: ${SHORT_EDGE}"
 echo "Steps/Flow : ${STEPS}/${FLOW_SHIFT}/${AUDIO_FLOW_SHIFT}  Seed: ${SEED}  Out: ${OUTPUT_PREFIX}{i}.mp4"
+echo "Log file   : ${LOG_FILE}"
 echo "段数       : ${N_SEG}"
 echo "----------------------------------------"
 for ((s=0; s<N_SEG; s++)); do
@@ -211,6 +223,9 @@ POLL_INTERVAL="${POLL_INTERVAL:-5}"
 POLL_TIMEOUT="${POLL_TIMEOUT:-14400}"
 SERVER_WAIT_RETRIES="${SERVER_WAIT_RETRIES:-90}"
 SERVER_WAIT_INTERVAL="${SERVER_WAIT_INTERVAL:-10}"
+DOWNLOAD_TIMEOUT="${DOWNLOAD_TIMEOUT:-10800}"
+
+echo "韧性配置   : 单段轮询上限 ${POLL_TIMEOUT}s / 下载上限 ${DOWNLOAD_TIMEOUT}s / 重提上限 ${MAX_RETRIES} 次"
 
 wait_for_server() {
   local i
@@ -234,12 +249,12 @@ download_video() {  # $1=vid $2=out
   url=$(jq -r '.url // empty' "$TMPD/job_${vid}.json" 2>/dev/null || true)
   if [ -n "$url" ]; then
     echo "    下载 url: ${url}"
-    if curl -sS -L --max-time 600 "$url" -o "${out}" 2>/dev/null; then
+    if curl -sS -L --max-time "${DOWNLOAD_TIMEOUT}" "$url" -o "${out}" 2>/dev/null; then
       [ -s "${out}" ] && return 0
     fi
   fi
   echo "    下载 content 端点..."
-  if curl -sS -X GET --max-time 600 "${BASE_URL}/v1/videos/${vid}/content" -o "${out}" 2>/dev/null; then
+  if curl -sS -X GET --max-time "${DOWNLOAD_TIMEOUT}" "${BASE_URL}/v1/videos/${vid}/content" -o "${out}" 2>/dev/null; then
     [ -s "${out}" ] && return 0
   fi
   return 1
@@ -336,11 +351,12 @@ for ((s=0; s<N_SEG; s++)); do
   out="${OUTPUT_PREFIX}$((s+1)).mp4"
   read -ra _imgs <<< "${SEG_IMG_LIST[s]:-}"
   cond_json="$(build_conditions "${_imgs[@]}")"
-  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}   (参考图 ${#_imgs[@]} 张: ${SEG_IMG_LIST[s]:-<空>})"
+  echo "[$((s+1))/${N_SEG}] 段$((s+1)) -> ${out}   (参考图 ${#_imgs[@]} 张: ${SEG_IMG_LIST[s]:-<空>}  开始 $(date '+%F %T'))"
   if gen_one "${SEGMENT_FILES[s]}" "${cond_json}" "${out}"; then
     ls -lh "${out}" 2>/dev/null || true
+    echo "    完成时刻: $(date '+%F %T')"
   else
-    echo "  !!! 段$((s+1)) 最终失败，继续下一段..."
+    echo "  !!! 段$((s+1)) 最终失败（$(date '+%F %T')），继续下一段..."
     FAILED+=("$((s+1))")
   fi
 done
@@ -355,3 +371,4 @@ else
   echo "完成，但以下段失败：${FAILED[*]}（可单独用 SEGMENT_FILES / SEGMENT_IMAGES_STR 重跑对应段）"
 fi
 echo "========================================"
+echo "[log] end      : $(date '+%F %T')"
