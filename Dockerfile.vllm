@@ -17,69 +17,22 @@
 # 后续根据实际显存峰值继续提高（24 → 28 → 32 ...）。
 # 不建议一开始直接拉满。
 
-FROM vllm/vllm-omni:minimax-h3
-
-# ----------------------------------------------------------------------
-# Build arguments
-# ----------------------------------------------------------------------
-
-ARG VLLM_OMNI_REPO=https://github.com/vllm-project/vllm-omni.git
-# ⚠️ 生产 reproducibility 风险：main 仍在快速变化，今天 build 与下周 rebuild 可能得到
-#    不同镜像，即使本 Dockerfile 一字未改。
-#    生产镜像务必固定到「已验证」的具体 commit，构建时传入：
-#      docker build -f Dockerfile.vllm \
-#        --build-arg VLLM_OMNI_REF=<已验证的commit> \
-#        -t minimax-h3-vllm:a100 .
-#    本地/验证用可保持 main。
-ARG VLLM_OMNI_REF=main
-ARG VLLM_OMNI_DIR=/opt/vllm-omni
+# vllm-omni 版本化预发布镜像（对齐 vLLM 0.31.0），已内置模块化 pipeline (#5720) 与 MiniMax-H3 支持。
+# x86 默认 tag 为 v0.31.0rc1；aarch64 另有 v0.31.0rc1-aarch64 变体。
+FROM vllm/vllm-omni:v0.31.0rc1
 
 # ----------------------------------------------------------------------
 # Runtime dependencies
+#
+# vllm-omni 与 MiniMax-H3 handler 均由基础镜像 vllm/vllm-omni:v0.31.0rc1 内置，
+# 不再 checkout 源码 / 覆盖 PYTHONPATH，以保证构建可复现（版本随镜像 tag 固定）。
+# 仅补装 ffmpeg（参考视频预处理与 MP4 混流所需）。
 # ----------------------------------------------------------------------
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        git \
         ffmpeg && \
     rm -rf /var/lib/apt/lists/*
-
-# ----------------------------------------------------------------------
-# vLLM-Omni
-#
-# minimax-h3 发布镜像早于模块化 pipeline，
-# 因此需要 checkout 当前 vLLM-Omni 源码。
-# ----------------------------------------------------------------------
-
-RUN git clone --depth 1 \
-    --branch "${VLLM_OMNI_REF}" \
-    "${VLLM_OMNI_REPO}" \
-    "${VLLM_OMNI_DIR}"
-
-# 官方 recipe 要求运行时优先使用该源码
-ENV PYTHONPATH="${VLLM_OMNI_DIR}:${PYTHONPATH:-}"
-
-# ----------------------------------------------------------------------
-# pip install -e —— 暂不加，做三级验证后再决定
-#
-# vllm-omni 是标准 Python package（pyproject.toml 声明 name="vllm-omni"），
-# 从 packaging 角度 pip install -e 是正规安装方式；但已前置 PYTHONPATH，
-# 对「源码 import」通常已足够。故先不加，按以下三级验证判断是否需要：
-#
-#   Tier 1  import:
-#     docker run --rm minimax-h3-vllm:a100 python -c "import vllm_omni; print(vllm_omni.__file__)"
-#   Tier 2  serve --help（验证 vllm 入口/插件能识别 vllm-omni）:
-#     docker run --rm minimax-h3-vllm:a100 vllm serve --help
-#   Tier 3  实际启动 MiniMax-H3 并发 FL2VA 首请求
-#
-# 判断：
-#   - Tier 1 失败                      → 取消注释下方 pip install -e 重建
-#   - Tier 2/3 报「找不到 vllm-omni 的 entrypoint / 插件未注册」类错误
-#                                   → 同样取消注释 pip install -e 重建
-#   - 三级全过                         → 保持不加（更轻、源码即改即生效）
-#
-# RUN --mount=type=cache,target=/root/.cache/pip \
-#     pip install -e "${VLLM_OMNI_DIR}"
 
 # ----------------------------------------------------------------------
 # MiniMax-H3 / A100 40GB profile
@@ -135,10 +88,10 @@ vllm serve /models/MiniMax-H3 \
   --diffusion-attention-backend CUDNN_ATTN \
 "]
 
-# 构建（验证用，main）：
+# 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.31.0rc1 固定，不再 clone 源码）：
 #   docker build -f Dockerfile.vllm -t minimax-h3-vllm:a100 .
-# 构建（生产，固定 commit）：
-#   docker build -f Dockerfile.vllm --build-arg VLLM_OMNI_REF=<commit> -t minimax-h3-vllm:a100 .
+#   （如需严格可复现，建议把 FROM 改为镜像 digest：vllm/vllm-omni@sha256:<digest>，
+#     rc 预发布 tag 后续可能被重新 push）
 # 运行（模型本体只读挂到 /models/MiniMax-H3）：
 #   docker run --gpus all --ipc=host --shm-size=512gb \
 #     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
