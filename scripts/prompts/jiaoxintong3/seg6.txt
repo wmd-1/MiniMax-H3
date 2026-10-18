@@ -1,0 +1,16 @@
+
+subject_definitions:
+<Picture 1> is the pending-employee management page image10.png, showing the management operations "调整入职日期", "确认入职" and "放弃入职" for pending onboarding staff.
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese screen-recording demo segment for 交薪通, 16:9. The camera pushes into the pending-employee management page <Picture 1> and annotates the three operation buttons in turn, then clicks "确认入职" with a ripple. The off-screen business narrator (S1) speaks Mandarin.
+
+retention_analysis:
+<Picture 1> (appears in [Shot 1]): fully_preserved - the management page layout and all three operation buttons "调整入职日期", "确认入职" and "放弃入职" are retained throughout the shot.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, press-ripple click feedback, slight surrounding dimming during focus, and push/pull transitions.
+[Shot 1] The video begins with a vertical push into <Picture 1>, the pending-employee management page, the lens zooming toward the operation button area by 00:02.000. At about 00:03.000 the cursor moves to the "调整入职日期" button and draws a circle annotation around it while the surroundings dim slightly, holding about two and a half seconds. At about 00:06.000 the cursor moves to the "确认入职" button and circles it, again holding about two and a half seconds. At about 00:09.000 the cursor moves to the "放弃入职" button and circles it for another two-second hold. At about 00:11.500 the cursor returns to the "确认入职" button and clicks it; a press-ripple feedback spreads from the click point and the button state updates. The frame holds on the updated page for the last two seconds. Throughout the segment the off-screen narrator (S1), a calm professional Mandarin business voice at a moderate pace, states the purpose before each action with natural half-second pauses, <d>[Chinese] 待入职的员工可以线上管理。调整日期、确认或放弃。扫码入职，三步搞定。</d> The narration ends by about 00:12, leaving the ripple and the hold in silence.
+
+overall_soundscape: Quiet office room tone; a soft click tick on the "确认入职" press.
+non_diegetic_music: N/A

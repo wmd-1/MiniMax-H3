@@ -1,0 +1,19 @@
+
+subject_definitions:
+<Picture 1> is the print-QR-code and send-link page image7.png, showing the "下载入职二维码" area and the "复制链接" area.
+<Picture 2> is the manual personnel-add page image8.png, showing the single-entry interface for adding a pending employee with a "新增人员" button and form fields.
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese screen-recording demo segment for 交薪通, 16:9. The camera annotates both distribution areas on <Picture 1>, then slides into the manual-add page <Picture 2> and zooms toward the "新增人员" button. The off-screen business narrator (S1) speaks Mandarin.
+
+retention_analysis:
+<Picture 1> (appears in [Shot 1]): fully_preserved - the page is shown in full view with both the "下载入职二维码" and "复制链接" areas retained and annotated in turn.
+<Picture 2> (appears in [Shot 2]): fully_preserved - the "新增人员" button and the form fields with their values are retained during the zoom-in.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, press-ripple click feedback, slight surrounding dimming during focus, and push/pull transitions instead of static cuts.
+[Shot 1] The video begins with a vertical push into <Picture 1>, the print-QR-code and send-link page, first showing the whole page. A small caption "第三步：分发二维码或链接" floats up at the bottom of the frame at about 00:01.000. At about 00:02.500 the cursor moves to the "下载入职二维码" area and draws a circle annotation around it while the surroundings dim slightly, holding about two and a half seconds. At about 00:06.000 the cursor moves to the "复制链接" area and circles it, holding until about 00:09.000. The off-screen narrator (S1), a calm professional Mandarin business voice at a moderate pace, states the purpose before each action with natural half-second pauses, <d>[Chinese] 第三步，分发二维码。可以下载打印。也可以复制链接发送。员工扫码就能填信息。</d> The narration ends by about 00:09.500.
+[Shot 2] At 00:10.000, the camera slides horizontally into <Picture 2>, the manual personnel-add page. The camera zooms toward the "新增人员" button, and the cursor moves onto the first form field, its border lighting up in a highlight as the segment ends. The narrator (S1) introduces the alternative path evenly, <d>[Chinese] 除了扫码，也支持手工添加。</d>
+
+overall_soundscape: Quiet office room tone; no clicks in this segment, only soft cursor movement.
+non_diegetic_music: N/A

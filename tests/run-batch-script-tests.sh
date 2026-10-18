@@ -5,13 +5,14 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-jiaoxintong2-sglang.sh / ref2va-jiaoxintong-sglang.sh /
-#           ref2va-story-sglang.sh / ref2va-story.sh
+# 被测对象：scripts/ref2va-jiaoxintong3-sglang.sh / ref2va-jiaoxintong2-sglang.sh /
+#           ref2va-jiaoxintong-sglang.sh / ref2va-story-sglang.sh / ref2va-story.sh
 #
 # 覆盖点：
 #   1) 输出视频命名 = OUTPUT_PREFIX + 段提示词文件名 stem（不按循环序号）
 #   2) 每段独立参考图，且 conditions[] 顺序 == <Picture N> 顺序
-#   3) jiaoxintong2 逐段时长（13/15/12/10/12/15/8/13/6，合计 104s）
+#   3) jiaoxintong2 逐段时长（13/15/12/10/12/15/8/13/6，合计 104s）与 jiaoxintong3 逐段时长
+#      （15x6 + 落板10，合计 100s，画幅 16:9）
 #   4) 单段重跑时命名/参考图/时长依然对得上
 #   5) IMAGE_PREFIX：默认 http 前缀 / 本地目录转 file:// / 绝对路径原样
 #   6) 覆盖参数与段数不一致时报错退出
@@ -34,6 +35,9 @@ set -uo pipefail
 TESTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${TESTS_DIR}/.." && pwd)"
 PORT="${PORT:-30010}"
+# 显式列出全 9 段，不让测试依赖被测脚本的默认段列表（用户临时改默认段不应弄挂测试）
+ALL9="$(for i in 1 2 3 4 5 6 7 8 9; do printf '%s ' "${ROOT_DIR}/scripts/prompts/jiaoxintong2/seg${i}.txt"; done)"
+ALL7="$(for i in 1 2 3 4 5 6 7; do printf '%s ' "${ROOT_DIR}/scripts/prompts/jiaoxintong3/seg${i}.txt"; done)"
 WORK="$(mktemp -d /tmp/h3-batch-tests.XXXXXX)"
 POSTS="${WORK}/posts.jsonl"
 LOGDIR="${WORK}/logs"
@@ -123,7 +127,8 @@ echo "  mock    : 已就绪 (pid ${MOCK_PID})"
 # 本地占位参考图（测 file:// 模式与 vLLM 脚本用）
 for f in dxb.png hxr.png logo.png aaa.png bbb.png ccc.png \
          first_shot.png first_shot.PNG image1.png image2.png image3.png image4.png image5.png \
-         image6.png image7.png image8.png image9.png image133.png image134.png image135.png image136.png; do
+         image6.png image7.png image8.png image9.png image10.png \
+         image133.png image134.png image135.png image136.png; do
   : > "${WORK}/${f}"
 done
 
@@ -131,7 +136,7 @@ done
 CASE="T1 jiaoxintong2 全 9 段：逐段时长 / 逐段参考图 / stem 命名"
 echo "── ${CASE}"
 reset_posts
-run_script ref2va-jiaoxintong2-sglang.sh t1 OUTPUT_PREFIX="${WORK}/jiaoxintong2_"
+run_script ref2va-jiaoxintong2-sglang.sh t1 OUTPUT_PREFIX="${WORK}/jiaoxintong2_" SEGMENT_FILES="${ALL9}"
 assert_eq "0" "$(rc_of t1)" "T1 退出码"
 assert_eq "9" "$(wc -l < "$POSTS" | tr -d ' ')" "T1 提交请求数"
 assert_eq "13 15 12 10 12 15 8 13 6" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T1 逐段时长"
@@ -200,7 +205,9 @@ CASE="T6 SEGMENT_DURATIONS_STR 与段数不一致应报错退出"
 echo "── ${CASE}"
 reset_posts
 run_script ref2va-jiaoxintong2-sglang.sh t6 \
-  OUTPUT_PREFIX="${WORK}/jiaoxintong2_" SEGMENT_DURATIONS_STR="10|20"
+  OUTPUT_PREFIX="${WORK}/jiaoxintong2_" \
+  SEGMENT_FILES="${ROOT_DIR}/scripts/prompts/jiaoxintong2/seg1.txt ${ROOT_DIR}/scripts/prompts/jiaoxintong2/seg2.txt ${ROOT_DIR}/scripts/prompts/jiaoxintong2/seg3.txt" \
+  SEGMENT_DURATIONS_STR="10|20"
 assert_eq "1" "$(rc_of t6)" "T6 退出码（非 0）"
 if grep -q "不一致" "${WORK}/t6.log"; then ok "T6 输出不一致报错"; else bad "T6 未见报错文本"; fi
 assert_eq "0" "$(wc -l < "$POSTS" | tr -d ' ')" "T6 未提交任何请求"
@@ -240,6 +247,36 @@ run_script ref2va-jiaoxintong2-sglang.sh t9 \
   SEGMENT_FILES="${ROOT_DIR}/scripts/prompts/jiaoxintong2/seg4.txt"
 assert_eq "0" "$(rc_of t9)" "T9 退出码"
 assert_eq "http://53.192.28.254:8210/images/image9.png" "$(q 1 '.conditions[0].uri')" "T9 完整 URI"
+
+# ================================= T10 =================================
+CASE="T10 jiaoxintong3 扫码入职 7 段：16:9 / 逐段时长 / 逐段参考图"
+echo "── ${CASE}"
+reset_posts
+run_script ref2va-jiaoxintong3-sglang.sh t10 OUTPUT_PREFIX="${WORK}/jiaoxintong3_" SEGMENT_FILES="${ALL7}"
+assert_eq "0" "$(rc_of t10)" "T10 退出码"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T10 提交请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T10 画幅"
+assert_eq "15 15 15 15 15 15 10" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T10 逐段时长"
+assert_eq "3 3 2 2 2 1 1" "$(jq -r '.conditions|length' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T10 逐段参考图数"
+assert_eq "first_shot.PNG,image2.png,image3.png" "$(imgs_of 1)" "T10 段1 图片顺序"
+assert_eq "image3.png,image4.png,image5.png" "$(imgs_of 2)" "T10 段2 图片顺序（与段1共用 image3 做衔接）"
+assert_eq "image10.png" "$(imgs_of 6)" "T10 段6 图片"
+assert_eq "first_shot.PNG" "$(imgs_of 7)" "T10 段7 落板图片（大写 .PNG 保持）"
+for i in 1 2 3 4 5 6 7; do assert_file "${WORK}/jiaoxintong3_seg${i}.mp4" "T10 产出"; done
+assert_lacks "${WORK}/t10.log" "unbound variable" "T10 无 set -u unbound"
+
+# =============================== T11 ===============================
+CASE="T11 jiaoxintong3 单段重跑 seg7（落板段：10s / 无旁白 / 输出名不错位）"
+echo "── ${CASE}"
+reset_posts
+run_script ref2va-jiaoxintong3-sglang.sh t11 \
+  OUTPUT_PREFIX="${WORK}/jiaoxintong3_" \
+  SEGMENT_FILES="${ROOT_DIR}/scripts/prompts/jiaoxintong3/seg7.txt"
+assert_eq "0" "$(rc_of t11)" "T11 退出码"
+assert_eq "1" "$(wc -l < "$POSTS" | tr -d ' ')" "T11 提交请求数"
+assert_eq "10" "$(q 1 '.target.duration_seconds')" "T11 段7 时长"
+assert_eq "first_shot.PNG" "$(imgs_of 1)" "T11 段7 参考图"
+assert_file "${WORK}/jiaoxintong3_seg7.mp4" "T11 产出（不是 seg1）"
 
 # ------------------------------- 汇总 -------------------------------
 echo "======================================================"

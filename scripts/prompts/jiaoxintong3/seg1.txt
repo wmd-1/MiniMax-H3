@@ -1,0 +1,22 @@
+
+subject_definitions:
+<Picture 1> is the opening brand page first_shot.PNG, a Bank of Communications branded white-background landing page, used as the exact first frame of [Shot 1].
+<Picture 2> is the pain-point overview page image2.png, a white business page listing the pain points "纸质合同签约慢", "纸质合同保管烦", "纸质合同查找难" and "线下数据采集繁", each with small scene illustrations.
+<Picture 3> is the three-step onboarding overview page image3.png, showing three step summaries "扫码入职", "入职审批" and "电子合同".
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese product-demo screen-recording segment for 交薪通, a Bank of Communications payroll and HR digital service platform for SMEs, in 16:9. The video opens on <Picture 1> with the title "交薪通·扫码入职" zooming in, then tours the four pain points on <Picture 2> with cursor circle annotations, and ends pushing into <Picture 3>. An off-screen business narrator (S1) speaks Mandarin at a moderate pace.
+
+retention_analysis:
+<Picture 1> ([Shot 1] first frame): fully_preserved - the white Bank of Communications brand page layout is retained as the opening frame with only the title overlay added.
+<Picture 2> (appears in [Shot 2]): fully_preserved - all four pain-point text blocks and their scene illustrations are retained while the camera moves across them.
+<Picture 3> (appears in [Shot 3]): fully_preserved - the full overview page is shown; no area is highlighted yet in this segment.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, press-ripple feedback on clicks, slight surrounding dimming during focus, and push/pull transitions instead of static cuts.
+[Shot 1] The video begins from <Picture 1>, the white Bank of Communications brand landing page filling the frame. The title text "交薪通·扫码入职" in large dark characters scales gently from 90% to 100% while fading in, centered over the page, fully settled by 00:02. No narration yet; only quiet room tone.
+[Shot 2] At 00:02.500, the camera pushes horizontally into <Picture 2>, the pain-point overview page. The lens first shows the whole page, then slowly zooms toward the text "纸质合同签约慢"; the area around it dims slightly and a mouse cursor draws a circle annotation around the text, holding about two seconds. The camera then pans right to "纸质合同保管烦" at about 00:05.000, continues to "纸质合同查找难" at about 00:07.500, and finally to "线下数据采集繁" at about 00:10.000, each receiving the same circle annotation and a two-second hold, the last annotation finishing by 00:12. Meanwhile the off-screen narrator (S1), a calm professional Mandarin business voice, speaks first stating each pain and then the solution, at a moderate pace with a clear half-second pause between sentences, <d>[Chinese] 传统入职，纸质合同签约慢。保管查找都麻烦。线下采集数据也繁琐。交薪通用三步解决。</d> The narration ends at about 00:13.500, leaving a brief quiet beat.
+[Shot 3] At 00:12.000, the camera pushes vertically into <Picture 3>, the three-step onboarding overview page, showing "扫码入职", "入职审批" and "电子合同" in full view with safe margins and large clear text. The final second holds silently on the full overview page without any highlight yet.
+
+overall_soundscape: Quiet office room tone with a faint interface ambience; a soft cursor tick accompanies each circle annotation.
+non_diegetic_music: N/A

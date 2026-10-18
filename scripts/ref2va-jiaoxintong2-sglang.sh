@@ -47,6 +47,7 @@ command -v jq >/dev/null 2>&1 || {
 #   # 关闭前缀(相对当前目录解析 file://)：IMAGE_PREFIX=  bash scripts/ref2va-jiaoxintong2-sglang.sh
 #
 # 默认：竖屏 9:16、短边 768、段提示词 scripts/prompts/jiaoxintong2/seg{1..9}.txt，逐段用 md 里的时长。
+#   只重跑部分段：直接改下面「段提示词文件」处的 for i in ... 段号（无需传环境变量）。
 # 其它：DURATION(未设=按段取时长；显式设定=所有段统一用该秒数)
 #   SHORT_EDGE(768) / ASPECT_RATIO(9:16) / SEED(3101) / HOST / PORT(30010)
 #   FLOW_SHIFT(12.0) / AUDIO_FLOW_SHIFT(3.0) / STEPS(50) / NUM_OUTPUTS(1) / MODEL(MiniMaxAI/MiniMax-H3)
@@ -109,6 +110,7 @@ fi
 if [ -z "${SEGMENT_FILES:-}" ]; then
   SEGMENT_DIR="${SEGMENT_DIR:-scripts/prompts/jiaoxintong2}"
   SEGMENT_FILES=()
+  # 全片为 1..9；只重跑失败段时临时改这里的段号（参考图与时长会按段号自动对上，输出名也不会变）。
   for i in 1 2 3 4 5 6 7 8 9; do SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt"); done
 else
   # 环境里传的是空格分隔字符串（bash 数组无法经环境传递），直接切分成数组。

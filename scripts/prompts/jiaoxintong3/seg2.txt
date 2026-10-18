@@ -1,0 +1,22 @@
+
+subject_definitions:
+<Picture 1> is the three-step onboarding overview page image3.png, showing "扫码入职", "入职审批" and "电子合同".
+<Picture 2> is the onboarding-management page image4.png, showing the page layout with the "新增二维码" button.
+<Picture 3> is the QR-code configuration form image5.png, with the fields "二维码名称", "入职登记表" and "入职部门".
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese screen-recording demo segment for 交薪通, continuing the scan-code onboarding flow in 16:9. The camera focuses on the "扫码入职" step of <Picture 1>, pushes into <Picture 2> and clicks the "新增二维码" button with a ripple, then moves through the first three fields of <Picture 3>. The off-screen business narrator (S1) speaks Mandarin.
+
+retention_analysis:
+<Picture 1> (appears in [Shot 1]): partially_preserved - the page is retained but only the "扫码入职" step is highlighted while the other two steps stay dimmed.
+<Picture 2> (appears in [Shot 2]): fully_preserved - the management page layout and the "新增二维码" button are retained during hover and click.
+<Picture 3> (appears in [Shot 3]): fully_preserved - the form fields and their current values are retained while the camera focuses on each in turn.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, hover glow, press-ripple click feedback, surrounding dimming during focus, and push/pull transitions.
+[Shot 1] The video begins from <Picture 1>, the three-step overview page in full view. The camera pushes slightly toward the "扫码入职" step; that area enlarges gently, its surroundings dim, and a mouse cursor draws a circle annotation around it while "入职审批" and "电子合同" remain dimmed and unfocused. This focus holds about four seconds, until 00:04. The off-screen narrator (S1), a calm professional Mandarin business voice, states the segment's focus evenly, <d>[Chinese] 本片聚焦第一步，扫码入职。</d>
+[Shot 2] At 00:04.000, the camera pulls out horizontally and pushes into <Picture 2>, the onboarding-management page. The lens zooms toward the "新增二维码" button; the cursor moves onto it at about 00:05.000 and a soft hover glow appears, then the cursor clicks the button and a press-ripple feedback spreads from the click point at about 00:07.000. The narrator (S1) continues, <d>[Chinese] HR进入入职管理页面。点击新增二维码。</d>
+[Shot 3] At 00:09.000, the camera pushes vertically into <Picture 3>, the QR-code configuration form. The camera first focuses on the "二维码名称" input field for about 1.5 seconds, then pans to the "入职登记表" dropdown area at about 00:10.500, and moves to the "入职部门" area at about 00:12.000, each field held for about 1.5 seconds with a gentle focus dim. A small caption "第一步：创建入职二维码" floats up at the bottom of the frame at about 00:09.500. Throughout the segment the narrator (S1) speaks first stating each operation's purpose and then the action, never reading the on-screen text verbatim, <d>[Chinese] 填写名称，选择登记表。指定入职部门。</d> The narration ends by about 00:14, and the frame holds quietly on the focused "入职部门" field to the end.
+
+overall_soundscape: Quiet office room tone; soft click ticks on the button press.
+non_diegetic_music: N/A

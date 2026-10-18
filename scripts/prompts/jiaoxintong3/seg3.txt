@@ -1,0 +1,19 @@
+
+subject_definitions:
+<Picture 1> is the QR-code configuration form image5.png, with the field "入职部门" and the option "同步批量开卡".
+<Picture 2> is the custom onboarding registration form page image6.png, showing the text "12大类、80小项人事信息" with configurable items and required-field settings, plus the "新增登记表" button.
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese screen-recording demo segment for 交薪通, 16:9. The camera finishes the configuration form on <Picture 1> by checking "同步批量开卡", then slides into the custom registration form <Picture 2>, circles the capability text and clicks "新增登记表". The off-screen business narrator (S1) speaks Mandarin.
+
+retention_analysis:
+<Picture 1> (appears in [Shot 1]): fully_preserved - the "入职部门" field and the "同步批量开卡" option are retained during the checkbox check and circle annotation.
+<Picture 2> (appears in [Shot 2]): fully_preserved - the "12大类、80小项人事信息" text, the configurable item list and the "新增登记表" button are retained throughout the shot.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, press-ripple click feedback, slight surrounding dimming during focus, and push/pull transitions.
+[Shot 1] The video begins from <Picture 1>, the QR-code configuration form with the "入职部门" field in focus. The camera pans to the "同步批量开卡" option at about 00:01.000; the cursor clicks the checkbox, a check animation plays, and a circle annotation is drawn around the option while the surroundings dim slightly. The off-screen narrator (S1), a calm professional Mandarin business voice, says, <d>[Chinese] 还能同步批量开卡。</d>
+[Shot 2] At 00:04.000, the camera slides horizontally into <Picture 2>, the custom onboarding registration form page. The camera pushes toward the text "12大类、80小项人事信息"; the surroundings dim and a mouse cursor draws a circle annotation around it, holding about three seconds until 00:07.500. The camera then pulls back slightly to show the full registration form with its configurable categories at about 00:08.000, and at about 00:10.500 the cursor moves to the "新增登记表" button and clicks it with a press-ripple feedback. A small caption "第二步：自定义入职登记表" floats up at the bottom of the frame at about 00:04.500. The narrator (S1) continues at a moderate pace with natural half-second pauses, <d>[Chinese] 第二步，自定义登记表。十二大类，八十小项。按需设置必填项。</d> The narration ends by about 00:14, and the frame holds on the updated form for the final second.
+
+overall_soundscape: Quiet office room tone; soft click ticks on the checkbox press and the button press.
+non_diegetic_music: N/A

@@ -1,0 +1,16 @@
+
+subject_definitions:
+<Picture 1> is the opening brand page first_shot.PNG, a Bank of Communications branded white-background landing page with the "交薪通" name in plain typesetting.
+
+summary:
+[keyframe completion] A 10-second formal Chinese closing segment for the 交薪通 product demo in 16:9. The camera slowly pulls back as <Picture 1> fades in as a stable brand end board, holds quietly, and gently fades out. No narration.
+
+retention_analysis:
+<Picture 1> ([Shot 1] keyframe): fully_preserved - the white Bank of Communications brand page is retained as the end board with no added overlays beyond a gentle fade.
+
+detailed_description:
+The target video is a formal, steady 16:9 closing shot in the same screen-recording visual style as the rest of the demo, with safe margins, large clear text, no exaggerated glow, and a calm restrained pace.
+[Shot 1] The video opens with a slow zoom-out over a softly brightened blurred interface; the white Bank of Communications brand page <Picture 1> fades in gradually as the camera pulls back, fully sharp and centered by 00:03. The brand page then holds as a stable end board, quiet and steady, from 00:03 to about 00:07, with no camera movement and no overlaid text beyond what the page itself contains; the "交薪通" name appears only in plain typesetting as printed on the page, with no imitation of official graphic logos or script wordmarks. From 00:07 the frame gently fades out over the final three seconds, completing the video at 00:10. No narration or voice is heard at any point in this segment.
+
+overall_soundscape: Quiet room tone only, with no interface sounds in the closing shot.
+non_diegetic_music: N/A

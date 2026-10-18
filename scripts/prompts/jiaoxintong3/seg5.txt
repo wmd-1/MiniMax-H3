@@ -1,0 +1,19 @@
+
+subject_definitions:
+<Picture 1> is the manual personnel-add page image8.png, showing the single-entry interface for adding a pending employee with form fields.
+<Picture 2> is the batch-import page image9.png, showing the import flow with a "下载导入模板" button and template upload.
+
+summary:
+[keyframe completion + reference generation] A 15-second formal Chinese screen-recording demo segment for 交薪通, 16:9. The camera tours the highlighted form fields of <Picture 1>, then quickly slides out into the batch-import page <Picture 2> and clicks "下载导入模板". The off-screen business narrator (S1) speaks Mandarin.
+
+retention_analysis:
+<Picture 1> (appears in [Shot 1]): fully_preserved - the "新增人员" button and the form fields with their values are retained during the border-highlight tour.
+<Picture 2> (appears in [Shot 2]): fully_preserved - the import page layout and the "下载导入模板" button are retained during hover and click.
+
+detailed_description:
+The target video is a formal, steady 16:9 screen-capture product-demo recording of a Chinese enterprise web platform, with crisp interface rendering, press-ripple click feedback, slight surrounding dimming during focus, and push/pull transitions instead of static cuts.
+[Shot 1] The video begins from <Picture 1>, the manual personnel-add page with the "新增人员" button above the form. The cursor moves down the form fields one by one; each field's border lights up in a highlight as the cursor reaches it and dims as it leaves, the steady tour continuing from 00:00 until about 00:06.500. The off-screen narrator (S1), a calm professional Mandarin business voice, speaks with natural pauses, <d>[Chinese] 除了扫码，也支持手工添加。单条录入或批量导入都行。</d>
+[Shot 2] At 00:07.000, the camera quickly slides out horizontally and cuts into <Picture 2>, the batch-import page. The camera zooms toward the "下载导入模板" button, the cursor clicks it with a press feedback at about 00:10.000, and a small caption "也支持手工或批量添加" floats up at the bottom of the frame at about 00:10.500. The frame holds quietly on the import page for the remaining seconds, with no further narration.
+
+overall_soundscape: Quiet office room tone; a soft click tick on the template-button press.
+non_diegetic_music: N/A
