@@ -52,7 +52,8 @@
 #   - /models/MiniMax-H3:ro 为兜底挂载（当前 --model-path 走仓库 ID 实际不依赖它）。
 #
 # 前置条件：
-#   - 已构建镜像 minimax-h3-sglang:latest（见同目录 Dockerfile，需含 sglang diffusion 后端）
+#   - 已构建镜像 minimax-h3-sglang:v0.5.21（与同目录 Dockerfile 的 FROM 对齐，
+#     需含 sglang diffusion 后端）。旧的 :latest 是 nightly-dev-20260803 构建，不要再用。
 #   - 模型已在宿主机 /model_nas/models/MiniMax-H3，且离线 legacy cache 已存在于
 #     /model_nas/modelscope_cache（ModelScope 1.39.0 已能离线复用，无需 register 脚本）。
 #   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
@@ -80,7 +81,7 @@
 
 services:
   minimax-h3:
-    image: minimax-h3-sglang:latest
+    image: minimax-h3-sglang:v0.5.21
     container_name: minimax-h3-sglang
     ipc: host
     pid: host
@@ -128,10 +129,13 @@ services:
                                    #   24 档 / 32 档 / 40 档 三档各跑一次，以两张卡 nvidia-smi 真实峰值为准，
                                    #   选「真实峰值<38G 且吞吐最好」的档位。当前暂置 40（约+6.4G→真实~36.4G）。
                                    # 若实测>38G 则回调到 32~38；若仍<36G 且性能更好可上探 42~44。
-      - --watchdog-timeout
-      - "3600"                     # 关键修复：层卸载下「单个 forward（整段视频生成）」常 > 默认 300s，
-                                   # sglang 看门狗会因此崩溃（日志 "scheduler did not respond in time"）
-                                   # 并触发 restart: unless-stopped 死循环。拉到 1h 避免长视频/分镜被误杀。
+      # 超时：--watchdog-timeout 是 srt 参数（diffusion 路径不读它，no-op），这里不保留；
+      # 它在 v0.5.21/v0.5.22 都仍被接受（srt/arg_groups/fields/device.py），加不加都不影响扩散。
+      # 扩散侧真正的 RPC 超时是 --scheduler-rpc-timeout（v0.5.21 起）。
+      # 默认 None = 不设 transport 层超时，异常时会无限挂住；这里保留旧 handoff 的
+      # 3h 意图，超时后 job 被标 failed 而不是永远等下去。
+      - --scheduler-rpc-timeout
+      - "10800"
       - --host
       - 0.0.0.0
       - --port
@@ -165,7 +169,9 @@ services:
           devices:
             - driver: nvidia
               # count: 2
-              device_ids: [2, 3]
+              # 必须写字符串：本机 Compose 5.6.0 对整数直接校验失败（exit=1），
+              # 旧版 compose 会自动转换；统一写字符串避免版本差异
+              device_ids: ["2", "3"]
               capabilities: [gpu]
         # 注：SWAP 硬限制由 service 级 mem_limit/memswap_limit 实现（见上方），
         # 此处不再设 limits.memory，避免与 service 级 mem_limit 语义冲突。

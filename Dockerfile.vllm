@@ -89,10 +89,10 @@ vllm serve /models/MiniMax-H3 \
 "]
 
 # 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.31.0rc1 固定，不再 clone 源码）：
-#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:a100 .
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .
 #   （如需严格可复现，建议把 FROM 改为镜像 digest：vllm/vllm-omni@sha256:<digest>，
 #     rc 预发布 tag 后续可能被重新 push）
 # 运行（模型本体只读挂到 /models/MiniMax-H3）：
 #   docker run --gpus all --ipc=host --shm-size=512gb \
 #     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
-#     -p 8000:8000 minimax-h3-vllm:a100
+#     -p 8000:8000 minimax-h3-vllm:v0.31.0rc1

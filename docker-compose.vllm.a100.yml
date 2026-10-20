@@ -24,7 +24,8 @@
 
 services:
   minimax-h3:
-    image: minimax-h3-vllm:latest
+    # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
+    image: minimax-h3-vllm:v0.31.0rc1
     container_name: minimax-h3-vllm-a100
 
     ipc: host
@@ -132,7 +133,9 @@ services:
           devices:
             - driver: nvidia
               # count: 2
-              device_ids: [2, 3]
+              # 必须写字符串：本机 Compose 5.6.0 对整数直接校验失败（exit=1），
+              # 旧版 compose 会自动转换；统一写字符串避免版本差异
+              device_ids: ["2", "3"]
               capabilities:
                 - gpu
 

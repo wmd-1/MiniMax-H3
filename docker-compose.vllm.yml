@@ -1,13 +1,13 @@
 # MiniMax-H3 (vLLM-Omni) —— 2× RTX 5090 32GB 省显存方案（DLO 低显存 TP2 路径）
 #
-# 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:minimax-h3）。
+# 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:v0.31.0rc1）。
 # serve 参数映射自官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, hardware=rtx_5090_2x）：
 #   - 仅加载 FL2VA DiT，分布式层卸载（DLO）20 resident 层
 #   - TP2 + text-encoder-tp 2 + vae tile 并行 2，Ulysses SP1 / ring1
 #   - CUDNN_ATTN 后端，enforce-eager，无需 FlashAttention-4
 #
 # 前置条件：
-#   - 已构建镜像 minimax-h3-vllm:latest（docker build -f Dockerfile.vllm -t minimax-h3-vllm:latest .）
+#   - 已构建镜像 minimax-h3-vllm:v0.31.0rc1（docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .）
 #   - 模型已在宿主机 /model_nas/models/MiniMax-H3（只读 bind 进容器 /models/MiniMax-H3）
 #   - 已安装 nvidia-container-toolkit，docker compose >= 2.0
 #   - 宿主机内存 ≥ 384 GiB-class（官方 2×RTX 5090 配方 377 GiB host，建议 384 GiB 级）
@@ -24,7 +24,8 @@
 
 services:
   minimax-h3:
-    image: minimax-h3-vllm:latest
+    # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
+    image: minimax-h3-vllm:v0.31.0rc1
     container_name: minimax-h3-vllm
     ipc: host
     pid: host
