@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system carried by <Picture 1>: a white configuration surface, a left-side category tree, thin light-grey dividers, deep-blue switches in the on state, and large dark-grey sans-serif text.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple that appears at the moment of every click.
+<Picture 1> is image6.png, the custom onboarding registration form page used as the full-frame visual base of every shot in this segment; its category list, the "12大类、80小项人事信息" text block, the required-field switches, and the "保存" button are preserved exactly as shown.
+
+summary:
+[keyframe completion] The target video slides the custom registration form of <Picture 1> in from the left, pushes in on the "12大类、80小项人事信息" text block, scans the category list while one required-field switch is turned on, pulls back to the full page, and ends with <Subject 2> clicking "保存" and a bottom caption line.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the white surface, category tree, dividers, deep-blue switches, and large text are retained.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the same white arrow cursor with its blue press-ripple performs the switch click and the save click.
+<Picture 1> ([Shot 1] to [Shot 3] visual base): fully_preserved - the page layout, the category list, the "12大类、80小项人事信息" text block, the required-field switches, and the "保存" button position are kept exactly as in the reference image.
+
+detailed_description:
+The target video continues the formal, steady screen-recording style, 16:9 at 1920×1080, with generous safe margins, large legible text, and no fabricated interface elements.
+
+[Shot 1] The shot opens as <Picture 1>, the custom onboarding registration form page, slides into frame horizontally from the left edge at slow speed and settles into a full-frame composition following <Subject 1>, with its category tree on the left, its configuration area in the center, and its action row at the lower right. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 第二步，自定义登记表。</d> The camera holds the wide framing for about half a second after the page settles so the overall structure can be read, then begins to move.
+
+[Shot 2] At 00:03.000, the shot continues without a cut as the camera pushes in with small amplitude at slow speed toward the text block "12大类、80小项人事信息" in the upper center of the page, which brightens while the surrounding areas dim slightly. The narrator says, <d>[Chinese] 十二大类，八十小项。</d> From about 5.4 seconds the camera pans down at slow speed along the left category tree and then across the central configuration list, passing rows of人事 information items one after another, each row's required-field switch visible in its current state. The narrator continues, <d>[Chinese] 按需设置必填项。</d> At about 6.9 seconds <Subject 2> slides onto one of the required-field switches, and a single click produces a circular blue ripple as the switch thumb slides to the right, the track turns deep blue, and a thin blue circle draws around that row. The camera keeps panning gently for another second so the state change is clearly read.
+
+[Shot 3] At 00:08.6 seconds the camera pulls out with small amplitude at slow speed until the whole page is framed again, showing the category tree, the configuration list with the switched row visible, and the action row together. <Subject 2> then travels in a short straight line down to the "保存" button at the lower right, which brightens with a soft inner glow and takes a thin blue outline on hover. At about 12.2 seconds the cursor presses the button, a circular blue ripple expands from the click point and fades within about half a second, and the button holds its pressed state. At about 12.9 seconds a short caption line rises from the bottom safe margin and settles: "第二步：自定义入职登记表". It remains static until the segment ends.
+
+overall_soundscape:
+Quiet office room tone continues across the segment. A soft interface tick is heard when the row highlight appears, a light switch-like click at the required-field toggle, and a single short mouse click at the save action, followed by a faint rustle as the caption line rises.
+
+non_diegetic_music:
+N/A

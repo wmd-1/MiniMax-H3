@@ -1,0 +1,25 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system carried by <Picture 1>: a white form surface on a light grey page, thin light-grey field borders, a deep-blue accent on active fields, and large dark-grey sans-serif labels.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple that appears at the moment of the click.
+<Picture 1> is image5.png, the QR-code configuration form used as the full-frame visual base of every shot in this segment; its field order, labels, layout, and the checkbox row are preserved exactly as shown.
+
+summary:
+[keyframe completion] The target video is a single continuous walkthrough of the configuration form in <Picture 1>. The camera enters by pushing in vertically, then moves field by field from "二维码名称" to "入职登记表" to "入职部门", ends on the "是否同步生成批量开卡任务" checkbox where <Subject 2> ticks it with a press-ripple and a circled highlight, and a small caption line rises at the bottom.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the white form surface, thin field borders, deep-blue active state, and large labels are retained.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the same white arrow cursor with its blue press-ripple performs the only click in the segment.
+<Picture 1> ([Shot 1] and [Shot 2] visual base): fully_preserved - the form layout, every field label and position, and the checkbox row are kept exactly as in the reference image.
+
+detailed_description:
+The target video continues the formal, steady screen-recording style, 16:9 at 1920×1080, with generous safe margins, large legible labels, and no fabricated interface elements.
+
+[Shot 1] The shot opens on the upper portion of <Picture 1>, the QR-code configuration form, entering the frame with a vertical push-in from below at slow speed until the form settles into a full-frame composition that follows <Subject 1>. Every field label, input box, dropdown, and the checkbox row sits where the reference image places it. At about 2.1 seconds the camera eases toward the "二维码名称" input field with small amplitude and slow speed, that field's border takes on the thin blue active outline while the other fields stay neutral, and an off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 填写名称，选择登记表。</d> The camera then pans right at slow speed with small amplitude across to the "入职登记表" dropdown, whose border lights up in the same blue as the previous field dims back, and a short downward chevron on the dropdown pulses once to show it is selectable.
+
+[Shot 2] At 00:06.800, the shot continues on the same page without a cut, now framing the middle band of <Picture 1> as the camera pans down and right at slow speed toward the "入职部门" field. That field takes the blue active outline, the previous field returns to neutral, and the narrator says, <d>[Chinese] 指定入职部门。</d> At about 9.6 seconds the camera pans further down to the row reading "是否同步生成批量开卡任务", which brightens while the surrounding form dims slightly. <Subject 2> slides onto the small square checkbox at the left of that row, hovers for a beat, and at about 10.9 seconds presses it: a circular blue ripple expands from the click point, a tick appears inside the square, the row's text turns to the deep-blue accent color, and a thin blue circle draws itself around the whole row as a marker. The narrator says, <d>[Chinese] 还能同步批量开卡。</d> The camera then pulls back with small amplitude at slow speed to show the completed form, and at about 12.8 seconds a short caption line rises from the bottom safe margin and settles: "第一步：创建入职二维码". It stays on screen, static, until the segment ends.
+
+overall_soundscape:
+Quiet office room tone runs underneath the whole segment. A soft tick accompanies each field activation, a single short mouse click is heard at the checkbox, and a very light paper-like rustle is heard as the caption line rises into place.
+
+non_diegetic_music:
+N/A

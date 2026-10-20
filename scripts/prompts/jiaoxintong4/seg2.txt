@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system shared by <Picture 1> and <Picture 2>: white card surfaces, a deep-blue accent color, thin light-grey dividers, rounded corners, and large left-aligned dark-grey sans-serif interface text.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple that appears at the moment of every click.
+<Picture 1> is image3.png, the three-step onboarding overview page used as the full-frame visual base of [Shot 1], showing three step cards of which only the "扫码入职" card is focused.
+<Picture 2> is image4.png, the onboarding management page used as the full-frame visual base of [Shot 2], with the "入职二维码" button in its toolbar area acting as the target of the push-in and click.
+
+summary:
+[keyframe completion] The target video moves from the three-step overview in <Picture 1> to the onboarding management page in <Picture 2> through a horizontal push-out and push-in. Only the "扫码入职" step is highlighted and circled in the overview; in the management page the camera pushes toward the "入职二维码" button, <Subject 2> hovers over it, and a press-ripple confirms the click.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the white card surfaces, deep-blue accent, thin dividers, and large interface text carry across both pages.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the same white arrow cursor with its blue press-ripple is used for the hover and the click.
+<Picture 1> ([Shot 1] visual base): partially_preserved - the page layout and all three step cards are retained, while the two non-target cards are dimmed and the "扫码入职" card alone stays bright.
+<Picture 2> ([Shot 2] visual base): fully_preserved - the onboarding management page layout, its toolbar, and the exact position of the "入职二维码" button are retained.
+
+detailed_description:
+The target video keeps the formal, steady screen-recording style of the series, 16:9 at 1920×1080, with generous safe margins, large legible interface type, and no fabricated interface elements or decorative overlays.
+
+[Shot 1] The shot opens on <Picture 1>, the three-step onboarding overview page, filling the frame at its original scale and following <Subject 1>. The camera pushes in with small amplitude at slow speed toward the three step cards. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 交薪通用三步解决。</d> At about 3.2 seconds the camera eases toward the left card labeled "扫码入职" while the two cards for "入职审批" and "电子合同" dim to a lower brightness and fall out of focus. A thin blue circular marker draws itself around the "扫码入职" card and its border lifts, and the narrator continues, <d>[Chinese] 本片聚焦第一步，扫码入职。</d> That focused framing holds nearly still for about three seconds so the card text can be read, then at about 7.0 seconds the camera begins a horizontal push-out to the right at slow speed, and the page slides out of frame as the movement carries into the next shot.
+
+[Shot 2] At 00:08.000, the horizontal push-out resolves into <Picture 2>, the onboarding management page, which slides in from the right edge and settles into a full-frame static composition with its page title, search bar, toolbar, and data area all visible. The camera then pushes in with small amplitude at slow speed toward the "入职二维码" button in the toolbar, and the narrator says, <d>[Chinese] HR进入入职管理页面。</d> At about 10.4 seconds <Subject 2> enters from the lower right and travels in a short straight line onto the button, where the button face brightens with a soft inner glow and its border picks up a thin blue outline to show the hover state. The narrator says, <d>[Chinese] 点击入职二维码。</d> At about 12.9 seconds the cursor presses down, a circular blue ripple expands outward from the click point and fades within about half a second, and the button settles into its pressed state. The camera holds that framing on the pressed button until the segment ends.
+
+overall_soundscape:
+Quiet office room tone continues throughout. A soft transitional whoosh accompanies the horizontal push-out and push-in between the two pages, and a single short mouse click is heard at the press-ripple, followed by a very soft interface tick.
+
+non_diegetic_music:
+N/A

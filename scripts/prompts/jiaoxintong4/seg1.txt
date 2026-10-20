@@ -1,0 +1,29 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system visible in <Picture 1> and <Picture 2>: a white page background, a deep-blue accent color, thin light-grey dividers, rounded card containers, and large left-aligned dark-grey sans-serif interface text.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple effect that appears at the moment of every click.
+<Picture 1> is first_shot.PNG, the corporate brand page used as the exact first frame of [Shot 1]; its existing layout, background, and mark are kept as they are in the image and are not redrawn or restyled.
+<Picture 2> is image2.png, the pain-point overview page used as the full-frame visual base of [Shot 2] and [Shot 3], carrying four pain-point text blocks that each sit next to a small scene image on a light background.
+
+summary:
+[keyframe completion] The target video is a formal enterprise-software demonstration that opens on <Picture 1>, dissolves to the pain-point overview in <Picture 2>, and marks four business pain points one by one with a dimmed focus and a drawn circle while a single off-screen Mandarin narrator speaks. <Subject 1> keeps the interface language consistent and <Subject 2> carries every pointing and clicking action.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the white background, deep-blue accent, thin dividers, and large dark-grey interface text are retained unchanged.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the same white arrow cursor with its blue press-ripple appears in both shots.
+<Picture 1> ([Shot 1] first frame): fully_preserved - the brand page is reproduced as the opening frame with its original layout, background, and mark.
+<Picture 2> ([Shot 2] and [Shot 3] visual base): partially_preserved - the page layout and all four pain-point text blocks are retained, while surrounding brightness is reduced to create local focus.
+
+detailed_description:
+The target video is a formal, steady screen-recording style enterprise demonstration in 16:9 at 1920×1080, with generous safe margins, large legible interface type, and no fabricated interface elements, no HUD graphics, and no exaggerated light effects.
+
+[Shot 1] The video opens exactly on <Picture 1>, the white corporate brand page, filling the frame with clean margins on all four sides. The camera holds a static shot with an almost imperceptible push in of small amplitude and slow speed. At about 0.3 seconds the title text "交薪通·扫码入职" appears centered in the upper middle of the white page, scaling up from roughly 92 percent of its final size while fading in over about 0.8 seconds, then it settles and stays perfectly still. No narration is heard in this shot and no other element moves, so the opening reads as a calm title card.
+
+[Shot 2] At 00:02.000, the shot cuts to <Picture 2>, the pain-point overview page, framed at the same margin and scale as the reference image, still following <Subject 1>. The camera pushes in with small amplitude at slow speed toward the text block "纸质合同签约慢" in the upper area of the page. As the push-in settles, the rest of the page dims slightly, a thin blue circular marker draws itself around that text block, and its edge brightens. <Subject 2> drifts in from the right and rests beside the block. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover with a steady, measured business pace, <d>[Chinese] 传统入职，纸质合同签约慢。</d> No person is visible on screen, so no lip movement and no mouth shapes accompany the voice. After a pause of about one second, the encircled highlight slides smoothly down to the block "纸质合同保管烦" while the previous block returns to neutral brightness, and the narrator continues, <d>[Chinese] 保管查找都麻烦。</d>
+
+[Shot 3] At 00:08.500, the shot cuts to a slightly closer framing of the same <Picture 2> page in which the lower two text blocks "纸质合同查找难" and "线下数据采集繁" sit near the center of the frame. The thin blue marker moves from "纸质合同查找难" across to "线下数据采集繁", the surrounding page staying dimmed, and the narrator says, <d>[Chinese] 线下采集数据也繁琐。</d> The camera then pulls out with small amplitude at slow speed, restoring the whole page and its normal brightness, and holds that wider framing until the segment ends.
+
+overall_soundscape:
+Low, quiet office room tone runs continuously under the whole segment. A soft transitional whoosh marks the cut into the overview page, and a faint interface tick sounds each time the circular marker finishes drawing.
+
+non_diegetic_music:
+N/A

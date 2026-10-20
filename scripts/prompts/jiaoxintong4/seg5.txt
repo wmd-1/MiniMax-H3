@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system carried by <Picture 1>: a white page surface, rounded cards, a deep-blue accent, thin light-grey dividers, and large dark-grey sans-serif labels.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple.
+<Picture 1> is image7.png, the print-and-share page used as the full-frame visual base of every shot in this segment; the QR code block, the "下载" area, and the "复制链接" area are preserved exactly as shown.
+
+summary:
+[keyframe completion] The target video pushes in vertically on the print-and-share page of <Picture 1>, then marks the "下载" area and the "复制链接" area one at a time with a dimmed focus and a drawn circle, each held long enough to read, closes on a closer framing of the QR code block, and ends with a bottom caption line.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the white surface, rounded cards, deep-blue accent, dividers, and large labels are retained.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the same white arrow cursor points at both distribution areas.
+<Picture 1> ([Shot 1] to [Shot 3] visual base): partially_preserved - the page layout, the QR code block, and both distribution areas are retained, while local brightness is reduced around each focused area.
+
+detailed_description:
+The target video continues the formal, steady screen-recording style, 16:9 at 1920×1080, with generous safe margins, large legible labels, and no fabricated interface elements.
+
+[Shot 1] The shot opens as <Picture 1>, the print-and-share page, enters the frame with a vertical push-in from below at slow speed and settles into a full-frame composition following <Subject 1>. The QR code block sits in the center of the page with the "下载" area to one side and the "复制链接" area to the other, all at their original positions and sizes. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 第三步，分发二维码。</d> The camera holds the wide framing for about a second so the page structure can be read before any marker appears.
+
+[Shot 2] At 00:02.800, the shot continues without a cut as the camera pushes in with small amplitude at slow speed toward the "下载" area. The rest of the page dims slightly, a thin blue circle draws itself around that area and its label brightens, and <Subject 2> slides onto it and rests. The narrator says, <d>[Chinese] 可以下载打印。</d> That focused framing holds nearly still for about two seconds. At about 5.6 seconds the dim focus and the circle move smoothly across to the "复制链接" area while the "下载" area returns to neutral brightness, the circle redraws around the new target, and the cursor follows onto it. The narrator says, <d>[Chinese] 也可以复制链接发送。</d> This framing also holds nearly still for about two seconds so the label can be read.
+
+[Shot 3] At 00:08.6 seconds the shot continues as the camera pushes in a little further, with small amplitude and slow speed, until the QR code block fills the center of the frame and the two distribution areas sit at the edges. The dimming lifts and the whole page returns to normal brightness, the QR code pattern staying crisp and unmodified. The narrator says, <d>[Chinese] 员工扫码就能填信息。</d> At about 11.7 seconds a short caption line rises from the bottom safe margin and settles: "第三步：分发二维码或链接". The camera holds that final composition, with the caption static on screen, until the segment ends.
+
+overall_soundscape:
+Quiet office room tone runs throughout. A faint interface tick accompanies each circle as it draws, a very soft cursor glide is audible as the focus shifts from one area to the other, and a light rustle is heard when the caption line rises.
+
+non_diegetic_music:
+N/A

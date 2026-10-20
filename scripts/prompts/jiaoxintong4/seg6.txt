@@ -1,0 +1,29 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system shared by <Picture 1> and <Picture 2>: white card surfaces, a deep-blue primary button, thin light-grey dividers, rounded input borders, and large dark-grey sans-serif labels.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple that appears at the moment of the click.
+<Subject 3> is the demonstration treatment applied to real personal data in both pages: any personal name, phone number, or ID string already present in the reference images stays exactly as masked or blurred there and is never sharpened, re-typed, or replaced with new values.
+<Picture 1> is image8.png, the manual-add entry page used as the full-frame visual base of [Shot 1], with the "新增人员" button as the target of the push-in and click.
+<Picture 2> is image9.png, the information entry page used as the full-frame visual base of [Shot 2], where the "姓名", "手机号", "入职部门", and "预计入职日期" fields are visited in that order.
+
+summary:
+[keyframe completion] The target video slides the manual-add page of <Picture 1> in from the left, pushes toward the "新增人员" button and clicks it with a press-ripple, then pushes out horizontally into the entry page of <Picture 2>, where the camera visits the name, phone, department, and expected start-date fields one at a time. <Subject 3> keeps every personal detail masked exactly as in the references.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the card surfaces, deep-blue button, dividers, input borders, and large labels carry across both pages.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the same white arrow cursor with its blue press-ripple performs the button click and guides the field visits.
+<Subject 3> (appears in [Shot 1], [Shot 2]): fully_preserved - the masked personal data in both reference images is reproduced as-is and no new personal data is invented.
+<Picture 1> ([Shot 1] visual base): fully_preserved - the page layout, toolbar, and the exact position of the "新增人员" button are retained.
+<Picture 2> ([Shot 2] visual base): fully_preserved - the form layout and the positions of the "姓名", "手机号", "入职部门", and "预计入职日期" fields are retained.
+
+detailed_description:
+The target video continues the formal, steady screen-recording style, 16:9 at 1920×1080, with generous safe margins, large legible labels, and no fabricated interface elements.
+
+[Shot 1] The shot opens as <Picture 1>, the manual-add entry page, slides into frame horizontally from the left edge at slow speed and settles into a full-frame composition following <Subject 1>, with its page title, search bar, and the "新增人员" button in the upper action row all in their original positions. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 除了扫码，也支持手工添加。</d> At about 2.2 seconds the camera pushes in with small amplitude at slow speed toward the "新增人员" button, and the data rows beneath it dim slightly so the button carries the focus. <Subject 2> slides onto the button, which brightens with a soft inner glow and a thin blue outline on hover, and at about 3.9 seconds the cursor presses it: a circular blue ripple expands from the click point and fades within about half a second.
+
+[Shot 2] At 00:04.500, the shot cuts with a fast horizontal push-out to the right, and <Picture 2>, the information entry page, enters from the right edge and settles into a full-frame static composition with its form fields aligned in two columns. The camera pushes in with small amplitude at slow speed toward the "姓名" field, whose border takes a thin blue highlight while the other fields stay neutral, and the narrator says, <d>[Chinese] 单条录入数据如图。</d> From about 6.6 seconds the camera moves field by field at a steady, unhurried pace: first to "手机号", then to "入职部门", then to "预计入职日期", each field lighting up with the same blue border as the previous one returns to neutral, and each holding for roughly two and a half seconds. <Subject 2> rests beside each field in turn as it is highlighted, without typing or altering any value, so every entry keeps exactly the content shown in <Picture 2>. The camera ends on a slightly wider framing that shows the four highlighted-in-turn fields together and holds until the segment ends.
+
+overall_soundscape:
+Quiet office room tone continues throughout. A soft interface tick is heard each time a field border lights up, a single short mouse click sounds at the "新增人员" button with the press-ripple, and a brief airy whoosh covers the horizontal transition between the two pages.
+
+non_diegetic_music:
+N/A

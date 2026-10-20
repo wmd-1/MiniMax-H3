@@ -1,0 +1,31 @@
+subject_definitions:
+<Subject 1> is the 交薪通 enterprise web interface design system carried by <Picture 1>: a white data table surface, a light grey header row, thin row dividers, deep-blue text links, and large dark-grey sans-serif labels.
+<Subject 2> is the white arrow mouse cursor with a soft grey drop shadow and a thin circular blue press-ripple that appears at the moment of the click.
+<Subject 3> is the demonstration treatment applied to real personal data in the table: any name, phone number, or department string already present in <Picture 1> stays exactly as masked or blurred there and is never sharpened or replaced.
+<Picture 1> is image10.png, the pending-onboarding management page used as the full-frame visual base of [Shot 1] and [Shot 2], where the "调整入职日期", "确认入职", and "放弃入职" actions are marked in that order.
+<Picture 2> is first_shot.PNG, the corporate brand page used as the exact landing frame of [Shot 3]; its existing layout, background, and mark are kept as they are in the image and are not redrawn or restyled.
+
+summary:
+[keyframe completion] The target video pushes in vertically on the pending-onboarding table of <Picture 1>, marks the "调整入职日期", "确认入职", and "放弃入职" actions one at a time with a dimmed focus and a drawn circle, then clicks "确认入职" with a press-ripple. The camera pulls out and cross-dissolves to the closing brand page of <Picture 2>, where the frame holds steady and fades out.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the table surface, header row, dividers, deep-blue action links, and large labels are retained.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the same white arrow cursor with its blue press-ripple points at the three actions and performs the confirmation click.
+<Subject 3> (appears in [Shot 1], [Shot 2]): fully_preserved - the masked personal data in the table is reproduced as-is and no new personal data is invented.
+<Picture 1> ([Shot 1] and [Shot 2] visual base): partially_preserved - the table layout and the positions of the three action links are retained, while local brightness is reduced around each focused action.
+<Picture 2> ([Shot 3] landing frame): fully_preserved - the brand page is reproduced as the closing frame with its original layout, background, and mark.
+
+detailed_description:
+The target video closes in the same formal, steady screen-recording style, 16:9 at 1920×1080, with generous safe margins, large legible labels, and no fabricated interface elements.
+
+[Shot 1] The shot opens as <Picture 1>, the pending-onboarding management page, enters the frame with a vertical push-in from below at slow speed and settles into a full-frame composition following <Subject 1>, with the table header, the row list, and the action links at the right of each row in their original positions. An off-screen Mandarin male narrator (S1) says in an off-screen voiceover at a measured business pace, <d>[Chinese] 待入职的员工可以线上管理。</d> At about 1.5 seconds the surrounding rows dim slightly and a thin blue circle draws itself around the "调整入职日期" link in the first row, which brightens as the marker closes. <Subject 2> slides onto that link and rests beside it. The narrator says, <d>[Chinese] 调整日期、确认或放弃。</d> At about 3.9 seconds the dim focus and the circle move to the "确认入职" link in the same row, the previous link returning to neutral brightness, and hold there for about two seconds.
+
+[Shot 2] At 00:06.2 seconds the shot continues without a cut as the circle moves once more to the "放弃入职" link, which brightens in turn while the other two links stay neutral, and <Subject 2> follows it across. After about two seconds the cursor travels back to the "确认入职" link, which takes a thin blue outline on hover, and at about 8.7 seconds the cursor presses it: a circular blue ripple expands from the click point and fades within about half a second, and the link holds a pressed state. The dimming then lifts and the whole table returns to normal brightness, with <Subject 3> keeping every personal detail exactly as masked in the reference image.
+
+[Shot 3] At 00:10.0 seconds the camera pulls out with small amplitude at slow speed, and the page recedes toward the center of the frame. From about 11.5 seconds the image cross-dissolves into <Picture 2>, the corporate brand page, which comes up to full brightness and settles into a completely static composition: the page fills the frame with clean margins, and the plain text "交薪通" sits centered in regular typography, with no logo redrawing, no gloss, and no decorative light effects. The frame holds perfectly still for about two and a half seconds, then fades out over the final half second to end the segment.
+
+overall_soundscape:
+Quiet office room tone runs under the whole segment. A faint interface tick accompanies each circle as it draws, a single short mouse click sounds at the confirmation with its press-ripple, and the room tone thins out during the cross-dissolve until only a soft fade of room noise remains at the end.
+
+non_diegetic_music:
+N/A
