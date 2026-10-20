@@ -1,0 +1,122 @@
+# OpenVDN/vdn-minimax-h3 — SGLang v0.5.22
+#
+# 选 SGLang 的原因：VDN 原生 pipeline 在 v0.5.22 已稳定，文档明确 SM80 走
+# bf16 DiT（62GB）+ layerwise offload；vLLM-Omni 要 0.32.0rc1 才有 VDNH3_ATTN，
+# 而它的 check_serving_contract 又明确拒绝 DISTRIBUTED_LAYER_WISE（DLO），
+# 40G 卡上没法用；本仓库的 vLLM 钉在 0.31，连这个后端都没有。
+#
+# 能力边界：FL2VA 分区，服务 t2va / fl2va；Ref2VA 请求会被拒绝。
+# 8 步 DMD 蒸馏；v0.5.22 的采样器要求 num_inference_steps=8
+# （8 次前向 = 9 个 sigma 点；v0.5.21 按 sigma 点计，曾要求 9）。
+#
+# 首次启动会把 linear branch + 两个 LoRA 预融合进 transformer（约 62GB 写入），
+# 并从 MiniMaxAI/MiniMax-H3 硬链接 Qwen3-VL 与 VAE。要求：
+#   - /model_nas 至少有 90GB 空闲
+#   - 缓存与模型在同一个文件系统（这里整盘挂 /model_nas，避免跨 mount 硬链接失败）
+#
+# 权重预下载（ModelScope，沿用 ref 的 legacy cache 方案）：
+#   modelscope download --model OpenVDN/vdn-minimax-h3 \
+#     --local_dir /model_nas/modelscope_cache/models/OpenVDN/vdn-minimax-h3
+# 若改用 HF：去掉 SGLANG_USE_MODELSCOPE/HF_HUB_OFFLINE，并设置 HF_TOKEN。
+#
+# A100 40G 适配：TP2（VDN 分支按 head 支持 TP 切分）+ layerwise offload。
+#   resident=24 是保守值，峰值有余量再 32/40；OOM 回退 16。
+#   若该 tag 的 VDN 在 TP 下报错，改用 --ulysses-degree 2（不切权重，需降 resident）。
+
+services:
+  vdn-h3:
+    image: minimax-h3-sglang:v0.5.22
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang
+    container_name: minimax-h3-vdn
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+
+    restart: unless-stopped
+
+    mem_limit: 384g
+    memswap_limit: 386g
+    mem_swappiness: 0
+    mem_reservation: 256g
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - OpenVDN/vdn-minimax-h3
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      # 必须 hybrid_window_attn_h3；稠密后端会跳过 linear branch 与 gate，结果错误
+      - --attention-backend
+      - hybrid_window_attn_h3
+      # SM80 不走 MXFP8；显式 bf16
+      - --quantization
+      - bf16
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      # VDN 的 hybrid attention 明确拒绝 torch.compile / BCG
+      - --enable-torch-compile
+      - "false"
+      - --warmup-resolutions
+      - 1344x768
+      - --warmup-num-frames
+      - "124"
+      # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
+      # 8 步变体正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
+      - --scheduler-rpc-timeout
+      - "10800"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    ports:
+      - "30013:30010"
+
+    volumes:
+      # 整盘挂载：modelscope/hf cache 与 SGLANG_DIFFUSION_CACHE_ROOT 必须同 FS 才能硬链接
+      - /model_nas:/model_nas:rw
+      # base 组件（Qwen3-VL / VAE）按 ModelScope legacy cache 解析，路径是
+      # <MODELSCOPE_CACHE>/models/MiniMaxAI/MiniMax-H3。这个目录往往只是根 base compose
+      # 留下的空挂载点（docker 会在父挂载里 mkdir 出 mountpoint，owner=root），
+      # 直接读会得到空目录并回退联网下载，所以这里显式挂真模型。
+      - /model_nas/models/MiniMax-H3:/model_nas/modelscope_cache/models/MiniMaxAI/MiniMax-H3:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - SGLANG_USE_MODELSCOPE=true
+      - MODELSCOPE_CACHE=/model_nas/modelscope_cache
+      - HF_HOME=/model_nas/hf-cache
+      - HF_HUB_OFFLINE=1
+      - SGLANG_DIFFUSION_CACHE_ROOT=/model_nas/sglang-cache/vdn
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    deploy:
+      resources:
+        reservations:
+          memory: 256g
+          devices:
+            - driver: nvidia
+              device_ids: ["${GPU0:-2}", "${GPU1:-3}"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 300s
+      timeout: 30s
+      retries: 2
+      # 首启要预融合 linear branch + LoRA（~62GB 写入），给足 30min
+      start_period: 1800s

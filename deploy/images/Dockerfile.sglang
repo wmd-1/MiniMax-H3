@@ -1,0 +1,37 @@
+# MiniMax-H3 (SGLang Diffusion) — v0.5.22
+#
+# 三套 SGLang 服务共用：
+#   - FastH3-8-Step-V2（v0.5.22 原生支持，A100 走稠密 FA 回退）
+#   - VDN-H3（v0.5.22，注意采样器要求 num_inference_steps=8）
+#   - PAI PDD（build/fuse 工具在 v0.5.22 仍保留）
+#
+# 镜像内是 editable 安装，源码树即运行模块；切版只需换 FROM tag 后重跑
+# pip install -e "python[diffusion]"。
+FROM lmsysorg/sglang:v0.5.22
+
+# PyPI 官方源在当前网络下首字节延迟高，会让 pip 的构建隔离依赖解析
+# （setuptools/setuptools-rust/setuptools-scm/wheel）与 [diffusion] 大依赖树龟速卡住。
+ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+ENV PIP_INDEX_URL=${PIP_INDEX_URL}
+
+WORKDIR /sgl-workspace/sglang
+
+RUN pip install -e "python[diffusion]"
+
+RUN pip install \
+    huggingface_hub \
+    accelerate \
+    hf_transfer
+
+# 早失败：确认这版镜像同时具备三套服务依赖。
+# 用宽松匹配（只匹配 “FastH3-8-Step”），避免上游把完整 repo id 拆行或
+# 换个后缀（V2.1）时构建被误判。
+RUN grep -rq "FastH3-8-Step" \
+      python/sglang/multimodal_gen/configs/ && \
+    test -f python/sglang/multimodal_gen/configs/pipeline_configs/minimax_h3_vdn.py && \
+    test -f python/sglang/multimodal_gen/tools/build_minimax_h3_pdd_weights.py && \
+    test -f python/sglang/multimodal_gen/tools/fuse_minimax_h3_pdd_heads.py
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    rm -rf /var/lib/apt/lists/*

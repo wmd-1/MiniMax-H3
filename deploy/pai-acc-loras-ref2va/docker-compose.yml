@@ -1,0 +1,166 @@
+# alibaba-pai/MiniMax-H3-Acc-LoRAs — PDD 8-step Ref2VA — SGLang v0.5.22
+#
+# 选 SGLang 的原因：PDD 不是普通 LoRA。它必须先把 backbone LoRA 离线合进
+# Ref2VA transformer，再把 32 个区间输出头融合成 8 个；这两个工具只在
+# SGLang 里（sglang.multimodal_gen.tools）。vLLM-Omni 的 --lora-path 不做这些步骤。
+#
+# 使用 Ref2VA adapter（主线要求 Ref2VA）：
+#   hf download alibaba-pai/MiniMax-H3-Acc-LoRAs \
+#     MiniMax-H3-Ref2VA-Acc-8Step.safetensors \
+#     --local-dir /model_nas/models/h3-acc-loras
+#
+# pdd-prepare 一次性产出（约 62GB）：
+#   /pdd/transformer/               合并后的 Ref2VA 主干
+#   /pdd/pdd_heads.safetensors      build 阶段的分区头
+#   /pdd/pdd_fused_heads.safetensors  fuse 后的服务头
+#   /pdd/pdd_config.json            必须和 fused heads 同目录
+#   /pdd/.done                      完成标记，serve 依赖它
+#
+# 步数不要凭记忆写：fuse 工具把 num_inference_steps 写进 pdd_config.json，
+# 服务端拿它对账 sigma 网格。v0.5.22 按“前向次数”计（8），v0.5.21 按“sigma
+# 点个数”计（9）。prepare 完先读：
+#   jq .num_inference_steps /model_nas/models/h3-ref2va-pdd/pdd_config.json
+#
+# 请求契约（与服务端融合头严格一致，否则被拒绝）：
+#   task=ref2va, num_inference_steps=8, flow_shift=12.0,
+#   audio_flow_shift=3.0, quality="lossless"
+#   （步数以 pdd_config.json 为准；本节取值对应 SGLang v0.5.22）
+#
+# A100 40G 适配：TP2 + layerwise offload，resident=24 保守值。
+#   实测峰值有余量再 32/40；OOM 回退 16。
+#
+# 模型解析沿用 ref 的 ModelScope legacy cache：
+#   --model-path MiniMaxAI/MiniMax-H3 + SGLANG_USE_MODELSCOPE=true
+#   prepare 阶段直接用 bind mount 的 /models/MiniMax-H3/Ref2VA/transformer。
+
+services:
+  pdd-prepare:
+    image: minimax-h3-sglang:v0.5.22
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang
+    container_name: minimax-h3-pdd-prepare
+    restart: "no"
+
+    entrypoint: ["bash", "-lc"]
+    command:
+      - |
+        set -euo pipefail
+        if [ -f /pdd/.done ]; then
+          echo "[pdd] already prepared"
+          exit 0
+        fi
+        python3 -m sglang.multimodal_gen.tools.build_minimax_h3_pdd_weights \
+          /models/MiniMax-H3/Ref2VA/transformer \
+          /models/h3-acc-loras/MiniMax-H3-Ref2VA-Acc-8Step.safetensors \
+          /pdd
+        python3 -m sglang.multimodal_gen.tools.fuse_minimax_h3_pdd_heads \
+          /pdd --video-shift 12.0 --audio-shift 3.0
+        touch /pdd/.done
+
+    volumes:
+      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+      - /model_nas/models/h3-acc-loras:/models/h3-acc-loras:ro
+      - /model_nas/models/h3-ref2va-pdd:/pdd:rw
+
+  minimax-h3-pdd:
+    image: minimax-h3-sglang:v0.5.22
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang
+    container_name: minimax-h3-pdd
+
+    depends_on:
+      pdd-prepare:
+        condition: service_completed_successfully
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+
+    restart: unless-stopped
+
+    mem_limit: 384g
+    memswap_limit: 386g
+    mem_swappiness: 0
+    mem_reservation: 256g
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - MiniMaxAI/MiniMax-H3
+      - --model-variant
+      - ref2va
+      - --transformer-weights-path
+      - /pdd/transformer
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      - --enable-torch-compile
+      - "false"
+      - --attention-backend
+      - fa
+      - --warmup-resolutions
+      - 1344x768
+      - --warmup-num-frames
+      - "124"
+      # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
+      # PDD 8 步正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
+      - --scheduler-rpc-timeout
+      - "10800"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    ports:
+      - "30011:30010"
+
+    volumes:
+      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+      - /model_nas/models/h3-ref2va-pdd:/pdd:ro
+      # 先挂父级 cache，再挂嵌套的 legacy cache 目标目录；与根目录
+      # docker-compose.yml 的顺序保持一致，避免挂载顺序造成遮蔽。
+      - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
+      # --model-path 走仓库 ID，sglang 按 ModelScope legacy cache 解析
+      # <MODELSCOPE_CACHE>/models/MiniMaxAI/MiniMax-H3；目录本身是 bind mount
+      # 出来的（沿用根目录 docker-compose.yml 的已验证写法），不是 cache 里
+      # 真有文件。缺这一条会退回联网拉取，离线机器直接失败。
+      - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - SGLANG_DIFFUSION_MINIMAX_H3_PDD_HEADS=/pdd/pdd_fused_heads.safetensors
+      - SGLANG_USE_MODELSCOPE=true
+      - MODELSCOPE_CACHE=/root/.cache/modelscope
+      - HF_HUB_OFFLINE=1
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    deploy:
+      resources:
+        reservations:
+          memory: 256g
+          devices:
+            - driver: nvidia
+              device_ids: ["${GPU0:-2}", "${GPU1:-3}"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 300s
+      timeout: 30s
+      retries: 2
+      # prepare 已完成；serve 仍要加载 ~62GB 合并权重，给足 30min
+      start_period: 1800s

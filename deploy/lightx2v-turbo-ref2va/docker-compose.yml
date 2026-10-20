@@ -1,0 +1,142 @@
+# lightx2v/Minimax-h3-Turbo — vLLM-Omni v0.31.0rc1
+#
+# 选 vLLM 的原因：LightX2V 的 8 个 Diffusers 布局 artifact 在 vLLM-Omni 官方支持表里，
+# 走 --lora-backend peft，请求级激活，不需要离线融合；DLO 与 request-switchable
+# LoRA 可以同时使用。Ref2VA 文件必须配 --task-type ref2va（不能挂到 combined/FL2VA 服务）。
+#
+# 版本：钉在 v0.31.0rc1，直接复用已有镜像 minimax-h3-vllm:v0.31.0rc1，不新建镜像。
+# 依据（在镜像内核对过）：vllm_omni/diffusion/models/minimax_h3/lora.py 已带
+#   _TURBO_NAME_RE（fl2v|ref2v）、768p 的 flow_shift=6、alpha 从 safetensors
+#   metadata 读，以及请求级 lora 字段 / --lora-backend peft / --dlo-resident-layers。
+# 0.32 的收益只有去掉 LoRA rebind（vLLM-Omni #7195），本服务是单一 artifact
+# 专用进程，稳态不会触发 rebind，所以不跟 RC；要升见 docs/HANDOFF-4-variants.md §7.1。
+#
+# 镜像重建（仅当本机没有该 tag）：在仓库根目录
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .
+#
+# 使用的 artifact（Ref2VA, 8 步）：
+#   minimax_h3_ref2v_turbo_8step_v1.0_768p_bf16.safetensors
+# 下载：
+#   hf download lightx2v/Minimax-h3-Turbo \
+#     minimax_h3_ref2v_turbo_8step_v1.0_768p_bf16.safetensors \
+#     --local-dir /model_nas/models/lightx2v-turbo
+#
+# ⚠️ 文件名就是契约：不要改名、不要用 _comfyui_ 导出（QKV 融合版会被按名字拒绝）、
+#    目录里只放这一个文件（多文件会被判歧义拒绝）。
+#
+# 请求契约（/v1/videos/sync 或异步 /v1/videos）：
+#   num_inference_steps=9, flow_shift=6, audio_flow_shift=3.0,
+#   extra_params={"task":"ref2va","duration":5,...}
+#   lora={"name":"h3-turbo-ref2v-8step",
+#         "path":"/models/turbo/minimax_h3_ref2v_turbo_8step_v1.0_768p_bf16.safetensors",
+#         "scale":1.0}
+#   path 必须是服务端看到的路径；步数/shift/文件名不匹配会被拒绝。
+#
+# A100 40G 适配：DLO resident=24 是带 LoRA 常驻缓冲的保守值。
+#   实测峰值有余量再 28 -> 32；出现 OOM 先回退 20/16。
+#
+# 并行拓扑：官方示例是 8 卡纯 Ulysses，TP2+LoRA 没有公开实测。本机 base H3
+#   在 TP2+DLO 上已验证，先沿用；如果 LoRA 在 TP 下报错或显存尖峰，改
+#   --tensor-parallel-size 1 --usp 2 --text-encoder-tp-size 1（vae 并行度保持 2）。
+#
+# attention backend：官方 recipe 在 B300 用 TRTLLM_ATTN；A100 上本仓库已验证
+#   的是 CUDNN_ATTN（base H3 用了很久），H3 是 packed varlen，FLASH_ATTN 这条
+#   路径没在本机验证过。先跟已验证值对齐，要试更快再单独开实验。
+
+services:
+  minimax-h3-turbo-ref2va:
+    # 复用根目录 Dockerfile.vllm 产出的 tag（与 base 服务同一份代码，只差命令行），
+    # 所以这里没有 build: 段；需要重建时走上面的 docker build。
+    image: minimax-h3-vllm:v0.31.0rc1
+    container_name: minimax-h3-turbo-ref2va
+
+    ipc: host
+    shm_size: 64gb
+
+    restart: unless-stopped
+
+    # RAM + SWAP <= 400G，swap 硬上限 16G
+    mem_limit: 384g
+    memswap_limit: 400g
+    mem_swappiness: 10
+    mem_reservation: 256g
+
+    command:
+      - vllm
+      - serve
+      - /models/MiniMax-H3
+      - --omni
+      - --task-type
+      - ref2va
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --trust-remote-code
+      - --served-model-name
+      - MiniMaxAI/MiniMax-H3
+
+      - --num-gpus
+      - "2"
+      - --tensor-parallel-size
+      - "2"
+      - --usp
+      - "1"
+      - --ring
+      - "1"
+
+      - --text-encoder-tp-size
+      - "2"
+      - --vae-patch-parallel-size
+      - "2"
+      - --vae-parallel-mode
+      - tile
+      - --vae-use-tiling
+
+      - --enable-distributed-layerwise-offload
+      - --dlo-no-use-allgather
+      - --dlo-resident-layers
+      - "24"
+
+      - --enforce-eager
+      # 与仓库验证过的 A100 base H3 一致；不要直接换成 TRTLLM_ATTN（需 SM90+）
+      - --diffusion-attention-backend
+      - CUDNN_ATTN
+
+      - --lora-backend
+      - peft
+      - --lora-path
+      - /models/turbo/minimax_h3_ref2v_turbo_8step_v1.0_768p_bf16.safetensors
+
+    ports:
+      - "8002:8000"
+
+    volumes:
+      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+      - /model_nas/models/lightx2v-turbo:/models/turbo:ro
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - VLLM_WORKER_MULTIPROC_METHOD=spawn
+      - VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400
+      - HF_HUB_OFFLINE=1
+      - WIDTH=1344
+      - HEIGHT=768
+
+    deploy:
+      resources:
+        reservations:
+          memory: 256g
+          devices:
+            - driver: nvidia
+              device_ids: ["${GPU0:-2}", "${GPU1:-3}"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"]
+      interval: 300s
+      timeout: 10s
+      retries: 2
+      # 首启要从 /model_nas 拉 ~62GB 主干 + LoRA 再建 DLO，NAS 慢时 10 分钟不够；
+      # start_period 只影响健康判定，不影响启动。
+      start_period: 1800s

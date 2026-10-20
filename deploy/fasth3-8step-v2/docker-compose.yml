@@ -1,0 +1,113 @@
+# FastVideo-FastH3-8-Step-V2 — SGLang v0.5.22
+#
+# 选 SGLang 而不是 vLLM 的原因：
+#   vLLM-Omni 的 FastH3CheckpointSpec.check_serving_contract() 硬性要求
+#   --diffusion-attention-backend FASTVIDEO_VSA；该 VSA 内核面向 SM90+/SM100，
+#   A100(SM80) 不可用，且没有稠密回退。SGLang v0.5.22 明确支持用任意稠密
+#   后端跑这份权重（跳过 compression gate），所以 A100 上走 SGLang。
+#
+# 能力边界：仅 T2VA；FL2VA / Ref2VA 请求会被拒绝。这是旁路服务，不是 Ref2VA 主线。
+#
+# 首次启动（HF 权重为 gated，需要可访问 MiniMaxAI/MiniMax-H3 的 token）：
+#   HF_HOME=/model_nas/hf-cache HF_TOKEN=... \
+#     hf download FastVideo/FastVideo-FastH3-8-Step-V2
+#   # 视频/音频 VAE 会按 provenance.json 里 pin 的 base revision 从
+#   # MiniMaxAI/MiniMax-H3 拉取；离线部署请先用同一 HF_HOME 预热。
+#
+# 请求契约（异步 /v1/videos）：
+#   task=t2va, num_inference_steps=8, flow_shift=10, audio_flow_shift=3,
+#   guidance_scale=1。步数/shift 不符会被服务端拒绝。
+#
+# A100 40G 适配：TP2 + layerwise offload；resident=24 是保守值。
+#   实测 nvidia-smi 峰值 <36G 可上探 32/40；OOM 则回退 16。
+#   若该 tag 的 V2 pipeline 拒绝 TP，可改 --ulysses-degree 2 并把
+#   resident-layers 降到 16（Ulysses 不切权重）。
+
+services:
+  fasth3-8step-v2:
+    image: minimax-h3-sglang:v0.5.22
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang
+    container_name: minimax-h3-fasth3-v2
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+
+    restart: unless-stopped
+
+    mem_limit: 384g
+    memswap_limit: 386g
+    mem_swappiness: 0
+    mem_reservation: 256g
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - FastVideo/FastVideo-FastH3-8-Step-V2
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      # SM80 没有 VSA 内核；显式选稠密 FA（不传也会因 capability 不匹配回退到稠密）
+      - --component-attention-backends
+      - transformer=fa
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      - --enable-torch-compile
+      - "false"
+      - --warmup-resolutions
+      - 1344x768
+      - --warmup-num-frames
+      - "124"
+      # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
+      # 8 步变体正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
+      - --scheduler-rpc-timeout
+      - "10800"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    ports:
+      - "30012:30010"
+
+    volumes:
+      # HF cache 同时承载 V2 权重、base VAEs 与 overlay 的 10GB VAE 重序列化
+      - /model_nas/hf-cache:/hf-cache:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - HF_HOME=/hf-cache
+      - HF_TOKEN=${HF_TOKEN:-}
+      - SGLANG_DIFFUSION_CACHE_ROOT=/hf-cache/sglang
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    deploy:
+      resources:
+        reservations:
+          memory: 256g
+          devices:
+            - driver: nvidia
+              # 默认沿用 ref 里的 2,3；可用 GPU0=0 GPU1=1 覆盖
+              device_ids: ["${GPU0:-2}", "${GPU1:-3}"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 300s
+      timeout: 30s
+      retries: 2
+      # 首启要拉 gated 权重 + 重序列化 ~10GB video VAE，10 分钟不够；
+      # healthcheck 不会重启容器，但 up --wait / 编排器会因此误判。
+      start_period: 1800s
