@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows the <Subject 2> agent delivering a complete visit-record summary after the audio parsing, then <Subject 1> reviewing the document, archiving it, and finally relaxing. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3], [Shot 4]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his reading, clicking, and relieved expression are added.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the assistant's look from <Picture 2> is retained in the avatar and the document header.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with cool daylight from the window and a clean screen glow across the desk.
+[Shot 1] A close-up of the laptop screen holds the completed attachment list with all waveform chips lit, and the parsing indicator switches to a check mark at 00:00.200.
+[Shot 2] At 00:00.500, the shot cuts to a medium close-up of the screen as the reply bubble expands under the <Subject 2> avatar, whose look matches <Picture 2> exactly, and the agent's voice begins. <Subject 2> (S1) says in a clear, evenly paced synthetic assistant voice: <d>[Chinese] 录音解析完成，已提炼客户诉求、关键分歧、合作意向、待跟进事项，输出完整走访记录总结文档。</d> As the line plays, the bubble resolves into a document card titled "客户走访记录总结" and four labelled blocks appear in sequence at 00:03.800, 00:05.400, 00:07.000, and 00:08.600: 客户诉求, 关键分歧, 合作意向, 待跟进事项. The camera trucks down with small amplitude at slow speed to keep pace with the blocks filling in.
+[Shot 3] At 00:10.500, the shot cuts to a medium shot of the desk from the front as <Subject 1>, whose face and outfit match <Picture 1> exactly, scrolls slowly through the finished summary, his eyes moving down the page and his head nodding once at 00:11.500. At 00:11.800 <Subject 1> (S2) says in a relieved, warm young male voice at a relaxed pace: <d>[Chinese] 这下拜访材料整理归档省心多了！</d>
+[Shot 4] At 00:14.000, the shot cuts to a close-up of the screen: the cursor moves onto an "存档" button at the top right of the document and clicks it at 00:14.300; the button turns to a check state and the document thumbnail slides into an archive folder on screen. A long, audible exhale from <Subject 1> is heard over the final half second.
+
+overall_soundscape:
+Cool office room tone and a faint laptop fan continue underneath. A single confirmation chime marks the parsing check, a soft ticking sound accompanies the four summary blocks filling in, and a trackpad scroll ticks twice. A mouse button clicks, a light archive swoosh follows the document into the folder, and a long relaxed exhale closes the segment.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a warm sustained pad underneath; the percussion softens at 00:10.500 and the pattern resolves on a single long synth note in the final second.

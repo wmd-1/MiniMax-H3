@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), shown as the assistant avatar on the phone screen lying on the desk and heard as an off-screen voice from that phone; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video delivers the <Subject 2> agent's closing mnemonic as an off-screen voice from the phone on the desk, shows <Subject 1> nodding in agreement, and ends on a freeze frame with the title card. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his listening posture, nod, and the freeze of the final frame are added.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - the assistant's look from <Picture 2> is retained on the phone screen and reused unchanged in the end-card mark.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look with warm late-afternoon daylight, and the final shot resolves into a clean graphic end card.
+[Shot 1] A medium close-up frames <Subject 1>, whose face and outfit match <Picture 1> exactly, seated behind the closed laptop with his right fist still at chest height. The phone on the desk holds the lit <Subject 2> avatar, matching <Picture 2> exactly, and <Subject 2> (S1) speaks from the phone as an off-screen voice in a clear, evenly paced synthetic assistant voice, while <Subject 1>'s lips remain completely closed: <d>[Chinese] 记住口诀——找政策、筛客户、做准备、挖存量、理走访。对公拓客不再难！</d> The camera pushes in with small amplitude at slow speed on <Subject 1>'s face, and his eyes move down toward the phone as he listens.
+[Shot 2] At 00:06.500, the shot cuts to a close-up of <Subject 1> as he nods twice, firmly, at 00:07.000 and 00:07.800, lowers his fist to the desk, and lets a small confident smile settle on his face.
+[Shot 3] At 00:09.000, the image freezes on <Subject 1>'s smiling frame, holding completely motionless. Across the frozen frame a clean title card resolves: at 00:09.500 the line "对公营销情报官・精准服务客户" fades in across the centre in bold white type on a soft translucent light-blue band, and at 00:10.500 the <Subject 2> mark, matching <Picture 2> exactly, fades in above the text. The card and the frozen frame hold without motion until the final frame at 00:15.000.
+
+overall_soundscape:
+Quiet late-afternoon office room tone continues underneath and fades gradually from 00:09.000. A short bright phone speaker tone is heard as the agent's voice starts, and the room tone drops to near silence under the frozen end card.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a muted kick and warm pad, lifting in level through the agent's line, then resolving onto a sustained major chord at 00:09.000 that decays slowly and fades out by the final frame.

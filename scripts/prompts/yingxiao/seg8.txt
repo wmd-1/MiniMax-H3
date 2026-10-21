@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] After a one-second blank frame, the target video jumps forward in time to the same desk and shows <Subject 1> reading a WeCom Business chat window, realizing that existing clients still hold untapped needs, and preparing to upload the chat history to the <Subject 2> panel. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3], [Shot 4]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only the later time of day, his self-talk, and his computer actions are added.
+<Subject 2> (appears in [Shot 4]): fully_preserved - the assistant's look from <Picture 2> is retained in the chat panel opened beside the chat window.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, but the daylight is now warmer and lower, and a thin stack of client files sits at the corner of the desk to signal that time has passed.
+[Shot 1] The video opens on a completely blank white frame that holds motionless and silent for one second.
+[Shot 2] At 00:01.000, the shot cuts to a medium wide shot of the same desk from a slightly different angle: <Subject 1>, whose face and outfit match <Picture 1> exactly, sits with an enterprise chat window filling most of the laptop screen, a conversation list down the left side and message bubbles on the right. He scrolls slowly with two fingers on the trackpad at 00:02.000, stops, tilts his head, and his eyes narrow as an idea forms.
+[Shot 3] At 00:03.500, the shot cuts to a medium close-up of <Subject 1> in three-quarter profile. <Subject 1> (S1) mutters to himself in a low, thinking voice, slowed and almost questioning, and with the slightly guarded delivery of someone talking to himself in an open office, his lips clearly moving and his gaze drifting off the screen: <d>[Chinese] 不少已经合作的存量客户，还有哪些机会可以深挖？不如把微信聊天记录导出来分析看看！</d> On the last phrase his eyes come back to the screen and his right hand moves to the mouse.
+[Shot 4] At 00:12.500, the shot cuts to a close-up of the laptop screen. The chat window shrinks to the left half, a file export progress strip fills and completes at 00:13.500, and an exported chat-record file tile drops onto the desktop. He drags the tile with the mouse into the "对公营销情报官" input box; the <Subject 2> avatar, matching <Picture 2> exactly, appears beside the attachment chip as the file locks in at 00:14.600 and the shot ends on the attached file chip.
+
+overall_soundscape:
+Office room tone continues underneath, and a quiet afternoon ambience with distant footsteps replaces the earlier bustle. A trackpad scroll ticks twice, a mouse button clicks, an export progress strip emits a short rising tone, and a soft drag-and-drop thud marks the chat-record file landing in the input box, followed by a single confirmation blip.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo, now with a warmer low synth pad; the pattern drops out for the blank frame, re-enters at 00:01.000 at a slightly lower level under the self-talk, and lifts back to full level at 00:12.500.

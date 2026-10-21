@@ -1,0 +1,25 @@
+subject_definitions:
+<Subject 1> is 小李 from xl.png.
+<Subject 2> is 老张 from lz.png.
+
+summary:
+[reference generation] A fifteen-second three-shot sequence: <Subject 1> steps out of the credit committee and reacts to her phone, then the film cuts to a cluttered finance office where <Subject 2> picks up a ringing landline as a phone scam begins.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 3]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video moves from a cool neutral corridor into a warmer cluttered office with harder overhead light.
+[Shot 1] A medium shot from the side of a pale grey corridor. A frosted glass door swings shut behind <Subject 1>. She takes two steps forward, stops and leans her shoulder against the wall, lifts her left hand and presses her fingertips to her temple, closing her eyes briefly. In her right hand she holds a phone with its screen glowing pale.
+<Subject 1> (S1) says in a low worn female voice, muttering to herself, <d>[Mandarin] 又得听一下午录音整理纪要。</d> She opens her eyes and pushes off the wall.
+[Shot 2] At 00:04.000, the shot cuts to a medium close-up from the chest up. <Subject 1> stops walking and holds the phone at waist height, tilted up toward her face. The phone surface shows abstract stacked text blocks and thin progress bars sliding into place, geometric and unreadable. The pale glow reaches the underside of her chin. Her eyes move down the screen, then her eyebrows lift and she raises her chin, her mouth opening slightly.
+<Subject 1> (S1) says in a bright incredulous female voice, the tiredness replaced by open disbelief, <d>[Mandarin] 以前得听一下午！现在几分钟就搞定了？</d> She looks up over the top of the phone toward the camera, a grin breaking across her face.
+[Shot 3] At 00:10.000, the shot cuts to a medium shot from the far side of a cluttered office desk. <Subject 2> reaches for a ringing landline with his right hand and lifts the handset to his ear, his left hand staying on the desk near the keyboard. He turns his head toward the monitor, which displays a plain transfer form of empty rectangular fields and a highlighted confirm area, all abstract and unreadable. His brow furrows slightly as he listens.
+An off-screen male voice through the handset (S2), fast and clipped with a thin telephone timbre, says, <d>[Mandarin] 张总，我是银行年检专员！公司账户需要年检，</d> <Subject 2> shifts his weight and his fingers curl against the desk edge.
+
+overall_soundscape:
+Quiet corridor room tone with a slight reflective echo and a soft glass door click, a phone notification blip, then a stuffy office room tone with the sharp double ring of a landline stopping as the handset lifts and a thin compressed telephone voice from the earpiece.
+
+non_diegetic_music:
+A light neutral corporate underscore with sparse piano and a soft bass pad, dropping out entirely on the cut to the finance office.

@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), shown as the assistant avatar on the phone screen lying on the desk; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] After a one-second blank frame, the target video shows <Subject 1> closing his laptop, straightening up, and confidently reciting the first half of his summary, while a phone on the desk lights up with the <Subject 2> avatar as the agent prepares to answer. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3], [Shot 4]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his closing action, recital, and fist gesture are added.
+<Subject 2> (appears in [Shot 4]): fully_preserved - the assistant's look from <Picture 2> is retained unchanged as the avatar on the phone screen.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with late-afternoon daylight warming the office slightly and a calm, settled atmosphere at the desk.
+[Shot 1] The video opens on a completely blank white frame that holds motionless and silent for one second.
+[Shot 2] At 00:01.000, the shot cuts to a close-up of <Subject 1>'s hands, whose skin and sleeve match <Picture 1> exactly, as he folds the laptop lid shut with one smooth press; the lid meets the base with a soft click at 00:02.400 and the screen glow dies.
+[Shot 3] At 00:02.500, the shot cuts to a medium close-up of <Subject 1>, whose face and outfit match <Picture 1> exactly, sitting upright behind the closed laptop. The camera slowly arcs right with small amplitude at slow speed around him. <Subject 1> (S1) recites in a confident, rhythmic young male voice at a steady, clearly separated pace, counting each step with a small hand movement on the desk: <d>[Chinese] 有了情报官加持——政策找方向、匹配选客户、研报补认知、一页纸备拜访，聊天挖线索、录音做归档！</d> His chin lifts on the final phrase.
+[Shot 4] At 00:11.500, the shot cuts to a slightly wider medium shot as <Subject 1> raises his right hand into a firm fist at chest height and holds it, his expression resolved. At 00:13.500 the phone lying on the desk beside the closed laptop lights up on its own, and the <Subject 2> avatar, matching <Picture 2> exactly, appears clearly on the phone screen; the shot holds on that lit phone and his fist until the end of the segment.
+
+overall_soundscape:
+Quiet late-afternoon office room tone continues underneath with a faint laptop fan that stops when the lid closes. The lid snaps shut with a soft mechanical click, the hinge settles, a hand taps the desk twice during the recital, and a short bright notification tone sounds from the phone at 00:13.500.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a muted kick; the pattern drops out for the blank frame, re-enters at 00:01.000 with a fuller low end, and rises in level from 00:11.500 to the final frame.

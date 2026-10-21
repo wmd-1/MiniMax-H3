@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小周 from xz.png.
+
+summary:
+[reference generation] A fifteen-second two-shot sequence at the approval centre: <Subject 1> works through research reports and complains about the workload, then abstract report modules light up and she reacts with astonishment.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a cool clinical corporate documentary style, bright overhead office light with soft daylight from a side window, the camera fixed at eye level across the desk.
+[Shot 1] <Subject 1> slides one report out of the fan with her left hand, opens it and flips three pages in quick succession with her thumb, then sets it down open and rests her palm on the page. Her posture is slightly slumped forward. She looks from the open report up to the monitor and back down, and her shoulders lift and fall in a single visible sigh.
+<Subject 1> (S1) says in a tired precise female voice, the pace slowing on the final clause, <d>[Mandarin] 风险点排查得一条条对比财报数据，没有大半天根本完不成审批报告。</d> She closes the report with one hand and lets it drop onto the pile.
+[Shot 2] At 00:09.000, the shot cuts to a medium close-up from slightly above desk level. The monitor at frame left brightens and four rounded interface modules, plain coloured blocks with thin glowing borders and no readable characters, light up in sequence and settle side by side. The cool glow washes across <Subject 1>'s face. She lifts her hand off the mouse, pulls it back toward her chest, straightens her spine and leans back in the chair. Her eyes move quickly across the screen and her expression opens into surprise.
+<Subject 1> (S1) says in a bright astonished female voice, <d>[Mandarin] 以前得折腾一整天，现在几分钟就搞定了！</d> She lets out a short laugh through her nose and shakes her head once, still watching the screen.
+
+overall_soundscape:
+Open-plan office room tone, the crisp flip of pages turning quickly, the soft thud of a closed report landing, a muffled sigh, then a soft chime as each module lights up and the small creak of a chair back.
+
+non_diegetic_music:
+A cool minimal corporate underscore with low sustained strings and a light electronic pulse at a slow even tempo, brightening into a short rising synth figure on the module chimes then stepping back under the room tone.

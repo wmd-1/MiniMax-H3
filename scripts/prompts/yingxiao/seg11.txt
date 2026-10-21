@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> stuck on a pile of visit recordings, complaining about it, then dragging the whole batch into the <Subject 2> panel and watching the files being parsed. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his troubled expression, drag gesture, and watching posture are added.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the assistant's look from <Picture 2> is retained in the chat panel and the parsing indicator.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look with cooler, softer daylight and a clean screen glow on the desk.
+[Shot 1] A medium close-up frames <Subject 1>, whose face and outfit match <Picture 1> exactly, seated behind a fan of audio-recording cards and a small digital voice recorder. He spreads the cards apart with both hands, looks down at the pile, and rubs the back of his neck. At 00:00.500 <Subject 1> (S1) says in a frustrated, slightly helpless young male voice at a slowed, sighing pace: <d>[Chinese] 刚结束客户走访，一堆录音材料，整理记录无从下手。</d> He lets his hand drop onto the desk on the last phrase.
+[Shot 2] At 00:05.500, the shot cuts to an over-shoulder view of the desk and laptop. <Subject 1>'s left hand sweeps the recording cards together and his right hand drags the selected batch onto the "对公营销情报官" input box; the <Subject 2> avatar, matching <Picture 2> exactly, sits at the left of the chat area. The file chips stack into a compact attachment list from 00:06.200 to 00:08.000, each chip showing a filename and a small audio waveform.
+[Shot 3] At 00:08.500, the shot cuts to a close-up of the screen. A parsing indicator appears under the attachment list and a progress arc sweeps around the <Subject 2> avatar; the waveform inside each chip lights up in sequence from left to right, filename by filename, and short grey text lines condense out of each waveform as it finishes. The camera pushes in with small amplitude at slow speed while the progress arc completes at 00:13.000 and a short status line appears: "解析完成". The shot holds on the completed attachment list with all chips lit until the end of the segment.
+
+overall_soundscape:
+Cool office room tone and a faint laptop fan continue underneath. Paper cards slide and rustle against the desk, a hand drags across a trackpad, and a soft multi-file upload swell is heard as the chips stack. A steady electronic parsing tick repeats as each waveform lights up, ending with a single clean two-note confirmation chime.
+
+non_diegetic_music:
+A thin plucked-synth pattern at a slow-to-moderate tempo with a soft sustained low synth note; the percussion stays sparse through the upload, and a light ticking layer joins at 00:08.500 and runs to the final frame.

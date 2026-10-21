@@ -1,0 +1,28 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 小周 from xz.png.
+<Subject 3> is 浙小控 from zxk.png.
+
+summary:
+[reference generation] A fifteen-second opening: three hard cuts establish the bank's credit workflow and end on a red alarm lamp, then the frame transitions to a dark product interface where <Subject 3> appears and a narrator introduces the product.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): partially_preserved - only hands and forearms are framed.
+<Subject 2> (appears in [Shot 2]): partially_preserved - only shoulders and hands are framed from behind.
+<Subject 3> (appears in [Shot 4], [Shot 5]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video opens in a clean corporate documentary style with cool daylight, then shifts into a premium enterprise-tech look with a deep navy field and thin luminous accent lines.
+[Shot 1] An overhead close-up on a light-grey desk. Two hands square up a thick stack of printed statements, tapping the block twice until the edges align, then set it down beside a second stack. Daylight rakes across the paper edges from frame left.
+[Shot 2] At 00:02.000, the shot cuts to a medium close-up from behind the right shoulder of <Subject 2>. Her hand lifts a printed report and lets the pages fall one by one, the paper fanning open, the top page settling flat.
+[Shot 3] At 00:03.000, the shot cuts to a low three-quarter angle across a long dark conference table. Seven hands rise into frame at once, palms open, held steady, and a red warning lamp snaps on above the far wall as a saturated red wash sweeps across the table and the grey wall panels.
+[Shot 4] At 00:04.000, the shot cuts to a deep navy field with faint concentric rings. Abstract interface panels of frosted glass with thin glowing borders rise and stack into a loose grid on the right half of frame, containing only plain bar shapes and small pulsing dots, no readable characters. From beyond the right edge, <Subject 3> drifts into frame and settles at the left-centre, its glow expanding once before easing into a steady pulse.
+An off-screen narrator (S1), a calm professional female voice with a measured unhurried delivery, says, <d>[Mandarin] 从授信申报到贷后守护，风控的每个环节</d>
+[Shot 5] At 00:09.000, the shot continues on the same composition with a slow inward dolly. <Subject 3> holds steady, its glow pulsing in a slow regular rhythm, while the abstract panels on the right brighten one after another from bottom to top. A narrow horizontal bar of plain white segments rises into the lower fifth of frame and settles, carrying only abstract marks.
+An off-screen narrator (S1), the same calm voice, says, <d>[Mandarin] 都有一位看得懂材料、抓得住风险的AI助理。</d> The glow eases to a settled pulse on the final frame.
+
+overall_soundscape:
+Tight indoor room tone, the slap of paper edges being squared, the riffling hiss of turning pages, a sharp electronic alarm beep repeating three times, then a soft studio ambience with a rising airy sweep as the panels assemble and a warm low bloom as <Subject 3> settles.
+
+non_diegetic_music:
+A restrained corporate synth bed at a slow tempo, soft plucked arpeggios over a sustained low pad, no percussion and no swell.

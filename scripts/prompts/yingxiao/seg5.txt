@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> leaning toward the screen and excitedly locking in the target company, followed by a one-second blank frame, then cutting to him sitting up straight and committing to preparing for the visit. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his forward lean, excited expression, and straightened posture are added.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the assistant's look from <Picture 2> is retained in the chat panel visible over his shoulder.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with warm daylight on one side of the subject and cool screen light on the other.
+[Shot 1] A medium close-up frames <Subject 1>, whose face and outfit match <Picture 1> exactly, with the laptop screen occupying the lower left of the frame and the <Subject 2> avatar visible in the chat header. At 00:00.200 he leans forward toward the screen, his shoulders rising, and at 00:00.500 <Subject 1> (S1) says in a bright, rising young male voice at an energetic but clear pace, <d>[Chinese] 太好了！就选定XX旅游文化发展有限公司作为目标客户。</d> His right hand closes into a small fist on the desk edge on the last phrase. At 00:06.000 a subtitle fades in across the lower third in white type with a short red accent bar: "10 家线索・5 家 A 级・精准锁定"; he holds the excited expression and glances back and forth between the subtitle area and the highlighted row on screen until 00:08.500.
+[Shot 2] At 00:08.500, the shot cuts to a completely blank white frame that holds motionless and silent for one second.
+[Shot 3] At 00:09.500, the shot cuts to a medium wide shot from the side of the desk: <Subject 1> pulls his chair in, sits up straight, squares his shoulders, and straightens a stack of papers with both hands at 00:10.500. Then <Subject 1> (S1) says in a firm, focused voice with a deliberate pace, <d>[Chinese] 拜访前，我得先把行业情况摸透！</d> He turns back to the keyboard, and in the final half second his hands settle onto the keys ready to type.
+
+overall_soundscape:
+Office room tone continues underneath. A chair cushion compresses and a hand taps the desk edge, a fabric shift follows as he straightens up, papers rustle briefly under his palms, and a light chair roll on the hard floor closes the segment. A single soft breath is audible after the line in [Shot 3].
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a light kick and shaker; the pattern cuts out at 00:08.500 for the blank frame, restarts with a brighter tone at 00:09.500, and holds level to the final frame.

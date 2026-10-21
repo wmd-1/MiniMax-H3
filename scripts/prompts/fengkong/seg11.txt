@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 浙宝箱 from zbx.png.
+
+summary:
+[reference generation] A fourteen-second two-shot closing sequence: overlapping workspace planes settle into one composition and <Subject 1> rises into frame, then luminous arcs close into a complete ring around it while the narrator delivers the closing thought.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a premium enterprise-tech visual style, a deep navy field with thin luminous accent lines, restrained and confident.
+[Shot 1] The frame opens on a layered composite of soft-lit planes suggesting a desk edge, a monitor glow and a table surface, drifting slowly at different depths. The camera pulls back in a smooth continuous move as the planes glide toward each other and settle into one centred composition. From the lower edge, <Subject 1> rises into the centre of frame and holds, its form pulsing once.
+An off-screen narrator (S1), a warm steady male voice with a conversational broadcast delivery, says, <d>[Mandarin] 从写报告到审材料，从开贷审会到守钱袋子——</d>
+[Shot 2] At 00:06.000, the shot continues on <Subject 1> held at the middle of frame as thin luminous lines sweep in from the left and right edges in smooth arcs and meet, closing into a complete horizontal ring that encircles the form and settles into a slow steady rotation. Small bright nodes appear at four points along the ring and pulse in sequence. The camera pushes in a little, tightening the composition.
+An off-screen narrator (S1), the same warm steady male voice, says, <d>[Mandarin] 对公风控研判官，把风险防控从事后翻旧账，变成全程盯着看。</d> The ring rotates one quarter turn as the line ends.
+
+overall_soundscape:
+A near-silent studio ambience with a soft airy whoosh as the planes converge, a low warm bloom as <Subject 1> rises, an airy sweep as the arcs close, four light electronic pulses as the nodes appear, and a sustained warm hum underneath.
+
+non_diegetic_music:
+A mid-tempo corporate synth bed with a gentle rising pad and soft mallet arpeggios, the pad widening through the second shot, building very slightly without percussion.

@@ -1,0 +1,24 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+The visiting company client is a secondary figure with no reference image, seen only from behind and in three-quarter profile.
+
+summary:
+[reference generation] A fourteen-second three-shot sequence: a handshake in the branch hall closes the anti-fraud thread, then <Subject 1> clicks a verification action and leans back in satisfaction.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - the character identity from the reference image is retained.
+The visiting company client (appears in [Shot 1]): weak_reference - only a generic middle-aged male client in a dark coat is required, seen from behind and in profile with no facial detail.
+
+detailed_description:
+The target video moves from a bright institutional hall into the warm naturalistic branch office.
+[Shot 1] A medium shot from a slight side angle in a bank hall with a polished stone floor. The visiting company client, seen from behind at frame left, stands in profile and clasps hands with a bank staff member in a dark suit at frame right whose back is to camera. Their right hands meet in the centre of frame and press together in a firm double shake, held for a beat. Behind them a large wall-mounted display panel glows with an abstract success graphic, a green circular ring and rising bar shapes with no readable characters.
+[Shot 2] At 00:04.000, the shot cuts to a medium close-up from behind and slightly right of <Subject 1>, a monitor filling the left half of frame. A small rounded notification panel with a thin glowing border slides into the lower right corner of the screen, containing two plain horizontal bars and a small square icon, entirely abstract. His hand moves the mouse a short distance and his index finger clicks once. The panel expands slightly and the screen brightness lifts. He leans in a touch, his chin tilting forward.
+<Subject 1> (S1) says in a relaxed curious male voice, half to himself, <d>[Mandarin] 现在试试这个功能怎么样。</d>
+[Shot 3] At 00:08.000, the shot cuts to a medium shot from the side of the desk. On the monitor, four horizontal checklist rows of plain grey blocks fill in from left to right and three small green circular marks appear one after another at their right ends, pure geometric shapes. <Subject 1> pulls his right hand off the mouse, lets it rest on the arm of the chair and leans back until his shoulders meet the backrest. His chest lifts in a satisfied breath and the corners of his mouth turn up.
+<Subject 1> (S1) says in a warm pleased male voice with an easy rhythm, <d>[Mandarin] 完美，全部匹配。这效率比以前高太多了！</d> He taps the armrest twice lightly with his fingertips.
+
+overall_soundscape:
+Bright airy hall room tone with a slight natural echo and a soft fabric rustle, then quiet office room tone with a soft notification chime, one crisp mouse click, a chime for each green mark, the creak of a chair back and two light fingertip taps on an armrest.
+
+non_diegetic_music:
+A warm resolving corporate figure on soft strings and light piano at a moderate tempo through the handshake, then a light marimba and muted bass pulse under the verification beats.

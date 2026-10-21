@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> typing a short instruction into the chat panel and the <Subject 2> agent returning a parsed-insight summary built from the uploaded chat records, ending on a generated report card. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; his hands and posture are the only additions.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the assistant's look from <Picture 2> is retained in the avatar and the report header.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with warm late-day daylight and a soft screen glow lighting the subject's face.
+[Shot 1] A close-up of the laptop screen holds the "对公营销情报官" input box with the chat-record file chip still attached above it. <Subject 1>'s hands enter from the bottom of the frame, and the typed characters appear quickly and evenly, forming "帮我挖掘聊天线索。" by 00:02.200; Enter is pressed at 00:02.500. The <Subject 2> avatar, matching <Picture 2> exactly, pulses once as the reply begins.
+[Shot 2] At 00:02.500, the shot cuts to a medium close-up of the screen as the reply bubble streams out and the agent's voice starts. <Subject 2> (S1) says in a clear, evenly paced synthetic assistant voice: <d>[Chinese] 已解析微信对话记录，识别企业未表露痛点3项，挖掘潜在业务机会，存量客户营销线索报告已生成！</d> While the line plays, three labelled markers appear in sequence inside the bubble at 00:04.200, 00:06.000, and 00:07.600, each attached to an extracted chat snippet. The camera pushes in with small amplitude at slow speed, and at 00:09.000 the bubble collapses into a report card titled "存量客户营销线索报告".
+[Shot 3] At 00:12.500, the shot cuts to a medium shot of the desk from the front as <Subject 1>, whose face and outfit match <Picture 1> exactly, moves the cursor onto the report card and clicks it at 00:13.200; the card opens into a full report page with a summary block at the top and a list of clue entries below, and his left hand rises to the desk edge as the page finishes loading in the final second.
+
+overall_soundscape:
+Office room tone continues underneath. Fast keyboard taps and an Enter press open the segment, followed by a message-post blip and a soft ticking sound as the three insight markers appear one by one. A mouse button clicks and a short page-open swoosh marks the report expanding, ending on a light interface settle tone.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a muted kick and light shaker; a sustained low synth note enters at 00:02.500 under the answer, rising slightly at 00:12.500 and holding to the end.

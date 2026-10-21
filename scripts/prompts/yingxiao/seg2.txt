@@ -1,0 +1,25 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 同事, the senior corporate banking relationship manager taken from <Picture 2> (ts.png); his face, hair, build, and outfit follow <Picture 2> exactly.
+<Subject 3> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 3> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 3> exactly.
+
+summary:
+[reference generation] The target video continues the office scene: <Subject 2> leans down and points <Subject 1> toward the new Zhejiang tourism policy, then <Subject 1> turns to his laptop, opens the <Subject 3> chat panel, and types his first question. All three references keep their identity and outfit consistent with <Picture 1>, <Picture 2>, and <Picture 3>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 4]): fully_preserved - identity and outfit from <Picture 1> are unchanged; expression shifts from puzzled to alert.
+<Subject 2> (appears in [Shot 1]): fully_preserved - identity and outfit from <Picture 2> are unchanged; only his leaning posture is added.
+<Subject 3> (appears in [Shot 3], [Shot 4]): fully_preserved - the assistant's look from <Picture 3> is reproduced as the avatar inside the chat panel without redrawing its features.
+
+detailed_description:
+The target video keeps the same bright corporate-explainer look, daylight office, light blue-and-white palette, and shallow depth of field.
+[Shot 1] An over-the-shoulder two-shot holds <Subject 1> seated at his desk in the lower left and <Subject 2>, with his appearance and outfit matching <Picture 2> exactly, standing behind the chair on the right. <Subject 2> (S1) leans down slightly, taps the desk edge with two fingers, and says in a warm, steady mature male voice at an easy pace, <d>[Chinese] 小王，浙江刚出了旅游业新政策，你从政策里找找机会啊！</d> He straightens up and gestures once toward the laptop screen with his chin.
+[Shot 2] At 00:05.500, the shot cuts to a close-up of <Subject 1>, whose face matches <Picture 1> exactly. His eyes widen as the idea lands; he blinks twice, his mouth opens slightly, and he turns his head sharply toward the laptop on the right.
+[Shot 3] At 00:07.500, the shot cuts to an over-shoulder view of the laptop as <Subject 1> wakes the screen with a key press and clicks open the "对公营销情报官" panel: a white chat card with a blue header, the <Subject 3> avatar at the left of the message area, and a text input box along the bottom. The camera pushes in with small amplitude at slow speed as the panel finishes rendering at 00:09.200.
+[Shot 4] At 00:10.000, the shot cuts to a close-up of the laptop screen. The cursor blinks in the input box and <Subject 1>'s typed characters appear one after another, forming "浙江旅游业最新贴息政策有哪些？" by 00:13.200. His right index finger presses Enter at 00:13.500; the input box clears and three loading dots begin to pulse beside the <Subject 3> avatar, which brightens as the reply bubble starts to form in the last instant of the shot.
+
+overall_soundscape:
+Office room tone continues underneath. A fingertip taps a desk edge, fabric shifts as someone stands upright, then a keyboard wakes with a short key click, a mouse button clicks, and rapid keyboard taps fill the second half of the shot sequence, ending with a soft Enter press and a single low interface blip.
+
+non_diegetic_music:
+The same light electronic pulse and plucked-synth arpeggio continue at a moderate tempo, with a quiet rising filter sweep from 00:07.500 to 00:10.000 and a thin high shimmer that enters with the chat panel and sustains to the end.

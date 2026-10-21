@@ -1,0 +1,24 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video opens on a one-second blank frame, then shows <Subject 1> typing a report request and the <Subject 2> panel generating a one-page industry brief, closing on a subtitle and a second blank frame. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 3], [Shot 5]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his typing action and his reading of the printed sheet are added.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the assistant's look from <Picture 2> is retained in the chat panel and the generated document header.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with the desk lit by daylight from the left and the screen glow from the front.
+[Shot 1] The video opens on a completely blank white frame that holds motionless and silent for one second.
+[Shot 2] At 00:01.000, the shot cuts to a close-up of the laptop screen. The cursor sits in the "对公营销情报官" input box and the typed characters appear quickly and evenly, forming "生成浙江省旅游业行业研报一页纸。" by 00:02.300; Enter is pressed at 00:02.500 and the reply bubble posts immediately. The <Subject 2> avatar, matching <Picture 2> exactly, brightens as the bubble streams out, and <Subject 2> (S1) says in the same clear, evenly paced synthetic assistant voice: <d>[Chinese] 已生成！行业背景、产业链、头部企业、行业前景一把摸透！</d> At 00:06.800 the reply bubble collapses into a document card that opens into a one-page brief titled "浙江省旅游业行业研报一页纸", with four labelled blocks filling the page from top to bottom; the camera pushes in with small amplitude at slow speed to follow the page rendering.
+[Shot 3] At 00:08.000, the shot cuts to a medium shot of the desk from the front as <Subject 1>, whose face and outfit match <Picture 1> exactly, leans in and scans the page on screen, his eyes moving down the four blocks and his chin lifting slightly at 00:10.500. At 00:09.000 a subtitle fades in across the lower third in white type with a short red accent bar: "行业大盘心中有数" and holds to 00:11.000.
+[Shot 4] At 00:11.000, the shot cuts to a completely blank white frame that holds motionless and silent for one second.
+[Shot 5] At 00:12.000, the shot cuts to a medium close-up of <Subject 1> as he lifts a freshly printed sheet from the desk with both hands, holds it upright at chest height, and reads down the page with small nods at 00:13.200 and 00:14.300, his expression settling into quiet confidence as the segment ends.
+
+overall_soundscape:
+Office room tone continues underneath. Fast keyboard taps and an Enter press open the second shot, followed by a message-post blip, a soft page-render ticking sound, and a brief printer whirr at 00:11.600 just before the printed sheet is picked up. Paper slides against a desk and rustles twice as it is lifted and read.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a light shaker; the pattern drops out for both blank frames and re-enters each time with a soft muted kick, holding level to the end.

@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly, with no added or altered features.
+<Subject 2> is 同事, the senior corporate banking relationship manager taken from <Picture 2> (ts.png); his face, hair, build, and outfit follow <Picture 2> exactly, with no added or altered features.
+
+summary:
+[reference generation] The target video is the opening beat of a live-action corporate workplace explainer set in a Wenzhou bank branch office. <Subject 1> sits at his desk stuck on how to find new corporate clients, and <Subject 2> walks past and rests a hand on his shoulder. Both characters keep their identity and outfit consistent with <Picture 1> and <Picture 2> in every shot.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - identity, face, hair, build, and outfit come from <Picture 1> unchanged; only posture, expression, and camera position change.
+<Subject 2> (appears in [Shot 2]): fully_preserved - identity, build, and outfit come from <Picture 2> unchanged; only his entrance path and the hand-on-shoulder action are added.
+
+detailed_description:
+The target video is a live-action corporate explainer with bright, clean daylight, a light blue-and-white palette, crisp contrast, and shallow depth of field. The location is a modern bank branch office in Wenzhou: a floor-to-ceiling window on the left, grey-white desks, dual monitors on each desk, and a glass partition with empty desks receding to the right rear.
+[Shot 1] A medium-wide shot frames <Subject 1> seated at his desk in three-quarter profile, shoulders slumped, staring at a spreadsheet on his laptop with a second monitor beside it. His appearance, hair, and outfit match <Picture 1> exactly. The camera pushes in with small amplitude at slow speed. At 00:01.500 he lifts his right hand and scratches the back of his head twice, lets the hand fall onto the desk, and exhales a long audible sigh. At 00:03.000 <Subject 1> (S1) says in a tired, slightly deflated young male voice at a natural conversational pace, <d>[Chinese] 入职三个月了，师傅让我独立拓客，可温州这么多企业，从哪儿下手啊？</d> He finishes with his brow furrowed and his lips pressed together, then taps the desk once with his index finger.
+[Shot 2] At 00:10.200, the shot cuts to a slightly wider two-shot from behind his chair as <Subject 2>, whose appearance and outfit match <Picture 2> exactly, walks in from the right along the glass partition carrying a folder and stops behind <Subject 1>'s chair. At 00:11.000 a subtitle appears across the lower third in clean white type with a short red accent bar: "新员工拓客难？方向比努力更重要". At 00:13.500 <Subject 2> sets his right hand on <Subject 1>'s shoulder and gives it two light pats; <Subject 1> turns his head up toward him with a puzzled look and the shot ends on that beat.
+
+overall_soundscape:
+Quiet open-plan office room tone with a distant air-conditioning hum runs throughout. Keyboard clatter and a mouse click are heard in the opening beat, followed by the creak of a chair, a long tired sigh, and slow footsteps approaching on the hard floor before a soft fabric shift as a hand lands on a shoulder.
+
+non_diegetic_music:
+A light electronic pulse at a moderate tempo with a repeating plucked-synth arpeggio; a soft shaker and muted kick enter at 00:10.200 and continue to the final frame.

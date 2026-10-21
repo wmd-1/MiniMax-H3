@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] A fifteen-second two-shot sequence: <Subject 1> takes a note in the workshop and acknowledges the explanation, then the printed risk report comes out of the printer and he signs and files it.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video opens in a hard industrial documentary look and returns to a warm naturalistic branch office with late-afternoon daylight.
+[Shot 1] A medium close-up of <Subject 1> standing in an assembly workshop, the production line blurred behind him. He holds a small paper notebook in his left hand and writes two short strokes with a pen in his right, then lifts his chin and gives a single clear nod. Light from high windows catches the edge of his cheek and shoulder.
+<Subject 1> (S1) says in a calm satisfied male voice, <d>[Mandarin] 好的，这个解释合理。</d> He closes the notebook with one hand.
+[Shot 2] At 00:04.000, the shot cuts to a low three-quarter angle beside a desk in the branch office, the paper very bright against the darker room. A desktop printer feeds out printed pages one after another, each sliding forward with a soft mechanical rhythm as a small stack accumulates in the output tray. <Subject 1> steps in from frame right, lifts the stack, squares it against the edge of the desk with one tap and flips to the last page with his thumb. He takes a pen from his inner pocket, signs in two quick strokes and drops the stack into an archive box on the floor beside the chair. He straightens and rests a hand on the box lid.
+<Subject 1> (S1) says in a warm relaxed male voice with a note of relief, <d>[Mandarin] 以前这种年度排查报告，光整理材料就得跑好几趟各部门，现在一键生成，省心多了！</d> He pats the box lid once and looks toward the window.
+
+overall_soundscape:
+Industrial workshop ambience with conveyor drone and metallic clanks, a soft pen scratch on paper and the snap of a notebook closing, then quiet office room tone with the rhythmic mechanical feed of the printer, a crisp tap of paper being squared and the soft drop of the stack into a cardboard box.
+
+non_diegetic_music:
+N/A through the workshop shot, then a warm mid-tempo corporate figure on piano and soft strings enters under the office action and settles at the end of the line.

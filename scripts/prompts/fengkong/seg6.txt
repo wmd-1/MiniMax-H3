@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 老张 from lz.png.
+
+summary:
+[reference generation] A fourteen-second two-shot sequence: the voice on the line presses harder and <Subject 1> gives in, then he types the transfer amount into an abstract form on the monitor.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a warm cluttered office style with harder overhead light, realistic and unstyled.
+[Shot 1] A medium close-up from the side. <Subject 1> holds the handset pressed to his ear, his eyes flicking between the middle distance and the monitor at frame right. His free hand rises and hovers uncertainly over the desk, fingers half-curled. He swallows, his jaw tightening, and his head tilts down a little as the pressure on the line builds. Finally he nods once, a small reluctant movement, and his hand drops onto the desk beside the keyboard.
+An off-screen male voice (S1), still fast and urgent with a hard edge of authority, says, <d>[Mandarin] 必须先将货款转入安全账户验资，否则账户冻结！这是紧急通知，您赶紧操作！</d>
+[Shot 2] At 00:10.000, the shot cuts to an over-the-shoulder angle from behind <Subject 1>, the monitor filling the right half of frame. His hand enters from the lower left and types with short deliberate strokes. On the monitor, an abstract amount block fills with plain white bars expanding leftward one mark at a time, simple geometric shapes with no readable numerals. A confirm area at the lower right of the form glows faintly brighter. The handset stays wedged between his shoulder and his ear.
+<Subject 1> (S2) says in a hesitant obliging male voice, half-distracted by the screen, <d>[Mandarin] 好的，我马上操作……</d> His hand lifts from the keyboard and moves toward the mouse.
+
+overall_soundscape:
+A stuffy office room tone, a thin compressed telephone voice from the earpiece throughout, a soft scrape of a hand settling on a desk, short deliberate keystrokes, a soft mouse click, a faint breath near the handset microphone.
+
+non_diegetic_music:
+N/A

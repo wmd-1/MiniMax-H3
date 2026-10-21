@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> opening the generated clue report and reacting with delight, followed by a one-second blank frame, then cutting to him back from a client visit facing a desk full of audio recordings. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 4]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his surprised expression and his troubled posture after the time jump are added.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the assistant's look from <Picture 2> is retained in the report header.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look; the first half uses warm late-day daylight at the desk, and the second half shifts to a cooler, softer light as the desk is covered with recording files.
+[Shot 1] A close-up of the laptop screen holds the opened "存量客户营销线索报告", whose header carries the <Subject 2> mark matching <Picture 2> exactly. The page shows a summary block of three numbered pain points above a list of clue entries; the camera trucks down with small amplitude at slow speed along the list, and <Subject 1>'s index finger enters from the lower right to trace one entry at 00:00.600.
+[Shot 2] At 00:01.000, the shot cuts to a medium close-up of <Subject 1>, whose face and outfit match <Picture 1> exactly. His eyebrows lift, his mouth opens, and he leans back a little as <Subject 1> (S1) says in a surprised, bright young male voice at an eager but clear pace: <d>[Chinese] 原来客户还有这么多潜在需求没有发掘！存量客户深耕又找到新方向了！</d> On the last phrase he straightens up and his right hand taps the desk once. At 00:08.000 a subtitle fades in across the lower third in white type with a short red accent bar: "解析聊天记录｜挖掘存量隐藏需求｜匹配行内产品" and holds to 00:09.500.
+[Shot 3] At 00:09.500, the shot cuts to a completely blank white frame that holds motionless and silent for one second.
+[Shot 4] At 00:10.500, the shot cuts to a medium wide shot of the same desk in cooler light. <Subject 1>, whose face and outfit match <Picture 1> exactly, walks in from the right and sets a shoulder bag down beside the chair at 00:11.500, then sits. The desk is now covered with a loose fan of audio-recording cards and a small digital voice recorder; he looks down at the pile, rubs the back of his neck, and his face falls into a worried frown as the segment ends.
+
+overall_soundscape:
+Office room tone continues underneath. A fingertip taps a screen edge, a hand taps a desk, and a chair shifts. After the blank frame, a shoulder bag settles on the floor, a chair is pulled out and sat in, and a soft loose rustle of paper cards is heard as the recordings fan out across the desk. A quiet exhale closes the segment.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a light shaker; the rhythm drops out for the blank frame, re-enters at 00:10.500 in a lower, thinner register with a single sustained note, and holds under the final beat.

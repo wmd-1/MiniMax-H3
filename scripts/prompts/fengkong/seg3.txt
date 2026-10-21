@@ -1,0 +1,25 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 小周 from xz.png.
+
+summary:
+[reference generation] A fifteen-second three-shot sequence: <Subject 1> sighs over the paperwork, the screen lights up and startles him, then the film cuts to <Subject 2> at the approval centre rubbing her tired eyes.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 3]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video moves from warm naturalistic office light into a cooler clinical office look as the location changes.
+[Shot 1] A medium close-up from the side of the desk. <Subject 1> rests his open palm flat on top of the tallest document stack, turns his head away from the paper and looks toward the window, his eyes losing focus. The window light catches the edge of his cheek and collar. His hand pats the stack twice with a faint sense of resignation.
+<Subject 1> (S1) says in a low half-muttered male voice, almost to himself, <d>[Mandarin] 唉，这要是能有个帮手就好了。</d> His lips close and he keeps looking out of the window, his expression slack.
+[Shot 2] At 00:04.000, the shot cuts to a medium close-up of <Subject 1> seated at the desk slightly off-centre, the monitor at frame right. The monitor brightens and abstract rounded interface blocks with thin glowing borders slide into place, geometric panels and bar shapes only, no readable characters. Cool light spills across his face. He straightens his back, pulls his head back a little, his eyes widening as he leans toward the screen, his right hand lifting off the desk and hovering.
+<Subject 1> (S1) says in a bright startled male voice, the fatigue gone, <d>[Mandarin] 这也太快了！</d> He blinks twice, a small disbelieving smile pulling at one corner of his mouth.
+[Shot 3] At 00:08.000, the shot cuts to a high three-quarter angle looking down at a different desk. <Subject 2> sits centred in frame, seven or eight printed research reports and policy documents fanned out around the keyboard. She lifts her right hand and presses two fingers into the inner corner of her eye, rubbing once, then drops the hand to the desk.
+<Subject 2> (S2) says in a tired but precise female voice with a dry matter-of-fact tone, <d>[Mandarin] 这份报告光行业分析就要从七八份研报里摘录，</d> She turns her head toward the spread of reports and taps one once with her knuckle.
+
+overall_soundscape:
+Warm quiet office room tone with two soft palm pats on paper, a soft electronic chime as the interface appears, a short intake of breath, then a transition into open-plan office ambience with distant keyboard clicks and a faint chair swivel.
+
+non_diegetic_music:
+The light corporate underscore thins to a single sustained pad under the sigh, lifts with a bright three-note synth motif on the chime, then settles into a cooler low string bed for the final shot.

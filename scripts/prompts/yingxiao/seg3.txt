@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows the <Subject 2> chat panel answering <Subject 1>'s policy question, with the two policy lines echoed as on-screen subtitles, and ends on a one-second blank frame. The agent's look stays consistent with <Picture 2> and the user's identity stays consistent with <Picture 1>.
+
+retention_analysis:
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the assistant's look from <Picture 2> is kept unchanged in the chat panel while the reply bubble expands.
+<Subject 1> (appears in [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his reading expression and the screen light on his face are added.
+
+detailed_description:
+The target video keeps the bright, clean corporate-explainer look, with cool screen light dominating the frame and daylight from the window behind.
+[Shot 1] A medium close-up frames the laptop screen straight on. The "对公营销情报官" reply bubble expands under the <Subject 2> avatar, and the camera holds a static shot with a very slow push in of small amplitude. At 00:00.800 the first reply line finishes streaming in and the agent's voice begins.
+[Shot 2] <Subject 2> (S1) speaks in a clear, evenly paced synthetic assistant voice, calm and unhurried, with clean articulation: <d>[Chinese] 浙江省出台《推动旅游业经济高质量发展若干政策》，力推文旅消费；我行同步发布《支持文旅消费行动方案》，配套行内专属产品！</d> While the line plays, the words stay highlighted line by line in the bubble, and at 00:03.000 two subtitle lines fade in across the lower third in white type: "①政府政策加持" on the first line and "②行内配套政策" on the second. The camera trucks right with small amplitude at slow speed to keep the last reply line and the two subtitles in frame.
+[Shot 3] At 00:08.000, the shot cuts to a close-up of <Subject 1>, whose face matches <Picture 1> exactly, seen in three-quarter profile with the laptop glow on his cheek and the window daylight on his opposite side. His lips stay closed and his eyes track left to right as he reads; he gives one small nod at 00:11.500, and the agent's voice continues seamlessly across the cut without a break in delivery.
+[Shot 4] At 00:14.000, the shot cuts to a completely blank white frame that holds motionless and silent for the final second of the video.
+
+overall_soundscape:
+A faint laptop fan and low office room tone sit underneath the whole segment. A soft keyboard tick and one short notification blip are heard in the first half second; a quiet chair shift and a single soft breath accompany the cut to <Subject 1>.
+
+non_diegetic_music:
+A sparse plucked-synth figure at a moderate tempo with a sustained warm pad underneath, holding a steady level through the reply and dropping out abruptly at 00:14.000 so the blank frame plays in silence.

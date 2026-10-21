@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] A fifteen-second two-shot sequence in the branch office: <Subject 1> enters, faces the mountain of documents on his desk, sits down and works through his complaint about the workload.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a warm naturalistic office style, Monday-morning daylight entering at a low angle through the window, dust motes visible in the light.
+[Shot 1] The camera sits low behind the desk, tilted up toward the office door. <Subject 1> pushes the door open with one hand and steps in, crosses to the desk and stops, his gaze dropping to four uneven stacks of printed documents covering the desk surface. He rests one hand on the back of the chair and looks down at the paper. Daylight from the window at frame left lays a bright bar across the documents.
+<Subject 1> (S1) says in a tired resigned male voice at a natural unhurried pace, speaking toward the paper rather than the camera, <d>[Mandarin] 这家精密零部件企业材料这么多，又是报表，又是征信，</d> He exhales through his nose and his shoulders drop slightly.
+[Shot 2] At 00:07.000, the shot cuts to a medium shot from the side of the desk. <Subject 1> pulls the chair out and sits, lifts a printed statement and lets the pages slip through his fingers while his eyes track down the columns. Halfway through, he turns his left wrist up and glances at his watch, holds the look, then lets the statement fall back onto the stack. He leans back slightly and shakes his head once, a small tight movement.
+<Subject 1> (S1) says in the same tired male voice with a flat deflated cadence, <d>[Mandarin] 后面还得算财务指标、写报告……这效率什么时候才能提上去。</d> On the last words his hand drops onto the paper stack.
+
+overall_soundscape:
+Quiet office room tone, the latch of a door, fabric friction against a chair back, the dry flutter of pages slipping past each other, a soft tap as a statement lands on the stack, the faint click of a watch bracelet.
+
+non_diegetic_music:
+A light sparse corporate underscore with soft marimba and a muted bass pulse at a walking tempo, held well below the dialogue.

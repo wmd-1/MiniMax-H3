@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+The plant sales manager is a secondary figure with no reference image, around forty, short black hair, a light blue work shirt with the sleeves rolled to the forearm.
+
+summary:
+[reference generation] A fifteen-second two-shot sequence: <Subject 1> opens an alert panel on his monitor and grows suspicious, then the film cuts to an assembly workshop where the plant sales manager explains the change in orders.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+The plant sales manager (appears in [Shot 2]): weak_reference - no reference image is used; the character is generated from the written description and appears only once in the film.
+
+detailed_description:
+The target video moves from a warm branch office with slightly cooler light into a hard industrial documentary look.
+[Shot 1] A medium close-up from the far side of the desk, the camera fixed with virtually no movement. A compact alert panel with a thin amber border slides into the lower right of the monitor, showing two plain horizontal marker blocks tinted red beside abstract bar shapes, one tall and one short, unreadable abstract data only. <Subject 1> clicks once and the panel expands to fill more of the screen with stacked grey rows. His jaw sets, the line between his brows deepening, his eyes narrowing and sweeping down the screen twice, and his right hand comes to rest on the edge of the keyboard without moving. He pulls his chin back slowly, then forward again.
+<Subject 1> (S1) says in a low controlled male voice, the words spaced out as he thinks aloud, <d>[Mandarin] 订单金额大幅下降，产品结构也变了……这不对劲，我得去下游核实一下。</d> He pushes back from the desk and his hand closes around the edge of the keyboard.
+[Shot 2] At 00:08.000, the shot cuts to a medium shot in an assembly workshop, hard daylight from high windows laying bright bands across a concrete floor with fine airborne dust. The plant sales manager stands at frame left with the production line receding behind him at frame right. Partially assembled component frames slide past on an overhead rail at a steady pace, some of a wide flat profile and some of a narrower one. He turns his upper body toward the camera and lifts one hand palm down, gesturing along the line in a small explanatory sweep, his expression relaxed and matter-of-fact.
+The plant sales manager (S2) says in a steady practical male voice with a workshop-flat delivery, <d>[Mandarin] 今年下半年开始切换新产品线，明年一季度就会恢复。</d> He nods once at the end of the sentence and glances back toward the moving line.
+
+overall_soundscape:
+Quiet office room tone with a soft two-tone alert chime, one mouse click, a slow controlled exhale, then a hard cut into loud industrial workshop ambience with the continuous mechanical drone of a conveyor, rhythmic metallic clanks and a distant compressed-air release.
+
+non_diegetic_music:
+A single low sustained tone with a faint pulsing undertone through the office shot, dropping out completely on the cut to the workshop.

@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 老张 from lz.png.
+
+summary:
+[reference generation] A fourteen-second two-shot sequence: the screen floods red and <Subject 1>'s hand freezes mid-press as a young male voice cuts in through the phone speaker, then the red fades and he sinks back in shaken relief.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a warm cluttered office style that turns hard and crimson, then softens back to ordinary office light.
+[Shot 1] A tight side angle across <Subject 1>'s shoulder toward the monitor, the face in the left third of frame. The right index finger hovers above the mouse, the fingertip beginning to press down. In a single beat the entire monitor floods saturated red and an abstract rounded overlay panel snaps over the form, its border thick and glowing, containing only plain geometric blocks and a bold horizontal bar with no readable characters. Hard red light throws across the face, the side of the neck, the shoulder and the desk surface. The finger stops mid-press and the hand freezes a few centimetres above the mouse, tendons tight. The head pulls back slightly and the eyes lock on the red screen.
+A young male voice (S1), urgent and firm, coming through a small phone speaker with a compressed telephone timbre, says, <d>[Mandarin] 张总！先别转！安全账户前期因涉诈已被冻结，这是诈骗！千万不要转！</d> The mouth opens without sound and the frozen hand begins to tremble slightly.
+[Shot 2] At 00:09.000, the shot cuts to a medium close-up facing <Subject 1>. He pulls his right hand back from the mouse, lets it fall into his lap and pushes himself back into the chair until his shoulders meet the backrest. The red wash on his face fades through amber into ordinary office light. He exhales a long breath, his chest dropping visibly, and lifts one hand to press flat against his sternum. His eyes close for a moment, then open, still on the screen.
+<Subject 1> (S2) says in a shaken exhaling male voice with a rasp of disbelief, <d>[Mandarin] 啊？原来是诈骗！还好你们拦截得及时！</d> He shakes his head slowly, the hand still pressed to his chest.
+
+overall_soundscape:
+A sharp repeated electronic warning tone cutting through the office room tone, a low sub-bass hit as the screen floods red, the thin buzzing of a phone speaker, a fast heartbeat-like pulse, then a return to normal room tone with a long audible exhale and the creak of a chair taking weight.
+
+non_diegetic_music:
+The score drops out briefly on the red flash, a tight low string ostinato enters at a fast tempo without resolving, then resolves into a single warm sustained chord that thins to a quiet pad.

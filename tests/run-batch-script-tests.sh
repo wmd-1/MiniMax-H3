@@ -5,7 +5,9 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-jiaoxintong4-sglang.sh / ref2va-jiaoxintong3-sglang.sh /
+# 被测对象：scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
+#           ref2va-fengkong-a-sglang.sh / ref2va-fengkong-b-sglang.sh（对公风控研判官 A/B）/
+#           ref2va-jiaoxintong4-sglang.sh / ref2va-jiaoxintong3-sglang.sh /
 #           ref2va-jiaoxintong2-sglang.sh / ref2va-jiaoxintong-sglang.sh /
 #           ref2va-story-sglang.sh / ref2va-story.sh
 #
@@ -53,6 +55,10 @@ cleanup() {
   if [ -n "${MOCK_PID:-}" ] && kill -0 "${MOCK_PID}" 2>/dev/null; then
     kill "${MOCK_PID}" 2>/dev/null
     wait "${MOCK_PID}" 2>/dev/null
+  fi
+  if [ -n "${MOCK_B:-}" ] && kill -0 "${MOCK_B}" 2>/dev/null; then
+    kill "${MOCK_B}" 2>/dev/null
+    wait "${MOCK_B}" 2>/dev/null
   fi
   if [ "${KEEP_WORK:-0}" = "1" ]; then
     echo "[keep] 临时目录保留：${WORK}"
@@ -128,11 +134,19 @@ echo "  mock    : 已就绪 (pid ${MOCK_PID})"
 
 # 本地占位参考图（测 file:// 模式与 vLLM 脚本用）
 for f in dxb.png hxr.png logo.png aaa.png bbb.png ccc.png \
+         xc.png xz.png xl.png lz.png zxk.png zbx.png xw.png ts.png qbg.png \
          first_shot.png first_shot.PNG image1.png image2.png image3.png image4.png image5.png \
          image6.png image7.png image8.png image9.png image10.png \
          image133.png image134.png image135.png image136.png; do
   : > "${WORK}/${f}"
 done
+
+# 第二个 mock，专用于验证 A/B 两个服务并行接线
+PORT_B="${PORT_B:-30012}"
+POSTS_B="${WORK}/posts_b.jsonl"
+python3 "${TESTS_DIR}/mock_video_server.py" --port "${PORT_B}" --log "${POSTS_B}" > "${WORK}/mock_b.log" 2>&1 &
+MOCK_B=$!
+sleep 1
 
 # ================================= T1 =================================
 CASE="T1 jiaoxintong2 全 9 段：逐段时长 / 逐段参考图 / stem 命名"
@@ -311,6 +325,127 @@ assert_eq "1" "$(wc -l < "$POSTS" | tr -d ' ')" "T13 提交请求数"
 assert_eq "15" "$(q 1 '.target.duration_seconds')" "T13 段5 时长"
 assert_eq "image7.png" "$(imgs_of 1)" "T13 段5 单图"
 assert_file "${WORK}/jiaoxintong4_seg5.mp4" "T13 产出（不是 seg1）"
+
+# ================================= T14 =================================
+CASE="T14 fengkong A 半（段1–6）：时长/角色图顺序/16:9/stem 命名"
+echo "── ${CASE}"
+reset_posts
+run_script ref2va-fengkong-a-sglang.sh t14 OUTPUT_PREFIX="${WORK}/fk_"
+assert_eq "0" "$(rc_of t14)" "T14 退出码"
+assert_eq "6" "$(wc -l < "$POSTS" | tr -d ' ')" "T14 提交请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T14 画幅"
+assert_eq "15 15 15 15 15 14" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T14 段1-6 时长"
+assert_eq "xc.png,xz.png,zxk.png" "$(imgs_of 1)" "T14 段1 角色图顺序（原全局 Subject 1,2,5→段内 1,2,3）"
+assert_eq "xc.png"        "$(imgs_of 2)" "T14 段2 角色图"
+assert_eq "xc.png,xz.png" "$(imgs_of 3)" "T14 段3 角色图顺序"
+assert_eq "xz.png"        "$(imgs_of 4)" "T14 段4（原全局 Subject 2→段内 1）"
+assert_eq "xl.png,lz.png" "$(imgs_of 5)" "T14 段5（原全局 3,4→段内 1,2）"
+assert_eq "lz.png"        "$(imgs_of 6)" "T14 段6（原全局 4→段内 1）"
+for i in 1 2 3 4 5 6; do assert_file "${WORK}/fk_seg${i}.mp4" "T14 产出"; done
+assert_eq "0" "$(ls -1 "${WORK}"/fk_seg7.mp4 2>/dev/null | wc -l | tr -d ' ')" "T14 未越界跑段7"
+
+# ================================= T15 =================================
+CASE="T15 fengkong B 半（段7–12）：打到第二个服务 PORT_B"
+echo "── ${CASE}"
+: > "$POSTS_B"
+run_script ref2va-fengkong-b-sglang.sh t15 OUTPUT_PREFIX="${WORK}/fk_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t15)" "T15 退出码"
+assert_eq "6" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T15 提交到第二服务的请求数"
+assert_eq "6" "$(wc -l < "$POSTS" | tr -d ' ')" "T15 主服务请求数未变（B 没误打过来）"
+bdurs=$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')
+assert_eq "14 14 15 15 14 14" "$bdurs" "T15 段7-12 时长"
+assert_eq "lz.png" "$(sed -n 1p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T15 段7 角色图"
+assert_eq "xc.png" "$(sed -n 2p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T15 段8（无图角色不占上传位）"
+assert_eq "zxk.png,zbx.png" "$(sed -n 6p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T15 段12 角色图顺序"
+for i in 7 8 9 10 11 12; do assert_file "${WORK}/fk_seg${i}.mp4" "T15 产出"; done
+
+# ================================= T16 =================================
+CASE="T16 A+B 合并：12 段无重叠、时长表完整、可顺序拼接"
+echo "── ${CASE}"
+combined="$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' '; jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ')"
+assert_eq "15 15 15 15 15 14 14 14 15 15 14 14" "$(echo $combined)" "T16 全 12 段时长序列"
+assert_eq "12" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") ))" "T16 两服务合计请求数"
+assert_eq "175" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" | awk '{s+=$1} END{print s}')" "T16 全片生成总时长(字卡另算 4s)"
+nfiles=$(ls -1 "${WORK}"/fk_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')
+assert_eq "12" "$nfiles" "T16 seg1..12 产出齐全（无互相覆盖）"
+
+# ================================= T17 =================================
+CASE="T17 prompt 与图表一致性：conditions 数 == 段内有图 Subject 数，且标签连续"
+echo "── ${CASE}"
+bad=0
+for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+  p="${ROOT_DIR}/scripts/prompts/fengkong/seg${i}.txt"
+  n_img=$(grep '^<Subject [0-9]*> is' "$p" | grep -cE 'from [a-z]+\.png')
+  labels=$(grep '^<Subject [0-9]*> is' "$p" | grep -E 'from [a-z]+\.png' | grep -o '[0-9]*' | head -1)
+  maxl=$(grep '^<Subject [0-9]*> is' "$p" | grep -E 'from [a-z]+\.png' | grep -o '[0-9]*' | sort -n | tail -1)
+  # 图表里的图数（从 A 脚本的表取，保证脚本与提示词不跑偏）
+  tbl=$(grep -oE "^  \[$i\]=\"[^\"]*\"" "${ROOT_DIR}/scripts/ref2va-fengkong-a-sglang.sh" | sed -E 's/^  \[[0-9]+\]="//; s/"$//')
+  tbl_cnt=$(echo $tbl | wc -w | tr -d ' ')
+  if [ "$n_img" != "$tbl_cnt" ] || [ "${labels:-1}" != "1" ] || [ "${maxl:-1}" != "$n_img" ]; then
+    bad=$((bad + 1))
+    echo "      ✗ 段${i}: 内有图=${n_img} 表内图数=${tbl_cnt} 首标签=${labels:-?} 最大标签=${maxl:-?}"
+  fi
+done
+if [ "$bad" -eq 0 ]; then ok "T17 12 段的 conditions 数、图表、标签连续性全部一致"; else bad "T17 有 ${bad} 段不一致"; fi
+
+# ================================= T18 =================================
+CASE="T18 yingxiao A 半（段1–7）：全 15s / xw恒为1 / 三图段仅段2"
+echo "── ${CASE}"
+reset_posts
+run_script ref2va-yingxiao-a-sglang.sh t18 OUTPUT_PREFIX="${WORK}/yx_"
+assert_eq "0" "$(rc_of t18)" "T18 退出码"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T18 提交请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T18 画幅"
+assert_eq "15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T18 段1-7 时长"
+assert_eq "xw.png,ts.png"        "$(imgs_of 1)" "T18 段1 上传顺序"
+assert_eq "xw.png,ts.png,qbg.png" "$(imgs_of 2)" "T18 段2 上传顺序（全片唯一三图段）"
+assert_eq "xw.png,qbg.png"       "$(imgs_of 3)" "T18 段3 上传顺序"
+assert_eq "xw.png,qbg.png"       "$(imgs_of 7)" "T18 段7 上传顺序"
+for i in 1 2 3 4 5 6 7; do assert_file "${WORK}/yx_seg${i}.mp4" "T18 产出"; done
+assert_eq "0" "$(ls -1 "${WORK}"/yx_seg8.mp4 2>/dev/null | wc -l | tr -d ' ')" "T18 未越界跑段8"
+
+# ================================= T19 =================================
+CASE="T19 yingxiao B 半（段8–14）：打到第二个服务 PORT_B"
+echo "── ${CASE}"
+: > "$POSTS_B"
+run_script ref2va-yingxiao-b-sglang.sh t19 OUTPUT_PREFIX="${WORK}/yx_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t19)" "T19 退出码"
+assert_eq "7" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T19 提交到第二服务的请求数"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T19 主服务请求数未变（B 没误打过来）"
+assert_eq "15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T19 段8-14 时长"
+assert_eq "xw.png,qbg.png" "$(sed -n 1p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T19 段8 上传顺序"
+assert_eq "xw.png,qbg.png" "$(sed -n 7p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T19 段14 上传顺序"
+for i in 8 9 10 11 12 13 14; do assert_file "${WORK}/yx_seg${i}.mp4" "T19 产出"; done
+
+# ================================= T20 =================================
+CASE="T20 yingxiao A+B 合并：14 段无重叠、总时长 210s、A/B 两张表一致"
+echo "── ${CASE}"
+assert_eq "14" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") ))" "T20 两服务合计请求数"
+assert_eq "210" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" | awk '{s+=$1} END{print s}')" "T20 全片总时长"
+assert_eq "14" "$(ls -1 "${WORK}"/yx_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T20 seg1..14 产出齐全"
+# A/B 两份脚本的参考图表必须逐字一致（拆两半并行时最容易改漏一边）
+difft=$(diff <(grep -A20 'declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-yingxiao-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p') \
+             <(grep -A20 'declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-yingxiao-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p') | grep -c '^[<>]')
+assert_eq "0" "$difft" "T20 A/B 两份脚本的角色图表完全一致"
+
+# ================================= T21 =================================
+CASE="T21 yingxiao 提示词自身一致性：<Subject K> 与 <Picture K> 一一对应且连续"
+echo "── ${CASE}"
+bad=0
+for i in $(seq 1 14); do
+  p="${ROOT_DIR}/scripts/prompts/yingxiao/seg${i}.txt"
+  pairs=$(grep '^<Subject [0-9]*> is' "$p" | sed -nE 's/^<Subject ([0-9]+)>.*<Picture ([0-9]+)> \(([a-z]+\.png)\).*/\1 \2 \3/p')
+  mis=$(echo "$pairs" | awk '$1!=$2{print "S"$1"≠P"$2}' | tr '\n' ' ')
+  cnt=$(echo "$pairs" | grep -c .)
+  first=$(echo "$pairs" | awk 'NR==1{print $1}')
+  maxl=$(echo "$pairs" | awk '{if($1>m)m=$1} END{print m+0}')
+  tbl=$(grep -oE "^  \[$i\]=\"[^\"]*\"" "${ROOT_DIR}/scripts/ref2va-yingxiao-a-sglang.sh" | sed -E 's/^  \[[0-9]+\]="//; s/"$//')
+  tbl_cnt=$(echo $tbl | wc -w | tr -d ' ')
+  if [ -n "$mis" ] || [ "$first" != "1" ] || [ "$maxl" != "$cnt" ] || [ "$cnt" != "$tbl_cnt" ]; then
+    bad=$((bad + 1)); echo "      ✗ 段${i}: 错位=[$mis] 首标签=$first 最大=$maxl 定义数=$cnt 表内=$tbl_cnt"
+  fi
+done
+if [ "$bad" -eq 0 ]; then ok "T21 14 段均 Subject↔Picture 一一对应、连续、与脚本表一致"; else bad "T21 有 ${bad} 段不一致"; fi
 
 # ------------------------------- 汇总 -------------------------------
 echo "======================================================"

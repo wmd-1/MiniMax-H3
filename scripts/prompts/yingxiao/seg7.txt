@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> flipping through the industry brief with growing confidence, then asking the <Subject 2> panel for a one-page target-company brief and receiving a fully structured document. His identity stays consistent with <Picture 1> and the agent's look stays consistent with <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his reading, speaking, and typing actions are added.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the assistant's look from <Picture 2> is retained in the chat panel and on the generated document.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look, with daylight from the window on the left and a soft screen glow on the subject's face.
+[Shot 1] A medium close-up frames <Subject 1>, whose face and outfit match <Picture 1> exactly, holding the printed industry brief in his left hand and turning it slightly toward the light. He reads down the page and nods twice, at 00:00.400 and 00:00.900. The camera pushes in with small amplitude at slow speed. At 00:01.000 <Subject 1> (S1) says in a confident, quickened but still clear young male voice, <d>[Chinese] 再帮我生成目标企业的访前一页纸！</d> while his right hand comes down onto the keyboard and begins typing in the final second of the line.
+[Shot 2] At 00:05.000, the shot cuts to a close-up of the laptop screen: the input box shows "再帮我生成目标企业的访前一页纸！" and Enter is pressed at 00:05.600. The reply bubble posts under the <Subject 2> avatar, whose look matches <Picture 2> exactly, and <Subject 2> (S2) says in a clear, evenly paced synthetic assistant voice: <d>[Chinese] 一页纸已生成！企业画像、营销线索、营销话术、推荐产品全部理清！</d> As the line plays, the bubble resolves into a document card titled "目标企业访前一页纸" with four labelled panels filling in one after another: 企业画像, 营销线索, 营销话术, 推荐产品. The camera trucks down with small amplitude at slow speed to keep pace with the panels filling.
+[Shot 3] At 00:13.500, the shot cuts to a medium close-up from the front as <Subject 1> looks up at the completed page on screen, his eyes brightening; a subtitle fades in across the lower third in white type with a short red accent bar: "访前一页纸・知己知彼" and holds to the final frame while he leans back slightly with a satisfied exhale.
+
+overall_soundscape:
+Office room tone continues underneath. Paper turns softly against a hand, a fingertip taps a keyboard, and a keyboard types rapidly in the final second of the first shot, followed by an Enter press and a message-post blip. A soft interface ticking sound accompanies the four panels filling in, and a light chair creak closes the segment.
+
+non_diegetic_music:
+A plucked-synth ostinato at a moderate tempo with a light shaker and muted kick; the pattern thins to a single sustained synth note from 00:05.000 and returns to full rhythm at 00:13.500, holding to the end.

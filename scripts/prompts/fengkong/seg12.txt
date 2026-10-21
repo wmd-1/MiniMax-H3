@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 浙小控 from zxk.png.
+<Subject 2> is 浙宝箱 from zbx.png.
+
+summary:
+[reference generation] A fourteen-second two-shot closing sequence: seven points of light ignite along an axis beneath <Subject 1> and join into a chain, then the chain collapses between both assistant forms as they converge to either side of frame.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video concludes the premium enterprise-tech sequence, the palette shifting from blue toward teal and settling into one deep navy field.
+[Shot 1] A centred composition on <Subject 1>, hovering at the middle of frame. A horizontal axis of seven dim points stretches across the lower third of frame. The points brighten one after another from left to right, evenly spaced, and as each one lights, a thin luminous thread connects it to the previous, forming a continuous chain. As the seventh point ignites, the whole chain lifts and brightens and <Subject 1> pulses once above it. The camera holds steady with only a very slight push in.
+An off-screen narrator (S1), a calm confident female voice with a measured delivery, says, <d>[Mandarin] 全链路7大AI功能，笔笔业务有人盯，笔笔资金有保障。</d>
+[Shot 2] At 00:07.000, the shot continues as the chain of seven points collapses inward from both ends, drawing together toward the centre of frame. <Subject 1> drifts to the upper left and <Subject 2> drifts in from the lower right; they converge and hold on either side of the frame centre, facing inward. The collapsed chain resolves into a single small bright ring between them. The camera eases back slightly, leaving clear negative space across the upper third of frame.
+An off-screen narrator (S1), the same calm confident female voice, says, <d>[Mandarin] 关注对公风控研判官，了解更多智能风控黑科技！</d> The ring between the two forms pulses once and holds steady.
+
+overall_soundscape:
+Seven soft electronic ignition tones climbing slightly in pitch with a light connective whoosh between each pair of points, a warm pulse bloom on the final point, then a soft converging sweep and a light chime as the forms settle, thinning toward silence.
+
+non_diegetic_music:
+A soft ascending synth figure rising in step with the seven tones, arriving on a held chord, then resolving on a single warm sustained chord with light bell overtones that holds to the final frame.

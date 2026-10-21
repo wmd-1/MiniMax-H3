@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the newly hired corporate banking relationship manager taken from <Picture 1> (xw.png); his face, hair, build, and outfit follow <Picture 1> exactly.
+<Subject 2> is 对公营销情报官, the bank's in-house AI agent taken from <Picture 2> (qbg.png), appearing as the assistant avatar inside the "对公营销情报官" chat panel on the laptop screen; its look follows <Picture 2> exactly.
+
+summary:
+[reference generation] The target video shows <Subject 1> typing a second screening question and the <Subject 2> panel answering in one continuous read-out, cutting from the chat bubble to a ranked result table of ten companies. The agent's look stays consistent with <Picture 2> and the user's identity stays consistent with <Picture 1>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - identity and outfit from <Picture 1> are unchanged; only his hands, posture, and concentration are added.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the assistant's look from <Picture 2> is kept unchanged inside the chat header and beside the reply bubble.
+
+detailed_description:
+The target video keeps the bright corporate-explainer look. Screen content is shot straight on with shallow depth of field, and every interface element stays crisp and legible.
+[Shot 1] A close-up of the laptop screen holds the "对公营销情报官" input box with the chat history scrolled up above it. <Subject 1>'s hands enter from the bottom of the frame, and the typed characters appear quickly and evenly, forming "浙江省温州市符合上述政策的旅游业企业有哪些？" by 00:01.500; he presses Enter at 00:01.800 and the bubble posts.
+[Shot 2] At 00:01.800, the shot cuts to a medium close-up of the screen with the <Subject 2> avatar at the left of the reply area, its look matching <Picture 2> exactly, and the reply bubble streaming out. <Subject 2> (S1) continues in the same clear, evenly paced synthetic assistant voice: <d>[Chinese] 共筛选10家适配企业，其中A级高价值客户5家！</d> The camera pushes in with small amplitude at slow speed; the numerals "10" and "5" scale up briefly inside the bubble as they are spoken.
+[Shot 3] At 00:06.800, the shot cuts to an over-shoulder view of the screen as the result table slides up from the bottom: ten rows with company names on the left, region and industry tags in the middle, and score bars on the right. The bars fill one after another from 00:07.000 to 00:09.500, and <Subject 2> (S1) continues across the cut without interruption: <d>[Chinese] 温州市XX旅游文化发展有限公司，82分，洞头区文旅国企平台，政策匹配度最高！</d> At 00:10.500 the top row's score bar reaches 82 and the row expands into a highlight card with a thin blue border; at 00:12.000 the camera trucks down with small amplitude at slow speed to follow the highlight card settling at the top of the list, and <Subject 1>'s index finger enters from the lower right and rests on that row. The shot holds on the highlighted row with the cursor blinking beside it until the end of the segment.
+
+overall_soundscape:
+Office room tone and a faint laptop fan continue underneath. Fast keyboard taps and one Enter press open the segment, followed by a soft message-post blip, a light interface ticking sound as the score bars fill, and a short two-note chime when the highlight card settles. A fingertip taps the screen edge once in the final second.
+
+non_diegetic_music:
+A steady plucked-synth ostinato at a moderate tempo with a light shaker pulse; a soft low string note enters at 00:06.800 and holds under the table animation, rising slightly in volume at 00:10.500 and staying level to the end.
