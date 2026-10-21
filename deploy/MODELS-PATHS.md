@@ -17,8 +17,9 @@
 | alibaba-pai/MiniMax-H3-Acc-LoRAs | `/model_nas/models/h3-acc-loras/` | `/models/h3-acc-loras` | ro | PDD prepare（Ref2VA 8step） |
 
 例外：**FastH3 V2 不吃 `/model_nas/models/MiniMax-H3`**，它按 `provenance.json`
-里 pin 的 revision 从 HF 拉 base 的 video/audio VAE（t2va 走 FL2VA 分区，
-具体子路径以 `provenance.json` 为准）到同一个 `HF_HOME=/model_nas/hf-cache`。
+里 pin 的 revision 从 HF 拉 base 的 video/audio VAE（t2va 走 FL2VA 分区；
+vLLM 源码的 allow_patterns 是 `FL2VA/video_vae/**`、`FL2VA/audio_vae/**`，
+SGLang overlay 以 pin 的 revision 为准）到同一个 `HF_HOME=/model_nas/hf-cache`。
 
 ### 运行时写出的目录（不是下载）
 
@@ -108,6 +109,8 @@ hf download alibaba-pai/MiniMax-H3-Acc-LoRAs \
    出来），空目录会被当成「模型存在」而回退联网下载。所以 VDN compose 已把
    `/model_nas/models/MiniMax-H3` 显式挂到该路径；改路径时 `vdn-h3` 与
    `pai-acc-loras-ref2va` 两个 compose 要同步。
+   另外，嵌套 bind 是独立 mount，overlay 的 hardlink 会 EXDEV 并回退 symlink
+   （<64MB 文件直接 copy），大权重不会被复制；只要该挂载在，symlink 就能解析。
 3. **LightX2V 文件名就是契约**：不要改名、不要用 `_comfyui_` 导出、
    目录里只放一个被识别的 artifact。
 4. **PDD prepare 需要完整分片**：`Ref2VA/transformer` 只有 `config.json` +

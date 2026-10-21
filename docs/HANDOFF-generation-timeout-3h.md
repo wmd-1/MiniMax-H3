@@ -130,7 +130,7 @@ compose 侧（若采用 env 方案）：
 落地要点：
 
 1. **无需改代码**，但 **env 一定要显式设置**：默认只有 `600s`，任何 >10min 的 sync 生成都会 504。官方 recipe 文档里常用 `1800`，本仓库现用 `14400`（4h）。
-   - 现状已覆盖：`Dockerfile.vllm` CMD 内 `VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400`（L116）、`docker-compose.vllm.yml` L86、`docker-compose.vllm.a100.yml` L117。
+   - 现状已覆盖：`Dockerfile.vllm` CMD 内 `VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400`（L116）、`docker-compose.vllm.5090.yml` L86、`docker-compose.vllm.a100.yml` L117。
    - **该值在模块 import 时读取**，只能进程启动前设置，运行期改 env 无效。
    - 若重建后改用自定义 `command:`/`entrypoint:` 覆盖 CMD，务必把 env 放进 `environment:`，否则会静默回落 600s。
 2. 基于 `vllm/vllm-omni:v0.31.0rc1` 重建时，vllm-omni 与 MiniMax-H3 handler 均由基础镜像内置，**不再 clone 源码 / 不再覆盖 `PYTHONPATH`**（现行 `Dockerfile.vllm` 已如此）。若日后改回以 `vllm/vllm-openai` 作 base，才需要重新 `git clone vllm-omni` + `ENV PYTHONPATH=/opt/vllm-omni:...`；严格可复现建议把 `FROM` 写成镜像 digest（rc 预发布 tag 可能被重新 push）。

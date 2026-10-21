@@ -9,12 +9,15 @@
 
 ## 1. 版本与选型矩阵
 
-| 模型 | 引擎 | 镜像 tag | 拓扑 | 端口 | 任务能力 |
+| 模型 | 引擎 | 镜像 tag | 拓扑 | 端口（宿主，4 实例） | 任务能力 |
 |---|---|---|---|---|---|
-| FastVideo-FastH3-8-Step-V2 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30012 | 仅 T2VA |
-| lightx2v/Minimax-h3-Turbo | vLLM-Omni v0.31.0rc1 | `minimax-h3-vllm:v0.31.0rc1` | TP2 + DLO | 8002 | Ref2VA（8step 768p） |
-| OpenVDN/vdn-minimax-h3 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30013 | T2VA / FL2VA |
-| alibaba-pai/MiniMax-H3-Acc-LoRAs | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30011 | Ref2VA（PDD 8step） |
+| FastVideo-FastH3-8-Step-V2 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30030-30033 | 仅 T2VA |
+| lightx2v/Minimax-h3-Turbo | vLLM-Omni v0.31.0rc1 | `minimax-h3-vllm:v0.31.0rc1` | TP2 + DLO | 8010-8013 | Ref2VA（8step 768p） |
+| OpenVDN/vdn-minimax-h3 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30040-30043 | T2VA / FL2VA |
+| alibaba-pai/MiniMax-H3-Acc-LoRAs | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30020-30023 | Ref2VA（PDD 8step） |
+
+> 每套都是 4 实例（每实例 TP2），容器内端口固定（SGLang 30010 / vLLM 8000），
+> 只把宿主发布端口区段错开。base 服务另占 SGLang 30010-30013 / vLLM 8000-8003。
 
 **为什么没有全部用 vLLM：**
 
@@ -54,13 +57,11 @@ deploy/
     docker-compose.yml
 ```
 
-GPU 号默认沿用原 ref 的 `2,3`；可在命令行覆盖：
+每套 compose 都是 4 实例（每实例 TP2 独占一对卡）：实例 0/1/2/3 固定用 GPU
+`0,1` / `2,3` / `4,5` / `6,7`；容器内端口固定，宿主端口按套分区发布。
+要换 GPU 对，直接改对应 service 的 `deploy ... device_ids`（已不再用 `GPU0`/`GPU1` 变量）。
 
-```bash
-GPU0=0 GPU1=1 docker compose up -d
-```
-
-四套服务的宿主端口已错开，可同时起两套（注意每套占 2 卡）。
+一套 compose 就会占满 8 张卡，四套变体（以及 base 的 4 实例）互斥，不能同时起。
 
 ---
 
@@ -377,9 +378,11 @@ nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv -l 1
    不会出现 `unrecognized arguments`。
 6. **FastH3 V2 与 base VAEs 都是 gated**：需要 `HF_TOKEN` 且有
    `MiniMaxAI/MiniMax-H3` 访问权；离线部署先预热 HF cache。
-7. **GPU/端口冲突**：四套默认都用 2,3；同时跑两套时用 `GPU0`/`GPU1` 错开。
-   端口已分别设为 30011/30012/30013/8002；base 服务占 30010（SGLang）/8000（vLLM）。
-   4 卡机器上 base + 一套变体可共存，四套变体不能同时起。
+7. **GPU/端口冲突**：每套 compose 默认 4 实例、占满 8 卡（0,1 / 2,3 / 4,5 / 6,7），
+   容器内端口固定（SGLang 30010、vLLM 8000），宿主端口按套分区：
+   base SGLang 30010-30013、PDD 30020-30023、FastH3 30030-30033、
+   VDN 30040-30043、base vLLM 8000-8003、LightX2V 8010-8013。
+   一套就占满 8 卡，套与套之间不能同时起；要混跑只能手改 `device_ids` 与宿主端口。
 8. **TP2 只在 base H3 上实测过**：FastH3 V2 / VDN 的官方示例都是纯 Ulysses，
    LightX2V 的官方示例是 8 卡纯 Ulysses；三者都没有公开的 TP2 实测。
    退路已写进各 compose 注释：SGLang 改 `--ulysses-degree 2`（不切权重，

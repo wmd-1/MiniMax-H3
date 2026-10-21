@@ -1,5 +1,19 @@
-# MiniMax-H3 (vLLM-Omni)
-# 2× NVIDIA A100 40GB
+# MiniMax-H3 (vLLM-Omni) —— 2× NVIDIA A100 40GB × 4 实例（每实例 TP2 + DLO）
+#
+# ── 多实例（一进程一实例，一次起 4 个）──────────────────────────────────────
+#   minimax-h3-0  GPU 0,1  →  http://<host>:8000   （脚本默认端口，向后兼容）
+#   minimax-h3-1  GPU 2,3  →  http://<host>:8001
+#   minimax-h3-2  GPU 4,5  →  http://<host>:8002
+#   minimax-h3-3  GPU 6,7  →  http://<host>:8003
+#   每实例仍是 TP2 + DLO，单卡显存口径与单实例方案完全一致；
+#   变的只是宿主机侧资源：RAM / SWAP 上限是「每实例」一份，4 份相加才是总需求。
+#     - 默认 mem_limit=384g/实例 → 4 实例合计 1536g，宿主机 RAM 需 ≥ 1.5 TiB；
+#     - RAM 不足时用 H3_VLLM_MEM_LIMIT / H3_VLLM_MEMSWAP_LIMIT / H3_VLLM_MEM_RESERVATION
+#       统一调小；但 DLO 把 ~130 GiB 权重放在主机内存，单实例 < ~160g 基本必然 OOM，
+#       384 GiB 级机器只能起 1 个实例，不能按 1/4 硬切。
+#     - ipc: host 时 /dev/shm 就是宿主机的 /dev/shm（shm_size 不生效，保留仅为兼容），
+#       4 实例共享同一份，容量由宿主机决定。
+#   单独起/重启某个实例：docker compose up -d minimax-h3-1 / docker compose restart minimax-h3-2
 #
 # 第一阶段（实测基线）：
 # - TP2 / FL2VA / DLO
@@ -22,29 +36,53 @@
 #
 # 官方 2× RTX 5090 32GB profile 为 20 层；A100 40GB 下列设为顶配 46。
 
+x-vllm-common: &vllm-common
+  # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
+  image: minimax-h3-vllm:v0.31.0rc1
+
+  ipc: host
+  shm_size: 64gb            # ipc: host 时 /dev/shm 即宿主机 shm，本项不生效，保留仅为兼容
+
+  restart: unless-stopped
+
+  # ------------------------------------------------------------
+  # Container memory / swap ceiling（每实例口径）
+  #
+  # RAM <= 384 GiB
+  # RAM + SWAP <= 400 GiB
+  # => container SWAP <= 16 GiB
+  #
+  # 多实例：4 份上限相加 ≈ RAM 1.5 TiB / SWAP 64 GiB，宿主机 RAM 必须跟上（见文件头）。
+  # ------------------------------------------------------------
+  mem_limit: ${H3_VLLM_MEM_LIMIT:-384g}
+  memswap_limit: ${H3_VLLM_MEMSWAP_LIMIT:-400g}
+  mem_swappiness: 10
+
+  mem_reservation: ${H3_VLLM_MEM_RESERVATION:-256g}
+
+  volumes:
+    - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+    - /data/minimax-h3:/data/minimax-h3:ro
+
+  environment:
+    # CUDA_VISIBLE_DEVICES: "0,1"
+    VLLM_WORKER_MULTIPROC_METHOD: spawn
+    VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
+
+    # 仅作为环境记录，不作为 CLI 参数来源
+    DLO_RESIDENT_LAYERS: "46"
+
+    WIDTH: "1344"
+    HEIGHT: "768"
+
+    # 生产环境离线运行
+    HF_HUB_OFFLINE: "1"
+
 services:
-  minimax-h3:
-    # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
-    image: minimax-h3-vllm:v0.31.0rc1
-    container_name: minimax-h3-vllm-a100
-
-    ipc: host
-    shm_size: 64gb
-
-    restart: unless-stopped
-
-    # ------------------------------------------------------------
-    # Container memory / swap ceiling
-    #
-    # RAM <= 384 GiB
-    # RAM + SWAP <= 400 GiB
-    # => container SWAP <= 16 GiB
-    # ------------------------------------------------------------
-    mem_limit: 384g
-    memswap_limit: 400g
-    mem_swappiness: 10
-
-    mem_reservation: 256g
+  # ══ 实例 0：GPU 0,1 → :8000（脚本默认端口，向后兼容）═════════════════════
+  minimax-h3-0:
+    <<: *vllm-common
+    container_name: minimax-h3-vllm-a100-0
 
     command:
       - vllm
@@ -108,34 +146,16 @@ services:
     ports:
       - "8000:8000"
 
-    volumes:
-      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
-      - /data/minimax-h3:/data/minimax-h3:ro
-
-    environment:
-      # CUDA_VISIBLE_DEVICES: "0,1"
-      VLLM_WORKER_MULTIPROC_METHOD: spawn
-      VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
-
-      # 仅作为环境记录，不作为 CLI 参数来源
-      DLO_RESIDENT_LAYERS: "46"
-
-      WIDTH: "1344"
-      HEIGHT: "768"
-
-      # 生产环境离线运行
-      HF_HUB_OFFLINE: "1"
-
     deploy:
       resources:
         reservations:
-          memory: 256g
+          memory: ${H3_VLLM_MEM_RESERVATION:-256g}
           devices:
             - driver: nvidia
               # count: 2
               # 必须写字符串：本机 Compose 5.6.0 对整数直接校验失败（exit=1），
               # 旧版 compose 会自动转换；统一写字符串避免版本差异
-              device_ids: ["2", "3"]
+              device_ids: ["0", "1"]
               capabilities:
                 - gpu
 
@@ -146,6 +166,208 @@ services:
           "python",
           "-c",
           "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status == 200 else 1)"
+        ]
+      interval: 300s
+      timeout: 10s
+      retries: 2
+      start_period: 600s
+
+  # ══ 实例 1：GPU 2,3 → :8001 ══════════════════════════════════════════════
+  minimax-h3-1:
+    <<: *vllm-common
+    container_name: minimax-h3-vllm-a100-1
+
+    # 参数与 minimax-h3-0 完全一致，仅 GPU 对 / 端口 / 容器名不同。
+    # YAML 序列不能跨服务继承，改动任一实例的参数时 4 个实例必须同步改。
+    command:
+      - vllm
+      - serve
+      - /models/MiniMax-H3
+      - --omni
+      - --task-type
+      - ref2va
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+      - --trust-remote-code
+      - --num-gpus
+      - "2"
+      - --tensor-parallel-size
+      - "2"
+      - --usp
+      - "1"
+      - --ring
+      - "1"
+      - --text-encoder-tp-size
+      - "2"
+      - --vae-patch-parallel-size
+      - "2"
+      - --vae-parallel-mode
+      - tile
+      - --vae-use-tiling
+      - --enable-distributed-layerwise-offload
+      - --dlo-no-use-allgather
+      - --dlo-resident-layers
+      - "46"
+      - --enforce-eager
+      - --diffusion-attention-backend
+      - CUDNN_ATTN
+
+    ports:
+      - "8001:8001"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_VLLM_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["2", "3"]
+              capabilities:
+                - gpu
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8001/health').status == 200 else 1)"
+        ]
+      interval: 300s
+      timeout: 10s
+      retries: 2
+      start_period: 600s
+
+  # ══ 实例 2：GPU 4,5 → :8002 ══════════════════════════════════════════════
+  minimax-h3-2:
+    <<: *vllm-common
+    container_name: minimax-h3-vllm-a100-2
+
+    # 参数与 minimax-h3-0 完全一致，仅 GPU 对 / 端口 / 容器名不同
+    command:
+      - vllm
+      - serve
+      - /models/MiniMax-H3
+      - --omni
+      - --task-type
+      - ref2va
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8002"
+      - --trust-remote-code
+      - --num-gpus
+      - "2"
+      - --tensor-parallel-size
+      - "2"
+      - --usp
+      - "1"
+      - --ring
+      - "1"
+      - --text-encoder-tp-size
+      - "2"
+      - --vae-patch-parallel-size
+      - "2"
+      - --vae-parallel-mode
+      - tile
+      - --vae-use-tiling
+      - --enable-distributed-layerwise-offload
+      - --dlo-no-use-allgather
+      - --dlo-resident-layers
+      - "46"
+      - --enforce-eager
+      - --diffusion-attention-backend
+      - CUDNN_ATTN
+
+    ports:
+      - "8002:8002"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_VLLM_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["4", "5"]
+              capabilities:
+                - gpu
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8002/health').status == 200 else 1)"
+        ]
+      interval: 300s
+      timeout: 10s
+      retries: 2
+      start_period: 600s
+
+  # ══ 实例 3：GPU 6,7 → :8003 ══════════════════════════════════════════════
+  minimax-h3-3:
+    <<: *vllm-common
+    container_name: minimax-h3-vllm-a100-3
+
+    # 参数与 minimax-h3-0 完全一致，仅 GPU 对 / 端口 / 容器名不同
+    command:
+      - vllm
+      - serve
+      - /models/MiniMax-H3
+      - --omni
+      - --task-type
+      - ref2va
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8003"
+      - --trust-remote-code
+      - --num-gpus
+      - "2"
+      - --tensor-parallel-size
+      - "2"
+      - --usp
+      - "1"
+      - --ring
+      - "1"
+      - --text-encoder-tp-size
+      - "2"
+      - --vae-patch-parallel-size
+      - "2"
+      - --vae-parallel-mode
+      - tile
+      - --vae-use-tiling
+      - --enable-distributed-layerwise-offload
+      - --dlo-no-use-allgather
+      - --dlo-resident-layers
+      - "46"
+      - --enforce-eager
+      - --diffusion-attention-backend
+      - CUDNN_ATTN
+
+    ports:
+      - "8003:8003"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_VLLM_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["6", "7"]
+              capabilities:
+                - gpu
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8003/health').status == 200 else 1)"
         ]
       interval: 300s
       timeout: 10s

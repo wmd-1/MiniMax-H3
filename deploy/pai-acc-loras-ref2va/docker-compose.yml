@@ -1,4 +1,18 @@
-# alibaba-pai/MiniMax-H3-Acc-LoRAs — PDD 8-step Ref2VA — SGLang v0.5.22
+# alibaba-pai/MiniMax-H3-Acc-LoRAs — PDD 8-step Ref2VA — SGLang v0.5.22 —— 4 实例（每实例 TP2）
+#
+# ── 多实例（一次起 4 个 serve 实例 + 1 个一次性 prepare）────────────────────
+#   pdd-prepare   无 GPU，一次性产出 /pdd（4 个 serve 实例都 depends_on 它）
+#   minimax-h3-0  GPU 0,1  →  http://<host>:30020
+#   minimax-h3-1  GPU 2,3  →  http://<host>:30021
+#   minimax-h3-2  GPU 4,5  →  http://<host>:30022
+#   minimax-h3-3  GPU 6,7  →  http://<host>:30023
+#   容器内一律监听 30010，实例差异只在宿主机发布端口与 GPU 对；
+#   单实例显存口径不变（TP2 + layerwise offload，resident=24 保守值）。
+#   宿主端口段 30020-30023 是本变体专用，避免和 base 30010-30013、
+#   FastH3 30030-30033、VDN 30040-30043 撞车。
+#   宿主机侧 RAM / SWAP 是「每实例」一份：默认 384g / 386g，4 份合计 ≈ 1.5 TiB，
+#   可用 H3_SGL_MEM_LIMIT / H3_SGL_MEMSWAP_LIMIT / H3_SGL_MEM_RESERVATION 覆盖。
+#   单实例操作：docker compose up -d minimax-h3-1 / docker compose restart minimax-h3-1
 #
 # 选 SGLang 的原因：PDD 不是普通 LoRA。它必须先把 backbone LoRA 离线合进
 # Ref2VA transformer，再把 32 个区间输出头融合成 8 个；这两个工具只在
@@ -33,7 +47,103 @@
 #   --model-path MiniMaxAI/MiniMax-H3 + SGLANG_USE_MODELSCOPE=true
 #   prepare 阶段直接用 bind mount 的 /models/MiniMax-H3/Ref2VA/transformer。
 
+# ───────────────────────────────────────────────────────────────────────────
+# 公共片段（4 个 serve 实例共享定义）：镜像、内存、命令、挂载、环境变量、健康检查
+# 容器内端口固定 30010 —— 4 个实例的 command / healthcheck 完全一致，
+# 只有宿主端口与 GPU 对写在各自的 service 上。
+# 4 个实例都 depends_on pdd-prepare（prepare 只需成功一次）。
+# ───────────────────────────────────────────────────────────────────────────
+x-pdd-common: &pdd-common
+  image: minimax-h3-sglang:v0.5.22
+  build:
+    context: ../images
+    dockerfile: Dockerfile.sglang
+
+  depends_on:
+    pdd-prepare:
+      condition: service_completed_successfully
+
+  ipc: host
+  pid: host
+  shm_size: 512gb
+
+  restart: unless-stopped
+
+  mem_limit: ${H3_SGL_MEM_LIMIT:-384g}
+  memswap_limit: ${H3_SGL_MEMSWAP_LIMIT:-386g}
+  mem_swappiness: 0
+  mem_reservation: ${H3_SGL_MEM_RESERVATION:-256g}
+
+  command:
+    - sglang
+    - serve
+    - --model-path
+    - MiniMaxAI/MiniMax-H3
+    - --model-variant
+    - ref2va
+    - --transformer-weights-path
+    - /pdd/transformer
+    - --num-gpus
+    - "2"
+    - --tp-size
+    - "2"
+    - --ulysses-degree
+    - "1"
+    - --performance-mode
+    - memory
+    - --layerwise-offload-components
+    - dit,text_encoder,vae
+    - --dit-offload-prefetch-size
+    - "1"
+    - --dit-layerwise-resident-layers
+    - "24"
+    - --enable-torch-compile
+    - "false"
+    - --attention-backend
+    - fa
+    - --warmup-resolutions
+    - 1344x768
+    - --warmup-num-frames
+    - "124"
+    # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
+    # PDD 8 步正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
+    - --scheduler-rpc-timeout
+    - "10800"
+    - --host
+    - 0.0.0.0
+    - --port
+    - "30010"                    # 容器内固定端口；宿主端口见各 service 的 ports
+
+  volumes:
+    - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+    - /model_nas/models/h3-ref2va-pdd:/pdd:ro
+    # 先挂父级 cache，再挂嵌套的 legacy cache 目标目录；与根目录
+    # docker-compose.yml 的顺序保持一致，避免挂载顺序造成遮蔽。
+    - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
+    # --model-path 走仓库 ID，sglang 按 ModelScope legacy cache 解析
+    # <MODELSCOPE_CACHE>/models/MiniMaxAI/MiniMax-H3；目录本身是 bind mount
+    # 出来的（沿用根目录 docker-compose.yml 的已验证写法），不是 cache 里
+    # 真有文件。缺这一条会退回联网拉取，离线机器直接失败。
+    - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
+    - /data/minimax-h3:/data/minimax-h3:ro
+
+  environment:
+    - SGLANG_DIFFUSION_MINIMAX_H3_PDD_HEADS=/pdd/pdd_fused_heads.safetensors
+    - SGLANG_USE_MODELSCOPE=true
+    - MODELSCOPE_CACHE=/root/.cache/modelscope
+    - HF_HUB_OFFLINE=1
+    - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+    interval: 300s
+    timeout: 30s
+    retries: 2
+    # prepare 已完成；serve 仍要加载 ~62GB 合并权重，给足 30min
+    start_period: 1800s
+
 services:
+  # ══ 一次性预处理（无 GPU；只在 /pdd/.done 缺失时真正干活）══════════════════
   pdd-prepare:
     image: minimax-h3-sglang:v0.5.22
     build:
@@ -63,104 +173,71 @@ services:
       - /model_nas/models/h3-acc-loras:/models/h3-acc-loras:ro
       - /model_nas/models/h3-ref2va-pdd:/pdd:rw
 
-  minimax-h3-pdd:
-    image: minimax-h3-sglang:v0.5.22
-    build:
-      context: ../images
-      dockerfile: Dockerfile.sglang
-    container_name: minimax-h3-pdd
-
-    depends_on:
-      pdd-prepare:
-        condition: service_completed_successfully
-
-    ipc: host
-    pid: host
-    shm_size: 512gb
-
-    restart: unless-stopped
-
-    mem_limit: 384g
-    memswap_limit: 386g
-    mem_swappiness: 0
-    mem_reservation: 256g
-
-    command:
-      - sglang
-      - serve
-      - --model-path
-      - MiniMaxAI/MiniMax-H3
-      - --model-variant
-      - ref2va
-      - --transformer-weights-path
-      - /pdd/transformer
-      - --num-gpus
-      - "2"
-      - --tp-size
-      - "2"
-      - --ulysses-degree
-      - "1"
-      - --performance-mode
-      - memory
-      - --layerwise-offload-components
-      - dit,text_encoder,vae
-      - --dit-offload-prefetch-size
-      - "1"
-      - --dit-layerwise-resident-layers
-      - "24"
-      - --enable-torch-compile
-      - "false"
-      - --attention-backend
-      - fa
-      - --warmup-resolutions
-      - 1344x768
-      - --warmup-num-frames
-      - "124"
-      # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
-      # PDD 8 步正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
-      - --scheduler-rpc-timeout
-      - "10800"
-      - --host
-      - 0.0.0.0
-      - --port
-      - "30010"
+  # ══ 实例 0：GPU 0,1 → 宿主 :30020 ══════════════════════════════════════════
+  minimax-h3-0:
+    <<: *pdd-common
+    container_name: minimax-h3-pdd-0
 
     ports:
-      - "30011:30010"
-
-    volumes:
-      - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
-      - /model_nas/models/h3-ref2va-pdd:/pdd:ro
-      # 先挂父级 cache，再挂嵌套的 legacy cache 目标目录；与根目录
-      # docker-compose.yml 的顺序保持一致，避免挂载顺序造成遮蔽。
-      - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
-      # --model-path 走仓库 ID，sglang 按 ModelScope legacy cache 解析
-      # <MODELSCOPE_CACHE>/models/MiniMaxAI/MiniMax-H3；目录本身是 bind mount
-      # 出来的（沿用根目录 docker-compose.yml 的已验证写法），不是 cache 里
-      # 真有文件。缺这一条会退回联网拉取，离线机器直接失败。
-      - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
-      - /data/minimax-h3:/data/minimax-h3:ro
-
-    environment:
-      - SGLANG_DIFFUSION_MINIMAX_H3_PDD_HEADS=/pdd/pdd_fused_heads.safetensors
-      - SGLANG_USE_MODELSCOPE=true
-      - MODELSCOPE_CACHE=/root/.cache/modelscope
-      - HF_HUB_OFFLINE=1
-      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+      - "30020:30010"
 
     deploy:
       resources:
         reservations:
-          memory: 256g
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
           devices:
             - driver: nvidia
-              device_ids: ["${GPU0:-2}", "${GPU1:-3}"]
+              # 必须写字符串：本机 Compose 5.6.0 对整数直接校验失败
+              device_ids: ["0", "1"]
               capabilities: [gpu]
 
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
-      interval: 300s
-      timeout: 30s
-      retries: 2
-      # prepare 已完成；serve 仍要加载 ~62GB 合并权重，给足 30min
-      start_period: 1800s
+  # ══ 实例 1：GPU 2,3 → 宿主 :30021 ══════════════════════════════════════════
+  minimax-h3-1:
+    <<: *pdd-common
+    container_name: minimax-h3-pdd-1
+
+    ports:
+      - "30021:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["2", "3"]
+              capabilities: [gpu]
+
+  # ══ 实例 2：GPU 4,5 → 宿主 :30022 ══════════════════════════════════════════
+  minimax-h3-2:
+    <<: *pdd-common
+    container_name: minimax-h3-pdd-2
+
+    ports:
+      - "30022:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["4", "5"]
+              capabilities: [gpu]
+
+  # ══ 实例 3：GPU 6,7 → 宿主 :30023 ══════════════════════════════════════════
+  minimax-h3-3:
+    <<: *pdd-common
+    container_name: minimax-h3-pdd-3
+
+    ports:
+      - "30023:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["6", "7"]
+              capabilities: [gpu]
