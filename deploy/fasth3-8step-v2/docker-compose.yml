@@ -20,6 +20,7 @@
 #   后端跑这份权重（跳过 compression gate），所以 A100 上走 SGLang。
 #
 # 能力边界：仅 T2VA；FL2VA / Ref2VA 请求会被拒绝。这是旁路服务，不是 Ref2VA 主线。
+# ⚠️ 因此本文件不能把默认 type 改为 ref2va：权重里没有 Ref2VA 分支。
 #
 # 首次启动（HF 权重为 gated，需要可访问 MiniMaxAI/MiniMax-H3 的 token）：
 #   HF_HOME=/model_nas/hf-cache HF_TOKEN=... \

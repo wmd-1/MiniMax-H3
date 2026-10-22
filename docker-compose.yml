@@ -25,7 +25,7 @@
 #     dit/text_encoder(vae decoder) 权重层卸载到主机内存(lossless)，每卡只留少量常驻层，稳过 40G。
 #   （层卸载不可与 --encoder-parallel / FSDP 混用）
 #   官方 RTX 5090 32GB 实测：同 recipe 每卡采样峰值 26.3 GiB（1344×768, 50步）。
-#   A100 40GB 比 5090 多 8GB，故可用更高 dit-layerwise-resident-layers 吃满余量（见 command 段实测计划）。
+#   A100 40GB 比 5090 多 8GB，理论上可上探更高 resident 层；当前统一取 24（多实例并行优先留余量）。
 #
 # 参数映射（来自官方 RTX 5090 配方，2026-08-11 复核）：
 #   官方已验证 2×RTX 5090 32GB recipe（377 GiB host，建议 384 GiB-class）：
@@ -34,11 +34,12 @@
 #     --dit-offload-prefetch-size 1 --dit-layerwise-resident-layers 20
 #     --enable-torch-compile false
 #   以下参数官方已明确验证，无需再质疑，本方案核心方向成立：
-#     weights=fl2va  -> --model-variant fl2va（同时可服务 t2va / fl2va 请求）
+#     weights=ref2va -> --model-variant ref2va（默认只加载 Ref2VA 分支权重，服务 ref2va 请求；
+#                       t2va/fl2va 需改回 --model-variant fl2va）
 #     quant=bf16     -> 默认精度，不添加 --quantization
 #     TP2 + Ulysses1 -> 仅 2 卡时最合理的并行划分
 #     performance-mode memory + layerwise-offload -> 40G 装不下 TP2 半量权重，必须层卸载
-#   仅 --dit-layerwise-resident-layers 为 A100 40GB 适配值（非官方验证值），需实测（见下）。
+#   仅 --dit-layerwise-resident-layers 为 A100 适配值（当前 24，官方 5090 用 20），需实测（见下）。
 #
 # ⚠️ 关于 layerwise-offload-components=vae 的重要澄清（官方说明）：
 #   不要把 "vae" 理解为「整个 VAE 全部卸载」。官方明确：
@@ -152,7 +153,7 @@ services:
       - MiniMaxAI/MiniMax-H3       # HF 根 ID：触发 sglang 原生 MiniMax-H3 backend；
                                    # 文件经 ModelScope resolver 从下方缓存路径解析（legacy cache 复用）
       - --model-variant
-      - fl2va                       # weights=fl2va（官方 recipe，同时服务 t2va / fl2va）
+      - ref2va                      # weights=ref2va：加载 Ref2VA 分支权重，默认服务 ref2va 请求
       - --num-gpus
       - "2"
       - --tp-size
@@ -169,12 +170,9 @@ services:
       - --enable-torch-compile
       - "false"                     # 官方 recipe：关闭 torch.compile（5090 配方明确验证）
       - --dit-layerwise-resident-layers
-      - "40"                       # ⚠️ A100 40GB 适配值（非官方验证值；官方 5090 用 20）。
-                                   # 显存预算基准 = nvidia-smi 真实峰值(当前实测~30G)，非程序内统计(25G)。
-                                   # 目标真实峰值 < 38G 且性能最优。实测计划：
-                                   #   24 档 / 32 档 / 40 档 三档各跑一次，以两张卡 nvidia-smi 真实峰值为准，
-                                   #   选「真实峰值<38G 且吞吐最好」的档位。当前暂置 40（约+6.4G→真实~36.4G）。
-                                   # 若实测>38G 则回调到 32~38；若仍<36G 且性能更好可上探 42~44。
+      - "24"                       # 统一取 24（保守值，4 实例同机优先留显存余量）。
+                                   # 官方 5090 验证值是 20；A100 40GB 理论上可上探，
+                                   # 但多实例并行时先保证每卡峰值 < 38G，确认整机稳定后再逐档上探 32/40。
       # 超时：--watchdog-timeout 是 srt 参数（diffusion 路径不读它，no-op），这里不保留；
       # 它在 v0.5.21/v0.5.22 都仍被接受（srt/arg_groups/fields/device.py），加不加都不影响扩散。
       # 扩散侧真正的 RPC 超时是 --scheduler-rpc-timeout（v0.5.21 起）。
@@ -224,7 +222,7 @@ services:
       - --model-path
       - MiniMaxAI/MiniMax-H3
       - --model-variant
-      - fl2va
+      - ref2va
       - --num-gpus
       - "2"
       - --tp-size
@@ -240,7 +238,7 @@ services:
       - --enable-torch-compile
       - "false"
       - --dit-layerwise-resident-layers
-      - "40"
+      - "24"
       - --scheduler-rpc-timeout
       - "10800"
       - --host
@@ -279,7 +277,7 @@ services:
       - --model-path
       - MiniMaxAI/MiniMax-H3
       - --model-variant
-      - fl2va
+      - ref2va
       - --num-gpus
       - "2"
       - --tp-size
@@ -295,7 +293,7 @@ services:
       - --enable-torch-compile
       - "false"
       - --dit-layerwise-resident-layers
-      - "40"
+      - "24"
       - --scheduler-rpc-timeout
       - "10800"
       - --host
@@ -334,7 +332,7 @@ services:
       - --model-path
       - MiniMaxAI/MiniMax-H3
       - --model-variant
-      - fl2va
+      - ref2va
       - --num-gpus
       - "2"
       - --tp-size
@@ -350,7 +348,7 @@ services:
       - --enable-torch-compile
       - "false"
       - --dit-layerwise-resident-layers
-      - "40"
+      - "24"
       - --scheduler-rpc-timeout
       - "10800"
       - --host

@@ -16,7 +16,7 @@
 #   单独起/重启某个实例：docker compose up -d minimax-h3-1 / docker compose restart minimax-h3-2
 #
 # 第一阶段（实测基线）：
-# - TP2 / FL2VA / DLO
+# - TP2 / Ref2VA / DLO
 # - DLO_RESIDENT_LAYERS=24 时：idle 2G，生成峰值 24G/卡（已确认）
 # - 容器 RAM 硬上限 384G，Swap 硬上限 16G
 #
@@ -34,7 +34,8 @@
 #   启动后用 nvidia-smi --query-gpu=memory.used --loop=1 抓峰值确认 ≤39G；
 #   若 VAE 突发致顶到 40G+ OOM 则回退 44。
 #
-# 官方 2× RTX 5090 32GB profile 为 20 层；A100 40GB 下列设为顶配 46。
+# 官方 2× RTX 5090 32GB profile 为 20 层；A100 40GB 顶配曾上探 46，
+# 本轮 4 实例并行统一收敛到 24（保守，单卡峰值约 24G，留足 VAE 突发余量）。
 
 x-vllm-common: &vllm-common
   # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
@@ -70,7 +71,7 @@ x-vllm-common: &vllm-common
     VLLM_OMNI_VIDEO_SYNC_TIMEOUT: "14400"
 
     # 仅作为环境记录，不作为 CLI 参数来源
-    DLO_RESIDENT_LAYERS: "46"
+    DLO_RESIDENT_LAYERS: "24"
 
     WIDTH: "1344"
     HEIGHT: "768"
@@ -128,12 +129,10 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
 
-      # # A100 顶配：t2va，40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
-      # - --dlo-resident-layers
-      # - "46"
-      # A100 顶配：ref2va，40 层实测 ~34G；上探 46 层 → 估 ~38G（余 ~2G，VAE 突发需盯峰值）
+      # 统一取 24（保守值）：24 层实测 idle 2G / 峰值 ~24G/卡，4 实例并行留足余量；
+      # A100 顶配可上探 46（估 ~38G、余 ~2G），确认整机稳定后再逐档上调。
       - --dlo-resident-layers
-      - "46"
+      - "24"
 
       # 稳定性优先
       - --enforce-eager
@@ -209,7 +208,7 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
       - --dlo-resident-layers
-      - "46"
+      - "24"
       - --enforce-eager
       - --diffusion-attention-backend
       - CUDNN_ATTN
@@ -276,7 +275,7 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
       - --dlo-resident-layers
-      - "46"
+      - "24"
       - --enforce-eager
       - --diffusion-attention-backend
       - CUDNN_ATTN
@@ -343,7 +342,7 @@ services:
       - --enable-distributed-layerwise-offload
       - --dlo-no-use-allgather
       - --dlo-resident-layers
-      - "46"
+      - "24"
       - --enforce-eager
       - --diffusion-attention-backend
       - CUDNN_ATTN

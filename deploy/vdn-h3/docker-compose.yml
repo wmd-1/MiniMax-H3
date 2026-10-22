@@ -20,6 +20,7 @@
 # 40G 卡上没法用；本仓库的 vLLM 钉在 0.31，连这个后端都没有。
 #
 # 能力边界：FL2VA 分区，服务 t2va / fl2va；Ref2VA 请求会被拒绝。
+# ⚠️ 因此本文件不能把默认 type 改为 ref2va：VDN overlay 没有 Ref2VA 分支权重。
 # 8 步 DMD 蒸馏；v0.5.22 的采样器要求 num_inference_steps=8
 # （8 次前向 = 9 个 sigma 点；v0.5.21 按 sigma 点计，曾要求 9）。
 #

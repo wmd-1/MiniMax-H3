@@ -1,4 +1,4 @@
-# MiniMax-H3 (vLLM-Omni) —— 2× RTX 5090 32GB × 4 实例（每实例 TP2 + DLO 20 层）
+# MiniMax-H3 (vLLM-Omni) —— 2× RTX 5090 32GB × 4 实例（每实例 TP2 + DLO 24 层）
 #
 # ── 多实例（一进程一实例，一次起 4 个）──────────────────────────────────────
 #   minimax-h3-0  GPU 0,1  →  http://<host>:8000   （脚本默认端口，向后兼容）
@@ -6,14 +6,14 @@
 #   minimax-h3-2  GPU 4,5  →  http://<host>:8002
 #   minimax-h3-3  GPU 6,7  →  http://<host>:8003
 #   容器内一律监听 8000，实例差异只在宿主机发布端口与 GPU 对；
-#   单实例显存口径不变（TP2 + DLO 20 resident 层，2×5090 官方验证值）。
+#   单实例显存口径不变（TP2 + DLO 24 resident 层；官方 5090 验证值是 20，这里统一取 24）。
 #   宿主机侧 RAM / SWAP 是「每实例」一份：默认 384g / 386g，4 份合计 ≈ 1.5 TiB，
 #   可用 H3_VLLM_MEM_LIMIT / H3_VLLM_MEMSWAP_LIMIT / H3_VLLM_MEM_RESERVATION 覆盖。
 #   单实例操作：docker compose -f docker-compose.vllm.5090.yml up -d minimax-h3-1
 #
 # 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:v0.31.0rc1）。
 # serve 参数映射自官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, hardware=rtx_5090_2x）：
-#   - 仅加载 FL2VA DiT，分布式层卸载（DLO）20 resident 层
+#   - 默认加载 Ref2VA DiT（--task-type ref2va），分布式层卸载（DLO）24 resident 层
 #   - TP2 + text-encoder-tp 2 + vae tile 并行 2，Ulysses SP1 / ring1
 #   - CUDNN_ATTN 后端，enforce-eager，无需 FlashAttention-4
 #
@@ -59,7 +59,7 @@ x-vllm-common: &vllm-common
     - /models/MiniMax-H3
     - --omni
     - --task-type
-    - fl2va                      # 仅加载 FL2VA DiT（官方 2×5090 recipe）
+    - ref2va                     # 默认 ref2va（需 Ref2VA 权重）；官方 5090 recipe 是 FL2VA，DLO 20 层沿用其值，需实测
     - --host
     - 0.0.0.0
     - --port
@@ -83,7 +83,7 @@ x-vllm-common: &vllm-common
     - --enable-distributed-layerwise-offload
     - --dlo-no-use-allgather
     - --dlo-resident-layers
-    - "20"                       # 2×RTX 5090 32GB 官方验证值
+    - "24"                       # 统一取 24（官方 5090 验证值 20；多实例并行留余量）
     - --enforce-eager
     - --diffusion-attention-backend
     - CUDNN_ATTN
@@ -98,7 +98,7 @@ x-vllm-common: &vllm-common
     # 容器内统一重编号为 0,1
     - VLLM_WORKER_MULTIPROC_METHOD=spawn
     - VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400
-    - DLO_RESIDENT_LAYERS=20
+    - DLO_RESIDENT_LAYERS=24
     - WIDTH=1344
     - HEIGHT=768
     - HF_HUB_OFFLINE=1           # 离线：禁止 vllm 走 HF 网络回退
