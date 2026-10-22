@@ -1,0 +1,24 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 对公风控研判官 from ypg.png.
+
+summary:
+[reference generation] A thirteen-second five-part sequence: the act opens on a blank frame, then a system notice appears on <Subject 1>'s monitor, he drops documents into the panel of <Subject 2> and clicks a verification action, and a completion message appears.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 4]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 4], [Shot 5]): fully_preserved - the identity is retained and appears as the avatar at the top of the assistant panel.
+
+detailed_description:
+The target video opens on one second of nothing, then settles into a warm naturalistic branch office with early-morning light.
+[Shot 1] The frame holds a completely blank white frame for one full second, with no subject, no objects and no text. A single soft low bloom rises and fades.
+[Shot 2] At 00:01.000, the shot cuts to a medium close-up from behind and slightly right of <Subject 1>, a monitor filling the left half of frame. He sits very still, eyes fixed on the screen, the pale glow catching the edge of his jaw.
+[Shot 3] At 00:02.500, the shot cuts to a frontal close-up of the monitor. A standalone system notice with a thin border slides into the lower right corner of the screen, separate from the chat window, and opens in one complete block carrying the Chinese text "A公司受托支付凭证与发票影像已上传，等待核验"; no avatar appears with it.
+[Shot 4] At 00:06.300, the same framing, with a chat window now open at the centre of the screen and the small avatar of <Subject 2> in its header. His hand enters from the lower left, drags two file thumbnails into the input area and releases them; they snap into place, then a cursor moves to a rounded button below the input and clicks.
+[Shot 5] At 00:07.800, the same framing. A reply bubble from <Subject 2> fades up on the left side, carrying the Chinese text "已自动生成《发票智能核验报告》，同步留痕至信贷档案系统。", with a document icon and three small square marks lighting up in sequence along its right edge. It holds to the end of the shot.
+
+overall_soundscape:
+One second of near silence under the blank frame with a faint low bloom, then quiet early-morning office room tone, a soft two-tone notification chime, the light drag-and-drop friction of files, one crisp click, three soft ascending confirmation ticks.
+
+non_diegetic_music:
+A single soft sustained note under the blank frame, then a light corporate underscore with soft marimba and a muted bass pulse at a walking tempo, lifting briefly on the confirmation ticks.

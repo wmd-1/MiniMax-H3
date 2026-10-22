@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 老张 from lz.png.
+
+summary:
+[reference generation] A fifteen-second two-shot sequence: <Subject 1> holds the second phone to his ear and listens to an urgent warning from a young male voice while his hand stays frozen above the mouse, then he pulls back and sinks into the chair in shaken relief as the red light fades.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video continues the office setting, the hard crimson light softening through amber into ordinary office light.
+[Shot 1] A tight side angle across <Subject 1>'s shoulder toward a monitor still glowing red with the alert panel visible. He presses the second phone to his free ear, the landline handset still against the other. He holds still, eyes locked on the red screen, his right hand frozen in the air above the mouse, his jaw working once.
+A young male voice (S1), urgent and firm, coming through the phone with a compressed telephone timbre and clear articulation, <d>[Mandarin] 张总！我是客户经理小陈，先别转！交易账户因涉诈已被冻结，这是诈骗！千万不要转！</d>
+[Shot 2] At 00:09.800, the shot cuts to a medium close-up facing him. He pulls his right hand back from the mouse and lets it fall into his lap, then pushes himself back into the chair until his shoulders meet the backrest. The red wash fades through amber into ordinary light. He exhales a long breath, his chest dropping visibly, and lifts one hand to press flat against his sternum, his eyes closing for a moment and then opening.
+<Subject 1> (S2) says in a shaken exhaling male voice with a rasp of disbelief, <d>[Mandarin] 啊？原来是诈骗！还好你们拦截得及时！</d> He shakes his head slowly, the hand still pressed to his chest.
+
+overall_soundscape:
+The thin buzz of two active handsets, a low warning tone still running under the red light, a long audible exhale, and the creak of a chair taking weight as the warning tone fades out.
+
+non_diegetic_music:
+The tension ostinato continues through the frozen beat, then resolves into a single warm sustained chord that thins to a quiet pad.

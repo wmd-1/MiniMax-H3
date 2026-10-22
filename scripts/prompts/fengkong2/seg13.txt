@@ -1,0 +1,25 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 对公风控研判官 from ypg.png.
+
+summary:
+[reference generation] A fourteen-second five-shot sequence: a message pops up on <Subject 1>'s phone, he speaks one line, types a batch of document names on the keyboard, the panel of <Subject 2> acknowledges the material, and a completion message follows with an e-signature field.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 3], [Shot 4], [Shot 5]): fully_preserved - the identity is retained and appears as the avatar in the panel header.
+
+detailed_description:
+The target video is in a warm naturalistic office style, late-afternoon light, a slightly cooler cast than earlier scenes.
+[Shot 1] A close-up on a desk surface: a phone lying face up lights up and a message row slides in from the top of the screen, rendered as a small rounded card carrying a short line of Chinese text. <Subject 1>'s hand enters and picks the phone up.
+[Shot 2] At 00:01.500, the shot cuts to a medium close-up from the side. <Subject 1> glances at the phone, then at his monitor, his expression shifting into a resigned half-smile.
+<Subject 1> (S1) says in a low matter-of-fact male voice, <d>[Mandarin] 合规检查的任务又来了。</d>
+[Shot 3] At 00:04.900, the shot cuts to an over-the-shoulder angle, framed so both the keyboard and the chat window are visible, with the small avatar of <Subject 2> in the window header. <Subject 1>'s hands settle on the keyboard and type in steady bursts; the Chinese text "信贷预警信号清单、企业近三年财务报表、金综平台抵押物状态核验结果" fills the input field left to right as the keys are pressed. He presses Enter, and the text lifts into a user message bubble right-aligned against the right edge of the window, carrying no avatar.
+[Shot 4] At 00:06.900, the same framing, held tighter on the panel. A reply bubble from <Subject 2> fades up on the left side carrying the Chinese text "材料已全部归集，正在生成风险排查报告……", with a small circular indicator turning beside it.
+[Shot 5] At 00:10.100, the same framing. The status bubble is replaced by a larger reply bubble from <Subject 2> carrying the Chinese text "A公司2025年度风险排查报告已自动生成，同步归档至信贷档案系统。", with a document icon and a thin green rule along its top edge. Below it a signature field outlined by a thin dashed border pulses once.
+
+overall_soundscape:
+Quiet office room tone, a soft phone notification blip, a dry laugh, brisk keyboard clicks with a soft key-press tick per character, a send whoosh, a soft click as each reply appears, a low processing hum, and a confirmation chime.
+
+non_diegetic_music:
+A light neutral corporate underscore with sparse piano and a soft bass pad at a slow tempo, held under the dialogue and lifting gently on the confirmation chime.

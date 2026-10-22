@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] An eleven-second three-shot sequence: hands sign the report at an e-signature field, <Subject 1> skims it and speaks with relief, then a blank frame closes the act.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a warm naturalistic office style, late-afternoon daylight from a window, the screen glow mixing with it.
+[Shot 1] A close-up on the desk. A hand holding a stylus touches a signature field outlined by a thin dashed border twice in quick strokes, and the dashed border closes into a solid line. A small check mark appears at the corner of the panel and the panel shrinks slightly as if filed away.
+[Shot 2] At 00:01.500, the shot cuts to a medium close-up from the side of the desk, a nearly fixed camera. <Subject 1> leans forward and scrolls slowly, his eyes tracking down the screen. He stops, lifts his chin and lets out a long slow breath, his chest dropping. Then he nods twice, small and satisfied, and the corners of his mouth turn up. His hand comes off the mouse and rests flat on the desk.
+<Subject 1> (S1) says in a warm relaxed male voice with a note of relief, <d>[Mandarin] 以前这种年度排查报告，来回折腾至少一周。现在一键生成，省心多了！</d>
+[Shot 3] At 00:09.900, the frame cuts to a completely blank white frame for the final second, with no subject, no objects and no text.
+
+overall_soundscape:
+Quiet office room tone, two light stylus taps on glass, a short filing whoosh, a slow mouse scroll, a long audible exhale, two soft taps of a palm on a desk, then near silence under the blank frame.
+
+non_diegetic_music:
+A warm mid-tempo corporate figure on piano and soft strings that lifts slightly midway and resolves on a held chord just before the blank frame.

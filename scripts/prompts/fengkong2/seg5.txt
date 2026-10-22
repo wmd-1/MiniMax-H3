@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is 小李 from xl.png.
+<Subject 2> is 对公风控研判官 from ypg.png.
+
+summary:
+[reference generation] A fifteen-second six-shot sequence: <Subject 1> leans against a corridor wall in fatigue and speaks one line, returns to her desk, uploads a recording and types a request on the keyboard, the panel of <Subject 2> returns two messages, and she reacts with delight.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3], [Shot 6]): fully_preserved - the character identity from the reference image is retained throughout.
+<Subject 2> (appears in [Shot 3], [Shot 4], [Shot 5]): fully_preserved - the identity is retained and appears as the avatar in the panel header.
+
+detailed_description:
+The target video is in a cool neutral corporate documentary style with flat corridor lighting and then brighter office light.
+[Shot 1] A medium shot from the side of a pale grey corridor. <Subject 1> stands leaning her shoulder against the wall, her left hand pressing fingertips to her temple. She opens her eyes, pushes off the wall and speaks, her chin dropping slightly.
+<Subject 1> (S1) says in a low worn female voice, muttering to herself, <d>[Mandarin] 又得听一下午录音整理纪要。</d>
+[Shot 2] At 00:03.900, the shot cuts to a medium shot at a desk inside an office. <Subject 1> sits down, drops a phone onto the desk and taps the screen twice; a small file icon with a waveform mark jumps from the phone into the chat window open on her monitor.
+[Shot 3] At 00:05.100, the shot cuts to an over-the-shoulder angle, framed so both the keyboard and the chat window are visible, with the small avatar of <Subject 2> in the window header. <Subject 1>'s hands settle on the keyboard and type in short bursts; the Chinese text "帮我生成这笔授信业务的贷审会会议纪要。" fills the input field left to right as the keys are pressed. She presses Enter, and the text lifts into a user message bubble right-aligned against the right edge of the window, carrying no avatar.
+[Shot 4] At 00:06.900, the shot cuts to a close-up of the phone screen held at waist height. The avatar of <Subject 2> appears at the top of a panel and a status line fades up beneath it on the left side, carrying the Chinese text "✓ 会议内容语义解析中……", with a small spinner turning beside it.
+[Shot 5] At 00:08.700, the same framing. The status line is replaced by a reply bubble from <Subject 2> carrying the Chinese text "【贷审会会议纪要】已生成", with a folded-corner document icon beside it. It holds and pulses once.
+[Shot 6] At 00:10.600, the shot cuts back to a medium close-up from the chest up. <Subject 1> holds the phone tilted toward her face. Her eyes move down the screen, her eyebrows lift, her chin comes up and her mouth opens slightly, then a grin breaks across her face.
+<Subject 1> (S1) says in a bright incredulous female voice, <d>[Mandarin] 以前得听一下午！现在几分钟就搞定了。</d>
+
+overall_soundscape:
+Quiet corridor room tone with a slight echo, then an office room tone with two light taps on a phone screen, brisk keyboard clicks with a soft key-press tick per character, a send whoosh, a soft electronic chime as each message appears, a light spinner tick, and a short breath of surprise.
+
+non_diegetic_music:
+A light neutral corporate underscore, sparse piano and a soft bass pad, brightening on the second chime with a rising two-note figure, then settling.

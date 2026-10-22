@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is 小周 from xz.png.
+
+summary:
+[reference generation] An eleven-second two-shot sequence at the approval centre: <Subject 1> rubs her tired eyes, works through printed research reports, complains about the workload, then types a request on the keyboard.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a cool clinical corporate documentary style, bright overhead office light with soft daylight from a side window.
+[Shot 1] The shot opens on a high three-quarter angle looking down at a long desk, then eases down to eye level without cutting, settling into a medium shot. <Subject 1> sits centred behind a keyboard with seven or eight printed reports fanned out around it in overlapping layers. She presses two fingers into the inner corner of her eye, rubs once, drops the hand, then slides one report out of the fan, opens it and flips three pages with her thumb. She sets it down open, looks from the page up to the monitor and back, and her shoulders lift and fall in a visible sigh.
+<Subject 1> (S1) says in a tired but precise female voice with a dry matter-of-fact tone, the pace slowing on the final clause, <d>[Mandarin] 这份审批报告光行业分析就要从七八份研报里摘，没有大半天根本完不成。</d>
+[Shot 2] At 00:09.200, the shot cuts to a medium over-the-shoulder angle, framed so both the keyboard and the chat window are visible. <Subject 1> drags the report thumbnail into the input field, then her hands settle on the keyboard and type in short bursts; the Chinese text "帮我生成授信审批报告。" fills the input field left to right as the keys are pressed. She presses Enter, and the text lifts into a user message bubble right-aligned against the right edge of the window, carrying no avatar.
+
+overall_soundscape:
+Open-plan office room tone with distant keyboard clicks, the crisp flip of pages, the soft thud of a closed report, one muffled sigh, then brisk keyboard clicks with a soft key-press tick per character and a send whoosh.
+
+non_diegetic_music:
+A cool minimal corporate underscore with low sustained strings and a light electronic pulse at a slow even tempo, held under the dialogue.

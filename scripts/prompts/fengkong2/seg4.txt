@@ -1,0 +1,26 @@
+subject_definitions:
+<Subject 1> is 对公风控研判官 from ypg.png.
+<Subject 2> is 小周 from xz.png.
+<Subject 3> is 小李 from xl.png.
+
+summary:
+[reference generation] A twelve-second four-shot sequence: the panel of <Subject 1> returns a completion message, <Subject 2> reacts in surprise, a blank frame closes the act, then the film cuts to a corridor where <Subject 3> appears.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the identity is retained and appears as the avatar in the panel header.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+<Subject 3> (appears in [Shot 4]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video is in a cool clinical office style, then a flat corridor look.
+[Shot 1] A frontal close-up of the monitor. A reply bubble fades up on the left side of a chat window, and the small avatar of <Subject 1> appears at its top-left corner, carrying the Chinese text "《授信审批报告》已生成，同步归档至信贷系统", with a document icon beside it. A thin progress bar beneath the bubble fills from left to right and stops at full width.
+[Shot 2] At 00:03.700, the shot cuts to a medium shot from the side of the desk. <Subject 2> clicks once with the mouse, leans toward the screen, and her eyes move quickly across it. Her eyebrows lift, her spine straightens and she leans back in the chair, then lets out a short laugh through her nose and shakes her head once.
+<Subject 2> (S1) says in a bright astonished female voice, the fatigue gone from her delivery, <d>[Mandarin] 以前得折腾一整天，现在几分钟就搞定了！</d>
+[Shot 3] At 00:09.000, the frame cuts to a completely blank white frame for one second, with no subject, no objects and no text.
+[Shot 4] At 00:10.000, the shot cuts to a pale grey corridor outside a frosted glass door; <Subject 3> pushes the door open and steps out, takes two steps forward, stops and leans her shoulder against the wall, lifting her left hand to press fingertips to her temple. A phone with a pale glowing screen sits in her right hand.
+
+overall_soundscape:
+Office room tone with a chime on the reply, one crisp mouse click, a short exhale of laughter, one second of near silence under the blank frame, then a quiet corridor tone with a reflective echo and a glass door clicking shut.
+
+non_diegetic_music:
+The cool underscore lifts on the reply chime with a bright three-note synth figure, drops out entirely under the blank frame, then returns as a sparse piano line for the corridor shot.

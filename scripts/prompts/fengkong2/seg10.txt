@@ -1,0 +1,24 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 对公风控研判官 from ypg.png.
+
+summary:
+[reference generation] A thirteen-second four-shot sequence: <Subject 1> reviews the verification result with satisfaction and speaks, a blank frame closes the act, then a quarter later an alert message from <Subject 2> appears on his monitor.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 4]): fully_preserved - the identity is retained and appears as the avatar at the top of the assistant panel.
+
+detailed_description:
+The target video is in a warm naturalistic office style throughout, with a slight cooling of the light for the final shot.
+[Shot 1] A medium shot from the side of the desk. <Subject 1> scrolls slowly with the mouse, his eyes tracking across the screen, then his brow smooths, his shoulders loosen and he leans back slightly, a satisfied smile forming. His right hand comes to rest on the arm of the chair.
+<Subject 1> (S1) says in a warm pleased male voice with an easy rhythm, <d>[Mandarin] 完美，全部匹配。这效率比以前人工高了不止一点点！</d>
+[Shot 2] At 00:06.400, the frame cuts to a completely blank white frame for one second, with no subject, no objects and no text.
+[Shot 3] At 00:07.400, the shot cuts to a medium shot of <Subject 1> standing at the same desk on a different day, sorting a thin stack of documents, sunlight at a lower angle now. He squares the stack and sets it down.
+[Shot 4] At 00:08.900, the shot cuts to a close-up of the monitor angled slightly away from camera. A chat panel is open with the small avatar of <Subject 2> in its header, and a reply bubble from <Subject 2> fades up on the left carrying the Chinese text "A公司本季度订单金额环比大幅下降，进入监控名单", with a thin amber border on its left edge. <Subject 1>'s hand enters and stops short of the mouse.
+
+overall_soundscape:
+Quiet office room tone, a slow mouse scroll, a satisfied exhale, one second of near silence under the blank frame, then paper being squared and a soft two-tone alert chime.
+
+non_diegetic_music:
+A warm light corporate figure on soft synth and marimba, resolving under the dialogue, dropping out for the blank frame, then returning as a single low sustained tone with a faint pulsing undertone.

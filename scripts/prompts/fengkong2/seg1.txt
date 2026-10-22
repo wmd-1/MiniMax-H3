@@ -1,0 +1,19 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] A fourteen-second single-shot opening in the branch office: <Subject 1> enters, sits down at a desk buried in documents, checks his watch and complains about the workload.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video is in a warm naturalistic office style, Monday-morning daylight entering at a low angle through a window, fine dust visible in the light.
+[Shot 1] The camera sits low behind the desk, tilted up toward the office door, and holds nearly still for the whole shot. <Subject 1> pushes the door open with one hand and steps in, crosses to the desk and stops, his gaze dropping to four uneven stacks of printed documents covering the surface. He pulls the chair out and sits, draws one stack toward himself and lifts the top sheet. Halfway through reading he turns his left wrist up and glances at his watch, holds it, then lets the sheet fall back. Daylight from the window at frame left lays a bright bar across the paper. A thin monitor sits unlit at the edge of frame.
+<Subject 1> (S1) says in a tired, resigned male voice at an unhurried conversational pace, speaking toward the paper rather than the camera, <d>[Mandarin] 这家零部件企业材料这么多，又是报表，又是征信，后面还得算指标、写报告……这效率什么时候才能提上去。</d> On the last words he exhales through his nose and his shoulders drop.
+
+overall_soundscape:
+Quiet office room tone, the door latch, fabric friction against a chair, paper lifting and settling, the faint click of a watch bracelet, distant muffled activity beyond the door.
+
+non_diegetic_music:
+A light sparse corporate underscore with soft marimba and a muted bass pulse at a walking tempo, held well below the dialogue.

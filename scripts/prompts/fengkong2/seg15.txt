@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 小周 from xz.png.
+<Subject 3> is 老张 from lz.png.
+<Subject 4> is 浙小控 from zxk.png.
+<Subject 5> is 浙宝箱 from zbx.png.
+
+summary:
+[reference generation] A fifteen-second single-shot closing scene in a bank hall: <Subject 1>, <Subject 2> and <Subject 3> stand together with <Subject 4> and <Subject 5> between them, and <Subject 4> raises a thumbs-up and delivers the closing line.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 3> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 4> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 5> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video is in a bright institutional corporate style, even daylight through tall windows, a polished pale stone floor, a service counter softly out of focus behind.
+[Shot 1] A symmetrical medium-wide shot in a bank hall. For the first two and a half seconds the frame holds the composition with no movement: five figures arranged across the centre, <Subject 1> at frame left holding a printed report, <Subject 2> beside him with her own report, <Subject 3> at frame right with a phone raised in one hand, and <Subject 4> and <Subject 5> together in the middle facing camera.
+<Subject 4> (S1) says in a warm steady male voice with a conversational broadcast delivery, <d>[Mandarin] 从写报告到审材料，从开贷审会到守钱袋子——对公风控研判官，把风险防控从事后翻旧账，变成全程盯着看。</d> As the line begins, <Subject 1> and <Subject 2> nod once toward camera and hold, <Subject 3> opens his free hand in a small celebratory gesture and smiles broadly, and <Subject 4> raises its right side in a thumbs-up and holds it. The camera eases in very slightly over the line, keeping all five figures inside frame.
+
+overall_soundscape:
+Bright airy hall room tone with a slight natural echo, a light rustle of paper reports, distant low conversation, the soft hum of the display panel.
+
+non_diegetic_music:
+A mid-tempo corporate synth bed with a warm sustained pad and soft mallet arpeggios, building gently under the line without percussion.

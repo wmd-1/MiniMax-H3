@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] A twelve-second two-shot sequence: <Subject 1> reads the alert on screen, his expression hardens as he thinks aloud, then the film cuts to an automotive parts workshop with a running production line.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video moves from a warm branch office with cooler light into a hard industrial documentary look.
+[Shot 1] A medium close-up from the far side of the desk, the camera fixed with virtually no movement, the alert bubble still visible on the monitor at the edge of frame. <Subject 1> reads it, his jaw setting, the line between his brows deepening. His eyes sweep down the screen twice. His right hand comes to rest on the edge of the keyboard without moving, then he pulls his chin back slowly and forward again.
+<Subject 1> (S1) says in a low controlled male voice, the words spaced out as he thinks aloud, <d>[Mandarin] 订单金额大幅下降，产品结构也变了……我得去下游核实一下。</d> On the last words he pushes back from the desk, the chair rolling a few centimetres.
+[Shot 2] At 00:07.300, the shot cuts to a wide medium shot inside an assembly workshop, hard daylight from high windows laying bright bands across a concrete floor with fine airborne dust. A long production line runs away from camera, partially assembled component frames sliding past on an overhead rail at a steady pace. No people in frame.
+
+overall_soundscape:
+Quiet office room tone, a slow controlled exhale, the small rolling creak of a chair, then a hard cut into loud industrial workshop ambience with a continuous conveyor drone, rhythmic metallic clanks and a distant compressed-air release.
+
+non_diegetic_music:
+A single low sustained tone with a faint pulsing undertone under the office shot, dropping out completely on the cut to the workshop.

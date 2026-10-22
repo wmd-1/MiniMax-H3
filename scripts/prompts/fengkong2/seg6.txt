@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is 老张 from lz.png.
+
+summary:
+[reference generation] A fifteen-second two-part sequence: the act opens on a blank frame, then <Subject 1> lifts a ringing landline in a cluttered finance office and listens as an off-screen male voice delivers a fast, pressuring phone scam.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2]): fully_preserved - the character identity from the reference image is retained throughout.
+
+detailed_description:
+The target video opens on one second of nothing, then settles into a warmer, more cluttered office style than the bank scenes, harder overhead light, realistic and unstyled.
+[Shot 1] The frame holds a completely blank white frame for one full second, with no subject, no objects and no text. A single soft low bloom rises and fades.
+[Shot 2] At 00:01.000, the shot cuts to a medium shot from the far side of a desk. <Subject 1> reaches out with his right hand and lifts a ringing landline handset to his ear while his left hand stays on the desk beside a keyboard. A monitor at frame right shows an online-banking transfer form with empty rectangular fields and a highlighted confirm area. The camera pushes in very slowly to a medium close-up from the side and holds. <Subject 1> keeps the handset pressed to his ear, his eyes flicking between the middle distance and the monitor. His free hand rises and hovers uncertainly over the desk, fingers half-curled. He swallows, his jaw tightening, his head tilts down, and near the end he nods once, a small reluctant movement.
+An off-screen male voice (S1), fast and clipped with a thin telephone timbre and audible urgency, comes through the handset, <d>[Mandarin] 张总，我是银行年检专员！公司账户需要年检，必须先将货款转入安全账户验资，否则账户冻结！这是紧急通知，您赶紧操作！</d>
+
+overall_soundscape:
+One second of near silence under the blank frame with a faint low bloom, then a small stuffy office room tone, the sharp double ring of a landline stopping as the handset is lifted, and a thin compressed telephone voice audible through the earpiece throughout.
+
+non_diegetic_music:
+A single soft sustained note under the blank frame, then N/A once the office shot begins.

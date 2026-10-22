@@ -1,0 +1,25 @@
+subject_definitions:
+The plant sales manager is a secondary figure with no reference image, around forty, short black hair, a light blue work shirt with the sleeves rolled to the forearm.
+<Subject 1> is 小陈 from xc.png.
+
+summary:
+[reference generation] A twelve-second four-shot sequence: in a workshop the plant sales manager explains the change in orders, <Subject 1> takes a note and acknowledges it, a blank frame closes the act, then the film cuts to a close-up of a desk being tidied.
+
+retention_analysis:
+The plant sales manager (appears in [Shot 1]): weak_reference - no reference image is used; the character appears once in the film and is framed in three-quarter view.
+<Subject 1> (appears in [Shot 2]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video is in a realistic industrial documentary style, hard daylight and airborne dust, then a warm office interior.
+[Shot 1] A medium shot from a three-quarter angle in an assembly workshop. The plant sales manager stands at frame left with the production line receding behind him at frame right. Partially assembled component frames slide past on an overhead rail, some wide and flat, some narrower. He turns his upper body toward the camera and lifts one hand palm down, gesturing along the line in a small explanatory sweep, his expression relaxed and matter-of-fact.
+The plant sales manager (S1) says in a steady practical male voice with a workshop-flat delivery, <d>[Mandarin] 今年下半年开始切换新产品线，明年一季度就会恢复。</d>
+[Shot 2] At 00:06.700, the shot cuts to a medium close-up of <Subject 1> standing in the same workshop, the production line blurred behind him. He holds a small notebook in one hand and writes two short strokes, lifts his chin and gives a single clear nod, then closes the notebook and tucks the pen away.
+<Subject 1> (S2) says in a calm satisfied male voice, <d>[Mandarin] 好的，这个解释合理。</d>
+[Shot 3] At 00:09.500, the frame cuts to a completely blank white frame for one second, with no subject, no objects and no text.
+[Shot 4] At 00:10.500, the shot cuts to a close-up on an office desk: hands squared a thin stack of folders, a phone lying face up beside them. No face in frame.
+
+overall_soundscape:
+Loud industrial workshop ambience with conveyor drone and metallic clanks, a soft pen scratch on paper, the snap of a notebook closing, one second of silence under the blank frame, then quiet office room tone.
+
+non_diegetic_music:
+N/A throughout the workshop shots, then a single sustained pad under the final office close-up.

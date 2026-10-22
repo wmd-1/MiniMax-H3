@@ -1,0 +1,28 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 小周 from xz.png.
+<Subject 3> is 老张 from lz.png.
+<Subject 4> is 浙小控 from zxk.png.
+<Subject 5> is 浙宝箱 from zbx.png.
+
+summary:
+[reference generation] A fifteen-second two-shot ending: <Subject 5> raises a thumbs-up in the same hall grouping and delivers the final call to action, then the frame settles into a static end card carrying the closing title.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 2> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 3> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 4> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+<Subject 5> (appears in [Shot 1]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video continues the bright institutional hall look, the same five-figure arrangement held from the previous shot.
+[Shot 1] The camera holds the symmetrical medium-wide composition. <Subject 5> raises its left side in a thumbs-up gesture and holds it, its form brightening slightly. <Subject 4> stays beside it, steady. <Subject 1> and <Subject 2> keep their reports and their small nods, and <Subject 3> keeps the phone raised, all holding their positions without shifting weight.
+<Subject 5> (S1) says in a warm confident male voice with a brisk broadcast delivery, <d>[Mandarin] 全链路7大AI功能，笔笔业务有人盯，笔笔资金有保障。关注对公风控研判官，了解更多智能风控黑科技！</d>
+[Shot 2] At 00:12.500, the shot cuts to a static end card: a deep navy field, a thin luminous horizontal rule above the centre, and centred white text reading "全链路智能风控　从授信申报到贷后守护　守护每一笔交易安全", held perfectly still. A soft teal glow blooms once beneath the rule and settles. The camera does not move.
+
+overall_soundscape:
+Bright hall room tone, a light paper rustle, then a soft low bloom as the end card appears and the room tone thins to near silence.
+
+non_diegetic_music:
+The synth bed continues and resolves on a single warm sustained chord with light bell overtones, holding flat to the final frame without decay.

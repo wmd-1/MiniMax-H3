@@ -5,7 +5,8 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
+# 被测对象：scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
+#           scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
 #           ref2va-fengkong-a-sglang.sh / ref2va-fengkong-b-sglang.sh（对公风控研判官 A/B）/
 #           ref2va-jiaoxintong4-sglang.sh / ref2va-jiaoxintong3-sglang.sh /
 #           ref2va-jiaoxintong2-sglang.sh / ref2va-jiaoxintong-sglang.sh /
@@ -59,6 +60,10 @@ cleanup() {
   if [ -n "${MOCK_B:-}" ] && kill -0 "${MOCK_B}" 2>/dev/null; then
     kill "${MOCK_B}" 2>/dev/null
     wait "${MOCK_B}" 2>/dev/null
+  fi
+  if [ -n "${MOCK_C:-}" ] && kill -0 "${MOCK_C}" 2>/dev/null; then
+    kill "${MOCK_C}" 2>/dev/null
+    wait "${MOCK_C}" 2>/dev/null
   fi
   if [ "${KEEP_WORK:-0}" = "1" ]; then
     echo "[keep] 临时目录保留：${WORK}"
@@ -146,6 +151,10 @@ PORT_B="${PORT_B:-30012}"
 POSTS_B="${WORK}/posts_b.jsonl"
 python3 "${TESTS_DIR}/mock_video_server.py" --port "${PORT_B}" --log "${POSTS_B}" > "${WORK}/mock_b.log" 2>&1 &
 MOCK_B=$!
+PORT_C="${PORT_C:-30013}"
+POSTS_C="${WORK}/posts_c.jsonl"
+python3 "${TESTS_DIR}/mock_video_server.py" --port "${PORT_C}" --log "${POSTS_C}" > "${WORK}/mock_c.log" 2>&1 &
+MOCK_C=$!
 sleep 1
 
 # ================================= T1 =================================
@@ -446,6 +455,57 @@ for i in $(seq 1 14); do
   fi
 done
 if [ "$bad" -eq 0 ]; then ok "T21 14 段均 Subject↔Picture 一一对应、连续、与脚本表一致"; else bad "T21 有 ${bad} 段不一致"; fi
+
+# ================================= T22 =================================
+CASE="T22 fengkong2 A（段1–6）：逐段时长/上传图顺序/段12外均含ypg"
+echo "── ${CASE}"
+reset_posts; : > "$POSTS_C"
+run_script ref2va-fengkong2-a-sglang.sh t22 OUTPUT_PREFIX="${WORK}/fk2_"
+assert_eq "0" "$(rc_of t22)" "T22 退出码"
+assert_eq "6" "$(wc -l < "$POSTS" | tr -d ' ')" "T22 提交请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T22 画幅"
+assert_eq "14 10 11 12 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T22 段1-6 时长"
+assert_eq "xc.png"                  "$(imgs_of 1)" "T22 段1 单图"
+assert_eq "xc.png,ypg.png,xz.png"   "$(imgs_of 2)" "T22 段2 上传顺序（ypg 为 Subject 2）"
+assert_eq "ypg.png,xz.png,xl.png"   "$(imgs_of 4)" "T22 段4 上传顺序（ypg 开头）"
+assert_eq "xl.png,ypg.png"          "$(imgs_of 5)" "T22 段5 上传顺序"
+assert_eq "lz.png"                  "$(imgs_of 6)" "T22 段6 单图"
+for i in 1 2 3 4 5 6; do assert_file "${WORK}/fk2_seg${i}.mp4" "T22 产出"; done
+
+# ================================= T23 =================================
+CASE="T23 fengkong2 B（段7–11）：打到第二个服务 PORT_B"
+echo "── ${CASE}"
+: > "$POSTS_B"
+run_script ref2va-fengkong2-b-sglang.sh t23 OUTPUT_PREFIX="${WORK}/fk2_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t23)" "T23 退出码"
+assert_eq "5" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T23 第二服务请求数"
+assert_eq "8 15 13 13 12" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T23 段7-11 时长"
+assert_eq "lz.png"        "$(sed -n 1p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T23 段7"
+assert_eq "xc.png,ypg.png" "$(sed -n 3p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T23 段9"
+assert_eq "xc.png"         "$(sed -n 5p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T23 段11"
+for i in 7 8 9 10 11; do assert_file "${WORK}/fk2_seg${i}.mp4" "T23 产出"; done
+
+# ================================= T24 =================================
+CASE="T24 fengkong2 C（段12–16）：第三服务；段12 只传 xc（无图角色已去编号）"
+echo "── ${CASE}"
+run_script ref2va-fengkong2-c-sglang.sh t24 OUTPUT_PREFIX="${WORK}/fk2_" PORT="${PORT_C}"
+assert_eq "0" "$(rc_of t24)" "T24 退出码"
+assert_eq "5" "$(wc -l < "$POSTS_C" | tr -d ' ')" "T24 第三服务请求数"
+assert_eq "12 14 11 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_C" | tr '\n' ' ' | sed 's/ $//')" "T24 段12-16 时长"
+assert_eq "xc.png" "$(sed -n 1p "$POSTS_C" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T24 段12 只传 1 张（销售负责人不占位）"
+assert_eq "xc.png,xz.png,lz.png,zxk.png,zbx.png" "$(sed -n 4p "$POSTS_C" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T24 段15 五人同框图序"
+for i in 12 13 14 15 16; do assert_file "${WORK}/fk2_seg${i}.mp4" "T24 产出"; done
+
+# ================================= T25 =================================
+CASE="T25 fengkong2 三服务合并：16 段无重叠、总时长 205s、三份表一致"
+echo "── ${CASE}"
+assert_eq "16" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") + $(wc -l < "$POSTS_C") ))" "T25 三服务合计请求数"
+assert_eq "205" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" "$POSTS_C" | awk '{s+=$1} END{print s}')" "T25 全片总时长"
+assert_eq "16" "$(ls -1 "${WORK}"/fk2_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T25 seg1..16 产出齐全"
+ta=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong2-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+tb=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong2-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+tc=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong2-c-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+assert_eq "$ta" "$tb" "T25 A/B 映射表逐字一致"; assert_eq "$ta" "$tc" "T25 A/C 映射表逐字一致"
 
 # ------------------------------- 汇总 -------------------------------
 echo "======================================================"

@@ -1,0 +1,26 @@
+subject_definitions:
+<Subject 1> is 小陈 from xc.png.
+<Subject 2> is 对公风控研判官 from ypg.png.
+<Subject 3> is 小周 from xz.png.
+
+summary:
+[reference generation] A ten-second sequence: <Subject 1> drops documents into the assistant window and types on the keyboard, the panel of <Subject 2> returns two reply messages, a blank frame closes the act, then the film cuts to <Subject 3> at the approval centre.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the character identity from the reference image is retained, framed in over-shoulder view.
+<Subject 2> (appears in [Shot 2], [Shot 3], [Shot 4]): fully_preserved - the identity is retained and appears as the avatar in the panel header.
+<Subject 3> (appears in [Shot 5]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video moves from warm office light into the cooler light of an approval centre.
+[Shot 1] A tight over-the-shoulder angle onto a monitor. <Subject 1>'s hands enter from the lower left carrying a thick stack of printed pages and drop it toward a chat window open on screen, with the small avatar of <Subject 2> in its header.
+[Shot 2] At 00:01.500, the same over-the-shoulder framing, held slightly wider so both the keyboard and the input field are in frame. <Subject 1>'s hands settle on the keyboard and type in short bursts; the Chinese text "帮我生成XXX公司的授信报告" fills the input field left to right as the keys are pressed. He presses Enter, and the text lifts into a user message bubble right-aligned against the right edge of the window, carrying no avatar.
+[Shot 3] At 00:03.500, the shot cuts to a frontal close-up of the monitor surface only. The avatar of <Subject 2> pulses and a reply bubble fades up on the left side of the window, carrying the Chinese text "正在解析企业材料：财务报表、征信报告……", with a small circular indicator turning beside it.
+[Shot 4] At 00:06.600, the same framing. A second reply bubble appears below the first, carrying the Chinese text "《授信调查报告》已完成", with a small document icon beside it. At 00:08.500 the whole panel fades out into a completely blank white frame, with no subject, no objects and no text, holding to the end of the shot.
+[Shot 5] At 00:09.000 space is held on the blank field to the end of the shot.
+
+overall_soundscape:
+Quiet warm office room tone, the rustle of a paper stack landing, brisk keyboard clicks with a soft key-press tick per character, a soft send whoosh, a chime as each reply bubble lands, a low confirmation tone, then the room tone drops away to near silence under the blank frame.
+
+non_diegetic_music:
+A restrained corporate synth bed that thins to a single held note as the panel fades, leaving only a faint tail under the blank frame.

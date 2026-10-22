@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 老张 from lz.png.
+
+summary:
+[reference generation] An eight-second four-shot sequence: <Subject 1> agrees to the caller, types the transfer amount, the screen floods red with an interception alert as his finger is about to confirm, and a second phone begins to ring on the desk.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 4]): fully_preserved - the character identity from the reference image is retained.
+
+detailed_description:
+The target video is in a warm cluttered office style that turns hard and crimson partway through.
+[Shot 1] A medium close-up from the side. <Subject 1> keeps the handset at his ear and nods, his free hand moving down toward the keyboard.
+<Subject 1> (S1) says in a hesitant obliging male voice, half-distracted by the screen, <d>[Mandarin] 好的，我马上……</d>
+[Shot 2] At 00:02.000, the shot cuts to an over-the-shoulder angle from behind him, the monitor filling the right half of frame. His fingers type short deliberate strokes and a numeric amount block on screen fills from the left as the digits are entered.
+[Shot 3] At 00:03.500, the same framing. In a single beat the entire monitor floods saturated red and a rounded alert panel snaps over the form, its border thick and glowing, carrying the Chinese text "转账交易存在风险，已拦截" in bold white characters across the panel.
+[Shot 4] At 00:05.900, the shot cuts to a tight side angle on his face and hand. Hard red light throws across his cheek, neck and shoulder. His index finger stops a few centimetres above the mouse, tendons tight, and the hand begins to tremble slightly. His head pulls back, his eyes lock on the red screen, and at 00:07.000 a phone on the desk starts to vibrate and light up; his free hand moves toward it.
+
+overall_soundscape:
+The stuffy office room tone, short deliberate keystrokes, a low sub-bass hit as the screen floods red, a sharp repeated electronic warning tone, a fast heartbeat-like pulse underneath, the thin buzz of the handset speaker, then a phone vibrating on the hard desk.
+
+non_diegetic_music:
+The score drops out briefly on the red flash, then a tight low string ostinato enters at a fast tempo without resolving.
