@@ -1,16 +1,22 @@
-# MiniMax-H3 (SGLang Diffusion) — v0.5.22
+# MiniMax-H3 (SGLang Diffusion) — v0.5.22 —— 四套服务共用这一个镜像
 #
-# 三套 SGLang 服务共用：
+#   - base Ref2VA（根目录 docker-compose.yml，默认 --model-variant ref2va）
 #   - FastH3-8-Step-V2（v0.5.22 原生支持，A100 走稠密 FA 回退）
 #   - VDN-H3（v0.5.22，注意采样器要求 num_inference_steps=8）
 #   - PAI PDD（build/fuse 工具在 v0.5.22 仍保留）
+#
+# 与根目录 Dockerfile 的关系：本文件是它的超集（多三套变体断言），
+# 构建产物同为 minimax-h3-sglang:v0.5.22，四套 compose 共用；
+# 只装根目录 Dockerfile 也能起 base，但跳变体时会缺这层早失败断言。
 #
 # 镜像内是 editable 安装，源码树即运行模块；切版只需换 FROM tag 后重跑
 # pip install -e "python[diffusion]"。
 FROM lmsysorg/sglang:v0.5.22
 
-# PyPI 官方源在当前网络下首字节延迟高，会让 pip 的构建隔离依赖解析
+# PyPI 官方源在当前网络下首字节延迟高（ttfb 秒级），会让 pip 的构建隔离依赖解析
 # （setuptools/setuptools-rust/setuptools-scm/wheel）与 [diffusion] 大依赖树龟速卡住。
+# 用 ENV 覆盖 index，确保外层 pip 与 build isolation 内层子 pip 都走国内镜像。
+# 可通过 --build-arg PIP_INDEX_URL=... 覆盖（例如切回官方源 https://pypi.org/simple）。
 ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
@@ -23,7 +29,12 @@ RUN pip install \
     accelerate \
     hf_transfer
 
-# 早失败：确认这版镜像同时具备三套服务依赖。
+# 早失败之一：base 必备能力。确认这版镜像仍是 MiniMax-H3 原生 backend
+# （宽松匹配，避免上游改名误判），且 compose 默认使用的 --model-variant ref2va 存在。
+RUN grep -rq "MiniMax-H3" python/sglang/multimodal_gen/configs/ && \
+    grep -rqi "ref2va" python/sglang/multimodal_gen/
+
+# 早失败之二：三套变体依赖。
 # 用宽松匹配（只匹配 “FastH3-8-Step”），避免上游把完整 repo id 拆行或
 # 换个后缀（V2.1）时构建被误判。
 RUN grep -rq "FastH3-8-Step" \
@@ -35,3 +46,10 @@ RUN grep -rq "FastH3-8-Step" \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
     rm -rf /var/lib/apt/lists/*
+
+# 四套共用（base + 三套变体，tag 与 FROM 版本对齐）。两份副本内容一致，改一处要同步另一处：
+#   deploy 侧（deploy/ 下三个变体 compose 的 build: 指向那份）：
+#     docker build -f deploy/images/Dockerfile.sglang -t minimax-h3-sglang:v0.5.22 deploy/images
+#   根目录副本：
+#     docker build -f Dockerfile.sglang -t minimax-h3-sglang:v0.5.22 .
+# 注：根目录 Dockerfile 产出同一个 tag，但内容是本文件的子集（只够 base）；日常只需建其中一份。

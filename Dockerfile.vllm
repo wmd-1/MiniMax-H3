@@ -3,8 +3,8 @@
 #
 # 目标：
 # - TP2
-# - FL2VA
-# - Distributed Layerwise Offload (DLO)
+# - Ref2VA（默认 --task-type ref2va；FL2VA 需改 CMD 或由 compose 覆盖 command）
+# - Distributed Layerwise Offload (DLO) 24 层
 # - 尽可能利用 A100 40GB 的额外显存
 # - 降低 CPU offload / Swap 压力
 #
@@ -17,14 +17,16 @@
 # 后续根据实际显存峰值继续提高（24 → 28 → 32 ...）。
 # 不建议一开始直接拉满。
 
-# vllm-omni 版本化预发布镜像（对齐 vLLM 0.31.0），已内置模块化 pipeline (#5720) 与 MiniMax-H3 支持。
-# x86 默认 tag 为 v0.31.0rc1；aarch64 另有 v0.31.0rc1-aarch64 变体。
-FROM vllm/vllm-omni:v0.31.0rc1
+# vllm-omni 版本化预发布镜像（对齐 vLLM 0.32.0rc1），已内置模块化 pipeline (#5720) 与 MiniMax-H3 支持。
+# 相对 0.31：H3 LoRA 去掉 rebind（vLLM-Omni #7195）、新增 VDNH3_ATTN；两版的
+# MiniMax-H3 artifact / LoRA 契约一致（见 docs/HANDOFF-4-variants.md §7.1）。
+# x86 默认 tag 为 v0.32.0rc1；若要改用定版 v0.32.0 或 aarch64 变体，先确认上游已发布再替换。
+FROM vllm/vllm-omni:v0.32.0rc1
 
 # ----------------------------------------------------------------------
 # Runtime dependencies
 #
-# vllm-omni 与 MiniMax-H3 handler 均由基础镜像 vllm/vllm-omni:v0.31.0rc1 内置，
+# vllm-omni 与 MiniMax-H3 handler 均由基础镜像 vllm/vllm-omni:v0.32.0rc1 内置，
 # 不再 checkout 源码 / 覆盖 PYTHONPATH，以保证构建可复现（版本随镜像 tag 固定）。
 # 仅补装 ffmpeg（参考视频预处理与 MP4 混流所需）。
 # ----------------------------------------------------------------------
@@ -33,6 +35,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ffmpeg && \
     rm -rf /var/lib/apt/lists/*
+
+# 早失败：确认 vllm_omni 已安装且带 MiniMax-H3 handler。
+# 用 find_spec + rglob，不 import 模块，避免构建期（无 GPU）触发 CUDA 初始化。
+RUN python -c "import importlib.util,pathlib,sys; r=pathlib.Path(list(importlib.util.find_spec('vllm_omni').submodule_search_locations)[0]); h=list(r.rglob('minimax_h3*')); print('minimax_h3 files:', len(h)); sys.exit(0 if h else 1)"
 
 # ----------------------------------------------------------------------
 # MiniMax-H3 / A100 40GB profile
@@ -60,7 +66,7 @@ ENV HEIGHT=768
 WORKDIR /workspace
 
 # ----------------------------------------------------------------------
-# MiniMax-H3 FL2VA
+# MiniMax-H3 Ref2VA
 # ----------------------------------------------------------------------
 
 CMD ["sh", "-c", "\
@@ -69,7 +75,7 @@ VLLM_WORKER_MULTIPROC_METHOD=spawn \
 VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400 \
 vllm serve /models/MiniMax-H3 \
   --omni \
-  --task-type fl2va \
+  --task-type ref2va \
   --host 0.0.0.0 \
   --port 8000 \
   --trust-remote-code \
@@ -88,11 +94,11 @@ vllm serve /models/MiniMax-H3 \
   --diffusion-attention-backend CUDNN_ATTN \
 "]
 
-# 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.31.0rc1 固定，不再 clone 源码）：
-#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .
+# 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.32.0rc1 固定，不再 clone 源码）：
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .
 #   （如需严格可复现，建议把 FROM 改为镜像 digest：vllm/vllm-omni@sha256:<digest>，
 #     rc 预发布 tag 后续可能被重新 push）
 # 运行（模型本体只读挂到 /models/MiniMax-H3）：
 #   docker run --gpus all --ipc=host --shm-size=512gb \
 #     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
-#     -p 8000:8000 minimax-h3-vllm:v0.31.0rc1
+#     -p 8000:8000 minimax-h3-vllm:v0.32.0rc1
