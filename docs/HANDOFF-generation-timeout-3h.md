@@ -77,11 +77,11 @@
 
 ## 4. 重建镜像时的改动清单
 
-### 4.1 SGLang 镜像（base 已改为 `lmsysorg/sglang:v0.5.21`）
+### 4.1 SGLang 镜像（base 已改为 `lmsysorg/sglang:v0.5.22`）
 
-> 现状：`Dockerfile` 已从 `lmsysorg/sglang:dev` 切到 `v0.5.21`，**但下文的 `RCVTIMEO` 3h patch 尚未加入该文件（仍为待办）**。
+> 现状：`Dockerfile` 已从 `lmsysorg/sglang:dev` 切到 `v0.5.22`，**但下文的 `RCVTIMEO` 3h patch 尚未加入该文件（仍为待办）**。
 
-当前 `Dockerfile`：`FROM lmsysorg/sglang:v0.5.21` + `pip install -e "python[diffusion]"`（editable，源码树即运行模块）。
+当前 `Dockerfile`：`FROM lmsysorg/sglang:v0.5.22` + `pip install -e "python[diffusion]"`（editable，源码树即运行模块）。
 → patch 目标就是 `/sgl-workspace/sglang/python/sglang/multimodal_gen/runtime/scheduler_client.py`，**必须写在 `pip install -e` 之后的层**，避免被后续步骤覆盖。
 
 **推荐做法：改成 env 可调（默认 3h）**，一次改对、后续无需重 build：
@@ -113,7 +113,7 @@ compose 侧（若采用 env 方案）：
       - SGLANG_DIFFUSION_SCHED_RCVTIMEO_MS=10800000   # 3h
 ```
 
-### 4.2 vLLM 镜像（base 已改为 `vllm/vllm-omni:v0.31.0rc1`）
+### 4.2 vLLM 镜像（base 已改为 `vllm/vllm-omni:v0.32.0rc1`）
 
 > 下文代码行号取自旧镜像 `minimax-h3-vllm:latest`（旧 base `vllm/vllm-omni:minimax-h3` + clone 的 vllm-omni `main`）。
 > 新 base 已内置 vllm-omni，行号/默认值可能漂，重建后按 §6 重新 grep 核对。
@@ -133,7 +133,7 @@ compose 侧（若采用 env 方案）：
    - 现状已覆盖：`Dockerfile.vllm` CMD 内 `VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400`（L116）、`docker-compose.vllm.5090.yml` L86、`docker-compose.vllm.a100.yml` L117。
    - **该值在模块 import 时读取**，只能进程启动前设置，运行期改 env 无效。
    - 若重建后改用自定义 `command:`/`entrypoint:` 覆盖 CMD，务必把 env 放进 `environment:`，否则会静默回落 600s。
-2. 基于 `vllm/vllm-omni:v0.31.0rc1` 重建时，vllm-omni 与 MiniMax-H3 handler 均由基础镜像内置，**不再 clone 源码 / 不再覆盖 `PYTHONPATH`**（现行 `Dockerfile.vllm` 已如此）。若日后改回以 `vllm/vllm-openai` 作 base，才需要重新 `git clone vllm-omni` + `ENV PYTHONPATH=/opt/vllm-omni:...`；严格可复现建议把 `FROM` 写成镜像 digest（rc 预发布 tag 可能被重新 push）。
+2. 基于 `vllm/vllm-omni:v0.32.0rc1` 重建时，vllm-omni 与 MiniMax-H3 handler 均由基础镜像内置，**不再 clone 源码 / 不再覆盖 `PYTHONPATH`**（现行 `Dockerfile.vllm` 已如此）。若日后改回以 `vllm/vllm-openai` 作 base，才需要重新 `git clone vllm-omni` + `ENV PYTHONPATH=/opt/vllm-omni:...`；严格可复现建议把 `FROM` 写成镜像 digest（rc 预发布 tag 可能被重新 push）。
 3. `core/sched/omni_scheduler_mixin.py` 里还有一个 `VLLM_OMNI_INPUT_WAIT_TIMEOUT_S`（默认 600s，超时把请求标 `FINISHED_ERROR`）。**与 H3 无关**：它只作用于 `uses_full_payload_input_coordinator()` 白名单阶段（全是 Qwen/CosyVoice/TTS 等音频模型），H3 走 `vllm_omni/diffusion/` 引擎，不在该路径。重建后若换 vllm-omni 版本，可复查该白名单是否加入了 H3。
 4. vLLM 侧不存在 sglang 那种「跨进程 REQ/REPLY 死等」硬编码；`diffusion/` 下的 timeout 都是 RPC join / 轮询粒度（`_ASYNC_OUTPUT_THREAD_JOIN_TIMEOUT_S=10`、`mq.dequeue(timeout=1.0)` 等），不会截断长生成。
 

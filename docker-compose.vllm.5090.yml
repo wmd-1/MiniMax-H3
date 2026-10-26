@@ -11,14 +11,14 @@
 #   可用 H3_VLLM_MEM_LIMIT / H3_VLLM_MEMSWAP_LIMIT / H3_VLLM_MEM_RESERVATION 覆盖。
 #   单实例操作：docker compose -f docker-compose.vllm.5090.yml up -d minimax-h3-1
 #
-# 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:v0.31.0rc1）。
+# 基于 vLLM 镜像（见同目录 Dockerfile.vllm，FROM vllm/vllm-omni:v0.32.0rc1）。
 # serve 参数映射自官方 recipe（recipes.vllm.ai/MiniMaxAI/MiniMax-H3, hardware=rtx_5090_2x）：
 #   - 默认加载 Ref2VA DiT（--task-type ref2va），分布式层卸载（DLO）24 resident 层
 #   - TP2 + text-encoder-tp 2 + vae tile 并行 2，Ulysses SP1 / ring1
 #   - CUDNN_ATTN 后端，enforce-eager，无需 FlashAttention-4
 #
 # 前置条件：
-#   - 已构建镜像 minimax-h3-vllm:v0.31.0rc1（docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .）
+#   - 已构建镜像 minimax-h3-vllm:v0.32.0rc1（docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .）
 #   - 模型已在宿主机 /model_nas/models/MiniMax-H3（只读 bind 进容器 /models/MiniMax-H3）
 #   - 已安装 nvidia-container-toolkit，docker compose >= 2.0，且宿主机至少有 8 张卡
 #   - 宿主机内存：单实例建议 384 GiB-class（官方 2×RTX 5090 配方 377 GiB host）；
@@ -41,7 +41,7 @@
 # ───────────────────────────────────────────────────────────────────────────
 x-vllm-common: &vllm-common
   # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
-  image: minimax-h3-vllm:v0.31.0rc1
+  image: minimax-h3-vllm:v0.32.0rc1
   ipc: host
   pid: host
   shm_size: 512gb           # ipc: host 时 /dev/shm 即宿主机 shm，本项不生效，保留仅为兼容

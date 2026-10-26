@@ -1,4 +1,4 @@
-# lightx2v/Minimax-h3-Turbo — vLLM-Omni v0.31.0rc1 —— 4 实例（每实例 TP2 + DLO）
+# lightx2v/Minimax-h3-Turbo — vLLM-Omni v0.32.0rc1 —— 4 实例（每实例 TP2 + DLO）
 #
 # ── 多实例（一进程一实例，一次起 4 个）──────────────────────────────────────
 #   minimax-h3-0  GPU 0,1  →  http://<host>:8010
@@ -16,15 +16,15 @@
 # 走 --lora-backend peft，请求级激活，不需要离线融合；DLO 与 request-switchable
 # LoRA 可以同时使用。Ref2VA 文件必须配 --task-type ref2va（不能挂到 combined/FL2VA 服务）。
 #
-# 版本：钉在 v0.31.0rc1，直接复用已有镜像 minimax-h3-vllm:v0.31.0rc1，不新建镜像。
-# 依据（在镜像内核对过）：vllm_omni/diffusion/models/minimax_h3/lora.py 已带
+# 版本：随 base 一起升到 v0.32.0rc1（复用 Dockerfile.vllm 产出的镜像，不新建镜像）。
+# 依据（0.31 镜像内核对过，两版契约一致）：vllm_omni/diffusion/models/minimax_h3/lora.py 已带
 #   _TURBO_NAME_RE（fl2v|ref2v）、768p 的 flow_shift=6、alpha 从 safetensors
 #   metadata 读，以及请求级 lora 字段 / --lora-backend peft / --dlo-resident-layers。
-# 0.32 的收益只有去掉 LoRA rebind（vLLM-Omni #7195），本服务是单一 artifact
-# 专用进程，稳态不会触发 rebind，所以不跟 RC；要升见 docs/HANDOFF-4-variants.md §7.1。
+# 0.32 额外去掉 LoRA rebind（vLLM-Omni #7195）；若升级后出片异常，把 image 换回
+# minimax-h3-vllm:v0.31.0rc1 即可回滚（见 docs/HANDOFF-4-variants.md §7.1）。
 #
 # 镜像重建（仅当本机没有该 tag）：在仓库根目录
-#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .
+#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .
 #
 # 使用的 artifact（Ref2VA, 8 步）：
 #   minimax_h3_ref2v_turbo_8step_v1.0_768p_bf16.safetensors
@@ -63,7 +63,7 @@
 x-turbo-common: &turbo-common
   # 复用根目录 Dockerfile.vllm 产出的 tag（与 base 服务同一份代码，只差命令行），
   # 所以这里没有 build: 段；需要重建时走上面的 docker build。
-  image: minimax-h3-vllm:v0.31.0rc1
+  image: minimax-h3-vllm:v0.32.0rc1
 
   ipc: host
   shm_size: 64gb           # ipc: host 时 /dev/shm 即宿主机 shm，本项不生效，保留仅为兼容

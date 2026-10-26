@@ -12,7 +12,7 @@
 | 模型 | 引擎 | 镜像 tag | 拓扑 | 端口（宿主，4 实例） | 任务能力 |
 |---|---|---|---|---|---|
 | FastVideo-FastH3-8-Step-V2 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30030-30033 | 仅 T2VA |
-| lightx2v/Minimax-h3-Turbo | vLLM-Omni v0.31.0rc1 | `minimax-h3-vllm:v0.31.0rc1` | TP2 + DLO | 8010-8013 | Ref2VA（8step 768p） |
+| lightx2v/Minimax-h3-Turbo | vLLM-Omni v0.32.0rc1 | `minimax-h3-vllm:v0.32.0rc1` | TP2 + DLO | 8010-8013 | Ref2VA（8step 768p） |
 | OpenVDN/vdn-minimax-h3 | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30040-30043 | T2VA / FL2VA |
 | alibaba-pai/MiniMax-H3-Acc-LoRAs | SGLang v0.5.22 | `minimax-h3-sglang:v0.5.22` | TP2 | 30020-30023 | Ref2VA（PDD 8step） |
 
@@ -27,17 +27,17 @@
   `--component-attention-backends transformer=fa` 用稠密注意力跑同一份权重。
 - **VDN**：SGLang 文档明确 SM80 走 bf16 DiT + layerwise offload；vLLM 的
   `VDNH3_ATTN` 要 v0.32.0rc1 才加入，且其 `check_serving_contract` 明确拒绝
-  `DISTRIBUTED_LAYER_WISE`（DLO），40G 卡上没法用；本仓库 vLLM 钉在 0.31，
-  连这个后端都没有。
+  `DISTRIBUTED_LAYER_WISE`（DLO），40G 卡上没法用；本仓库 vLLM 现已升到 0.32.0rc1
+  （有 VDNH3_ATTN），但 DLO 这条限制没变，所以 VDN 仍走 SGLang。
 - **PAI PDD**：PDD 不是普通 LoRA，必须离线合并主干 + 融合 32 个区间输出头；
   这两个工具只在 SGLang 的 `sglang.multimodal_gen.tools` 里。
 - **LightX2V**：vLLM-Omni 官方支持，请求级 LoRA，不需要离线融合，因此优先 vLLM。
 
-**镜像策略：**SGLang 侧新开 `minimax-h3-sglang:v0.5.22`，不覆盖 base 服务在用的
-`minimax-h3-sglang:v0.5.21`。vLLM 侧 **不新建镜像**：LightX2V 直接复用
-`minimax-h3-vllm:v0.31.0rc1`（即根目录 `Dockerfile.vllm` 产出的 tag），与 base 是
-同一份代码，差别只在命令行（base 是 50 步 ref2va，本服务多一个 `--lora-path`
-+ 请求级 `lora`）。
+**镜像策略：**base 与三套 SGLang 变体共用 `minimax-h3-sglang:v0.5.22`
+（根目录 `Dockerfile` 与 `deploy/images/Dockerfile.sglang` 产出同一 tag，后者多三套
+变体的构建断言，建一次即可）。vLLM 侧 **不新建镜像**：LightX2V 与 base 共用
+`minimax-h3-vllm:v0.32.0rc1`（根目录 `Dockerfile.vllm` 产出的 tag），差别只在命令行
+（base 是 50 步 ref2va，本服务多一个 `--lora-path` + 请求级 `lora`）。
 
 ---
 
@@ -46,7 +46,7 @@
 ```
 deploy/
   images/
-    Dockerfile.sglang          # v0.5.22；FastH3 V2 + VDN + PDD 共用
+    Dockerfile.sglang          # v0.5.22；base + FastH3 V2 + VDN + PDD 四套共用（根目录 Dockerfile 的超集）
   fasth3-8step-v2/
     docker-compose.yml
   lightx2v-turbo-ref2va/
@@ -72,17 +72,17 @@ deploy/
 ```bash
 docker pull lmsysorg/sglang:v0.5.22
 
-# 三套 SGLang 共用这个 tag，在任一目录构建一次即可
+# 四套（base + 三套变体）共用这个 tag，在任一目录构建一次即可
 cd /home/wmd/projects/MiniMax-H3/deploy/fasth3-8step-v2 && docker compose build
 
-# lightx2v-turbo-ref2va 无 build 段，直接用已有 minimax-h3-vllm:v0.31.0rc1
+# lightx2v-turbo-ref2va 无 build 段，直接用已有 minimax-h3-vllm:v0.32.0rc1
 ```
 
-> LightX2V 和 base 服务同样跑在 vLLM-Omni v0.31.0rc1，只是多一个 `--lora-path`，
+> LightX2V 和 base 服务同样跑在 vLLM-Omni v0.32.0rc1，只是多一个 `--lora-path`，
 > 所以不再单独建镜像（原 `deploy/images/Dockerfile.vllm` 已删，避免和根目录
-> `Dockerfile.vllm` 两处漂移）。本机没有 `minimax-h3-vllm:v0.31.0rc1` 时，在仓库
-> 根目录重建：`docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.31.0rc1 .`。
-> 要用 0.32 的 rebind 优化见 §7.1。
+> `Dockerfile.vllm` 两处漂移）。本机没有 `minimax-h3-vllm:v0.32.0rc1` 时，在仓库
+> 根目录重建：`docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .`。
+> 回滚方式与升级注意见 §7.1。
 
 ### 3.2 权重下载
 
@@ -257,8 +257,8 @@ curl -sS -X POST http://127.0.0.1:8002/v1/videos/sync \
 - `lora.path` 必须是**服务端**看到的路径（`/models/turbo/...`），不是宿主机路径。
 - 文件名/步数/shift 不匹配会被拒绝；`_comfyui_` 导出会被按名字拒绝。
 - 0.31 与 0.32 的 artifact 表、LoRA 契约一致：`_TURBO_NAME_RE` 解析 task/steps、
-  768p 的 `flow_shift=6`、alpha 从 metadata 读，两版都有。默认钉 0.31，升 0.32
-  只为去掉 LoRA rebind（见 §7.1）。
+  768p 的 `flow_shift=6`、alpha 从 metadata 读，两版都有。本轮已随 base 统一升到
+  v0.32.0rc1（收益是去掉 LoRA rebind），回滚见 §7.1。
 
 ### 5.3 VDN-H3（SGLang，v0.5.22）
 
@@ -351,13 +351,12 @@ nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv -l 1
 
 ## 7. 已知风险 / 回滚
 
-1. **LightX2V 钉 v0.31.0rc1，不跟 0.32**：0.31 的 H3 LoRA 模块已带完整 Turbo
-   契约（`_TURBO_NAME_RE` 含 `fl2v|ref2v`、768p 的 `flow_shift=6`、alpha 从
-   metadata 读、请求级 `lora` 字段、`--lora-backend peft`、`--dlo-resident-layers`），
-   镜像本机已有，不新建、也不多拉一个 RC。0.32 的收益只有去掉 LoRA rebind
-   （vLLM-Omni #7195），而本服务是单一 artifact 专用进程，稳态不触发 rebind。
-   要升 0.32：从 `FROM vllm/vllm-omni:v0.32.0rc1` 单独建一个 tag，把 compose 的
-   `image` 指向它，先跑一次 Ref2VA 8 步冒烟，对比峰值/出片再切。
+1. **vLLM 已统一升到 v0.32.0rc1**：0.31/0.32 的 H3 LoRA 契约一致
+   （`_TURBO_NAME_RE` 含 `fl2v|ref2v`、768p 的 `flow_shift=6`、alpha 从 metadata 读、
+   请求级 `lora` 字段、`--lora-backend peft`、`--dlo-resident-layers`），
+   0.32 额外去掉 LoRA rebind（vLLM-Omni #7195）。升级后先跑一次 Ref2VA 8 步冒烟，
+   对比峰值/出片；异常时把 compose 的 `image` 换回 `minimax-h3-vllm:v0.31.0rc1`
+   回滚（旧镜像保留，不要用新版覆盖旧 tag）。
 2. **FastH3 V2 在 A100 没有 VSA**：只能稠密 FA；质量接近，但吞吐拿不到 VSA 收益。
    若后续换 H100/B200，可改 vLLM-Omni + `FASTVIDEO_VSA` 或 SGLang
    `transformer=video_sparse_attn_h3`。
@@ -403,9 +402,9 @@ nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv -l 1
 
 ## 8. 待办（A100 机器上）
 
-- [ ] 确认 `lmsysorg/sglang:v0.5.22` 可 pull（vLLM 走已有 `minimax-h3-vllm:v0.31.0rc1`，无新 tag）。
+- [ ] 确认 `lmsysorg/sglang:v0.5.22` 与 `vllm/vllm-omni:v0.32.0rc1` 可 pull。
 - [ ] 构建 `minimax-h3-sglang:v0.5.22` 一个镜像，记录 digest。
-- [ ] 确认 `minimax-h3-vllm:v0.31.0rc1` 在目标机已存在（没有就 `docker build -f Dockerfile.vllm` 重建）。
+- [ ] 构建 `minimax-h3-vllm:v0.32.0rc1`（`docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .`），记录 digest。
 - [ ] 下载四套权重（LightX2V、PDD、VDN、FastH3 V2）。
 - [ ] 逐套启动：FastH3 V2 → VDN → PDD → LightX2V，记录首次启动耗时。
 - [ ] 每套发一次固定种子请求，记录 nvidia-smi 峰值与 E2E。

@@ -39,7 +39,7 @@
 
 x-vllm-common: &vllm-common
   # tag 与 Dockerfile.vllm 的 FROM 对齐；旧 :latest 是 2026-08 的旧构建
-  image: minimax-h3-vllm:v0.31.0rc1
+  image: minimax-h3-vllm:v0.32.0rc1
 
   ipc: host
   shm_size: 64gb            # ipc: host 时 /dev/shm 即宿主机 shm，本项不生效，保留仅为兼容
