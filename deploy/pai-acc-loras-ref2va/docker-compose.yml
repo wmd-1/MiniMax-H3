@@ -105,10 +105,8 @@ x-pdd-common: &pdd-common
     - 1344x768
     - --warmup-num-frames
     - "124"
-    # RPC 超时：默认 None = 不设 transport 层超时，异常时会无限挂住。
-    # PDD 8 步正常分钟级完成，3h 仅作兜底；该 flag 在 v0.5.21/v0.5.22 源码里均存在。
-    - --scheduler-rpc-timeout
-    - "10800"
+    # RPC 超时：刻意不传 --scheduler-rpc-timeout，走其默认 None = 不设 transport 层 RPC 超时，
+    # 避免服务端在 3h 处把长任务标 failed；异常挂住由脚本侧超时/人工兜底。
     - --host
     - 0.0.0.0
     - --port

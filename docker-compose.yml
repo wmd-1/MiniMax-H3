@@ -173,13 +173,10 @@ services:
       - "24"                       # 统一取 24（保守值，4 实例同机优先留显存余量）。
                                    # 官方 5090 验证值是 20；A100 40GB 理论上可上探，
                                    # 但多实例并行时先保证每卡峰值 < 38G，确认整机稳定后再逐档上探 32/40。
-      # 超时：--watchdog-timeout 是 srt 参数（diffusion 路径不读它，no-op），这里不保留；
+      # 超时：刻意不传 --scheduler-rpc-timeout，走其默认 None = 不设 transport 层 RPC 超时，
+      # 长任务不会被服务端在 3h 处标 failed；异常挂住由脚本侧超时/人工兜底。
+      # 注：--watchdog-timeout 是 srt 参数（diffusion 路径不读它，no-op），同样不保留；
       # 它在 v0.5.21/v0.5.22 都仍被接受（srt/arg_groups/fields/device.py），加不加都不影响扩散。
-      # 扩散侧真正的 RPC 超时是 --scheduler-rpc-timeout（v0.5.21 起）。
-      # 默认 None = 不设 transport 层超时，异常时会无限挂住；这里保留旧 handoff 的
-      # 3h 意图，超时后 job 被标 failed 而不是永远等下去。
-      - --scheduler-rpc-timeout
-      - "10800"
       - --host
       - 0.0.0.0
       - --port
@@ -239,8 +236,7 @@ services:
       - "false"
       - --dit-layerwise-resident-layers
       - "24"
-      - --scheduler-rpc-timeout
-      - "10800"
+      # 不传 --scheduler-rpc-timeout：默认 None = 不设 transport 层 RPC 超时（与实例 0 一致）。
       - --host
       - 0.0.0.0
       - --port
@@ -294,8 +290,7 @@ services:
       - "false"
       - --dit-layerwise-resident-layers
       - "24"
-      - --scheduler-rpc-timeout
-      - "10800"
+      # 不传 --scheduler-rpc-timeout：默认 None = 不设 transport 层 RPC 超时（与实例 0 一致）。
       - --host
       - 0.0.0.0
       - --port
@@ -349,8 +344,7 @@ services:
       - "false"
       - --dit-layerwise-resident-layers
       - "24"
-      - --scheduler-rpc-timeout
-      - "10800"
+      # 不传 --scheduler-rpc-timeout：默认 None = 不设 transport 层 RPC 超时（与实例 0 一致）。
       - --host
       - 0.0.0.0
       - --port
