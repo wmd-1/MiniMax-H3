@@ -5,7 +5,8 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
+# 被测对象：scripts/ref2va-yinhang-a/b/c/d-sglang.sh（银行卡限额与管控，四服务并行）/
+#           scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
 #           scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
 #           ref2va-fengkong-a-sglang.sh / ref2va-fengkong-b-sglang.sh（对公风控研判官 A/B）/
 #           ref2va-jiaoxintong4-sglang.sh / ref2va-jiaoxintong3-sglang.sh /
@@ -64,6 +65,10 @@ cleanup() {
   if [ -n "${MOCK_C:-}" ] && kill -0 "${MOCK_C}" 2>/dev/null; then
     kill "${MOCK_C}" 2>/dev/null
     wait "${MOCK_C}" 2>/dev/null
+  fi
+  if [ -n "${MOCK_D:-}" ] && kill -0 "${MOCK_D}" 2>/dev/null; then
+    kill "${MOCK_D}" 2>/dev/null
+    wait "${MOCK_D}" 2>/dev/null
   fi
   if [ "${KEEP_WORK:-0}" = "1" ]; then
     echo "[keep] 临时目录保留：${WORK}"
@@ -140,6 +145,7 @@ echo "  mock    : 已就绪 (pid ${MOCK_PID})"
 # 本地占位参考图（测 file:// 模式与 vLLM 脚本用）
 for f in dxb.png hxr.png logo.png aaa.png bbb.png ccc.png \
          xc.png xz.png xl.png lz.png zxk.png zbx.png xw.png ts.png qbg.png \
+         lay.png wdg.png zns.png \
          first_shot.png first_shot.PNG image1.png image2.png image3.png image4.png image5.png \
          image6.png image7.png image8.png image9.png image10.png \
          image133.png image134.png image135.png image136.png; do
@@ -155,6 +161,10 @@ PORT_C="${PORT_C:-30013}"
 POSTS_C="${WORK}/posts_c.jsonl"
 python3 "${TESTS_DIR}/mock_video_server.py" --port "${PORT_C}" --log "${POSTS_C}" > "${WORK}/mock_c.log" 2>&1 &
 MOCK_C=$!
+PORT_D="${PORT_D:-30014}"
+POSTS_D="${WORK}/posts_d.jsonl"
+python3 "${TESTS_DIR}/mock_video_server.py" --port "${PORT_D}" --log "${POSTS_D}" > "${WORK}/mock_d.log" 2>&1 &
+MOCK_D=$!
 sleep 1
 
 # ================================= T1 =================================
@@ -506,6 +516,50 @@ ta=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong
 tb=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong2-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
 tc=$(grep -A20 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-fengkong2-c-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
 assert_eq "$ta" "$tb" "T25 A/B 映射表逐字一致"; assert_eq "$ta" "$tc" "T25 A/C 映射表逐字一致"
+
+# ================================= T26 =================================
+CASE="T26 银行卡限额与管控：四脚本分段、四服务并行、合计 188s"
+echo "── ${CASE}"
+reset_posts; : > "$POSTS_B"; : > "$POSTS_C"; : > "$POSTS_D"
+run_script ref2va-yinhang-a-sglang.sh t31 OUTPUT_PREFIX="${WORK}/yh_"
+assert_eq "0" "$(rc_of t31)" "T26 A 退出码"
+assert_eq "4" "$(wc -l < "$POSTS" | tr -d ' ')" "T26 A 段1-4 请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T26 画幅"
+assert_eq "11 14 14 11" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T26 A 逐段时长"
+assert_eq "lay.png,xl.png" "$(imgs_of 1)" "T26 段1 图序（李阿姨在前）"
+assert_eq "xl.png,lay.png" "$(imgs_of 2)" "T26 段2 图序（小刘在前，同两人换序）"
+
+run_script ref2va-yinhang-b-sglang.sh t31b OUTPUT_PREFIX="${WORK}/yh_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t31b)" "T26 B 退出码"
+assert_eq "4" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T26 B 段5-8 请求数（第二服务）"
+assert_eq "13 13 13 12" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T26 B 逐段时长"
+assert_eq "wdg.png,xl.png" "$(sed -n 1p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T26 段5 图序"
+
+run_script ref2va-yinhang-c-sglang.sh t31c OUTPUT_PREFIX="${WORK}/yh_" PORT="${PORT_C}"
+assert_eq "0" "$(rc_of t31c)" "T26 C 退出码"
+assert_eq "4" "$(wc -l < "$POSTS_C" | tr -d ' ')" "T26 C 段9-12 请求数（第三服务）"
+assert_eq "12 11 13 12" "$(jq -r '.target.duration_seconds' "$POSTS_C" | tr '\n' ' ' | sed 's/ $//')" "T26 C 逐段时长"
+assert_eq "zns.png,xl.png" "$(sed -n 3p "$POSTS_C" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T26 段11 图序"
+
+run_script ref2va-yinhang-d-sglang.sh t31d OUTPUT_PREFIX="${WORK}/yh_" PORT="${PORT_D}"
+assert_eq "0" "$(rc_of t31d)" "T26 D 退出码"
+assert_eq "3" "$(wc -l < "$POSTS_D" | tr -d ' ')" "T26 D 段13-15 请求数（第四服务）"
+assert_eq "14 14 11" "$(jq -r '.target.duration_seconds' "$POSTS_D" | tr '\n' ' ' | sed 's/ $//')" "T26 D 逐段时长"
+assert_eq "xl.png" "$(sed -n 2p "$POSTS_D" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T26 段14 单图段"
+assert_eq "lay.png,wdg.png,zns.png,xl.png" "$(sed -n 3p "$POSTS_D" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T26 段15 四图段"
+
+assert_eq "15" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") + $(wc -l < "$POSTS_C") + $(wc -l < "$POSTS_D") ))" "T26 四服务合计请求数"
+assert_eq "188" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" "$POSTS_C" "$POSTS_D" | awk '{s+=$1} END{print s}')" "T26 全片总时长"
+assert_eq "15" "$(ls -1 "${WORK}"/yh_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T26 seg1..15 产出齐全无覆盖"
+ya=$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-yinhang-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+for x in b c d; do
+  assert_eq "$ya" "$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-yinhang-$x-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')" "T26 A/$x 映射表逐字一致"
+done
+# 四个脚本的默认 IMAGE_PREFIX 必须都指向独立子目录 yhk/（xl.png 与风控版同名不同人，共用目录会串角色）
+for x in a b c d; do
+  ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-yinhang-$x-sglang.sh")
+  assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/yhk/}"' "$ip" "T26 $x 默认 IMAGE_PREFIX 为 yhk/ 子目录"
+done
 
 # ------------------------------- 汇总 -------------------------------
 echo "======================================================"

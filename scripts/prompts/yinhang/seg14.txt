@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video opens the closing act: <Subject 1> turns from the counter to face the camera and delivers the summary line, then the three key points appear one by one as stacked lower-third subtitle lines while she counts them off on her fingers. Her identity from <Picture 1> is preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged from the turn toward camera through the full summary line and the subtitle sequence.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing, now staged as a direct-address closing shot.
+[Shot 1] A medium shot from the customer side of the counter shows <Subject 1> (S1), 小刘 from <Picture 1>, seated behind the counter. She turns her upper body from the monitor toward the camera, settles her hands on the counter edge, and her smile opens into a warm, professional expression. The camera holds a static shot.
+[Shot 2] At 00:01.800, cutting to a slightly tighter medium close-up at eye level, <Subject 1> (S1) speaks directly to camera in a warm, clear, unhurried female voice, <d>[Chinese] 银行卡的限额和管控，不是为难您，而是守护您的钱袋子。记住三件事——</d> The camera pushes in with small amplitude at slow speed, and she raises her right hand into frame as she finishes the line.
+[Shot 3] At 00:08.600, the shot cuts to a medium shot from the same eye level, framing <Subject 1> (S1) centred behind the counter with the service hall softly out of focus behind her. She raises one finger, then a second, then a third in a slow steady rhythm, lips closed, while three lower-third subtitle lines appear stacked at the bottom of the frame in sequence with soft fades: "①卡被管控别慌，配合核实即可恢复" at 00:08.800, "②限额不够用，线上渠道可申请调整" at 00:10.400, and "③限额是保护，不是限制" at 00:12.000. All three lines remain on screen with her final held smile to the cut at 00:14.000.
+
+overall_soundscape:
+Quiet branch room tone with a low air-conditioning hum continues. A soft fabric shift is audible as 小刘 turns her chair, followed by a faint chair swivel and a light tap of her hand on the counter edge.
+
+non_diegetic_music:
+The acoustic-guitar and marimba figure returns at a moderate tempo and builds in volume in three small steps, each synchronized with a subtitle line appearing.

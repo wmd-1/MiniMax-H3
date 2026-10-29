@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 张女士, the customer in <Picture 1> (zns.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 小刘, the bank teller in <Picture 2> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video opens the third act at the same counter: <Subject 1> walks up holding her card and asks why her card has a limit, <Subject 2> asks whether it is a new or an old account, and <Subject 1> confirms it is newly opened. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 4]): fully_preserved - 张女士's identity from <Picture 1> is retained unchanged from her approach through both of her lines.
+<Subject 2> (appears in [Shot 3], [Shot 4]): fully_preserved - 小刘's identity from <Picture 2> is retained unchanged behind the counter.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing, marking a slight time shift with marginally warmer light than the previous act.
+[Shot 1] A medium-wide shot from the side of the counter island shows the service hall with the counter running across the frame and the queue-number screen glowing behind. <Subject 1>, 张女士 from <Picture 1>, walks up to the free position holding her card loosely at waist height, slowing as she reaches the glass divider. The camera holds a static shot and lets her arrive into the centre of the frame.
+[Shot 2] At 00:02.300, the shot cuts to a medium two-shot across the counter. <Subject 1> (S1) sets her card on the counter and asks in a light, curious young female voice, <d>[Chinese] 你好，我想问一下，我这张卡为什么有限额啊？</d> She keeps one fingertip on the card as she speaks.
+[Shot 3] At 00:06.700, the shot cuts to a medium close-up of <Subject 2> (S2), 小刘 from <Picture 2>, behind the counter, her hands resting on the keyboard. She asks in the same gentle, steady, clear female voice, <d>[Chinese] 您是新开户还是老卡呢？</d> and tilts her head slightly toward <Subject 1>.
+[Shot 4] At 00:09.300, the shot cuts back to the two-shot. <Subject 1> (S1) answers at once in a matter-of-fact tone, <d>[Chinese] 新开户的，刚办的。</d> She turns the card face up and taps its corner once. <Subject 2> nods and begins typing on the keyboard, and the segment ends on her fingers moving across the keys.
+
+overall_soundscape:
+Branch room tone with a low air-conditioning hum continues. Light footsteps approach over the tiled floor, the card is set down on the stone counter, and soft keyboard strokes start near the end of the segment.
+
+non_diegetic_music:
+The acoustic-guitar figure returns to a relaxed moderate tempo with sparse marimba notes and a low sustained bass, held well under the dialogue.

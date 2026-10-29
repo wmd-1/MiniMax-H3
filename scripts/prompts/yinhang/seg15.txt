@@ -1,0 +1,27 @@
+subject_definitions:
+<Subject 1> is 李阿姨, the customer in <Picture 1> (lay.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 王大哥, the customer in <Picture 2> (wdg.png). His face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+<Subject 3> is 张女士, the customer in <Picture 3> (zns.png). Her face, hairstyle, build, and clothing follow <Picture 3> exactly and must not be redesigned or added to.
+<Subject 4> is 小刘, the bank teller in <Picture 4> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 4> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video closes the film with three quick shots in which <Subject 1>, <Subject 2>, and <Subject 3> appear on screen while their off-screen voiceover lines play with closed lips, then lands on a held final frame of <Subject 4> facing the camera with a closing title card. All four identities are preserved exactly.
+
+retention_analysis:
+<Subject 1> ([Shot 1]): fully_preserved - 李阿姨's identity from <Picture 1> is retained unchanged in her on-screen reaction shot.
+<Subject 2> ([Shot 2]): fully_preserved - 王大哥's identity from <Picture 2> is retained unchanged in his on-screen reaction shot.
+<Subject 3> ([Shot 3]): fully_preserved - 张女士's identity from <Picture 3> is retained unchanged in her on-screen reaction shot.
+<Subject 4> ([Shot 4]): fully_preserved - 小刘's identity from <Picture 4> is retained unchanged in the held final frame.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing, closing on a held final frame.
+[Shot 1] A close shot at counter height frames <Subject 1> (S1), 李阿姨 from <Picture 1>, on the customer side, holding her card up beside her shoulder with a satisfied nod. Her lips remain completely closed while she says in an off-screen voiceover with a light, pleased tone, <d>[Chinese] 配合核实，卡就能恢复了！</d>
+[Shot 2] At 00:02.700, the shot cuts to a close shot of <Subject 2> (S2), 王大哥 from <Picture 2>, standing at the counter with his phone held up in one hand, glancing at its screen with a grin. His lips remain completely closed while he says in an off-screen voiceover with an upbeat, satisfied tone, <d>[Chinese] 手机上也能调额，真方便！</d>
+[Shot 3] At 00:05.300, the shot cuts to a close shot of <Subject 3> (S3), 张女士 from <Picture 3>, tucking both cards back into her wallet with a small knowing smile. Her lips remain completely closed while she says in an off-screen voiceover with a light, enlightened tone, <d>[Chinese] 原来限额是保护，明白了！</d>
+[Shot 4] At 00:07.900, the shot cuts to a medium shot of <Subject 4>, 小刘 from <Picture 4>, seated behind the counter and facing the camera with a warm closed-lip smile, hands resting together on the counter edge. The image slows into a held final frame, and a clean title card fades in over the centre of the frame at 00:08.500 reading "限额是保护，不是限制", remaining on screen to the last frame.
+
+overall_soundscape:
+Branch room tone with a low air-conditioning hum runs under the whole sequence. A card is slid into a wallet with a light snap, a phone body taps softly against a palm, and the ambience fades to near silence under the held final frame.
+
+non_diegetic_music:
+The acoustic-guitar and marimba figure resolves into a warm four-note cadence at a slow tempo, joined by a soft sustained string pad and a single low bass note, then decays to silence over the held final frame.

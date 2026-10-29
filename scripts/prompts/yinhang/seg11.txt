@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 张女士, the customer in <Picture 1> (zns.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 小刘, the bank teller in <Picture 2> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video continues the third act: <Subject 1> asks what happens with an old card and lays a second card on the counter, and <Subject 2> answers that the same rule applies and begins listing the conditions that trigger an automatic limit reduction. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - 张女士's identity from <Picture 1> is retained unchanged as she asks and puts down the old card.
+<Subject 2> (appears in [Shot 3]): fully_preserved - 小刘's identity from <Picture 2> is retained unchanged while she answers.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium two-shot across the counter: <Subject 1> (S1), 张女士 from <Picture 1>, holds the form loosely and asks in a curious young female voice, <d>[Chinese] 原来是这样，那如果是老卡呢？我还有一张卡用了好几年，也有限额。</d> She pulls a small wallet from her bag on the last words.
+[Shot 2] At 00:06.400, the shot cuts to a close shot of the counter surface. <Subject 1> takes a second card from the wallet and lays it beside the first, aligning the two cards with one finger. The counter stone fills the lower frame.
+[Shot 3] At 00:07.200, the shot cuts to a medium close-up of <Subject 2> (S2), 小刘 from <Picture 2>, behind the counter. She taps the second card once with a fingertip and says in the same gentle, steady, clear female voice at a measured pace, <d>[Chinese] 老卡也一样。</d> <Subject 2> (S2) pauses, then continues while turning the screen slightly toward the customer side, <d>[Chinese] 如果长期不用、近一年累计入账不足1万元，</d> Her fingertip lifts off the card on the final phrase, and the frame holds to the cut at 00:13.000.
+
+overall_soundscape:
+Branch room tone with a low air-conditioning hum continues. A wallet clasp clicks open, two cards tap lightly on the stone counter, and a fingertip taps once on plastic.
+
+non_diegetic_music:
+Sparse acoustic-guitar notes at a slow tempo with a soft bass drone, holding a single sustained tone through the pause before the conditions are listed.

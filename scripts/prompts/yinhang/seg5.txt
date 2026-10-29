@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 王大哥, the customer in <Picture 1> (wdg.png). His face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 小刘, the bank teller in <Picture 2> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video opens the second act: <Subject 1> hurries to the counter beside the position just vacated and complains that his card limit is too low because he needs to transfer a large sum for his son's wedding, and <Subject 2> responds with a reassuring opening line. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - 王大哥's identity from <Picture 1> is retained unchanged through the fast approach and the counter complaint.
+<Subject 2> (appears in [Shot 3]): fully_preserved - 小刘's identity from <Picture 2> is retained unchanged as she answers him.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium-wide shot along the counter island shows the long light-grey stone top and the glass divider receding into the frame, with the empty position beside the one just used. <Subject 1>, 王大哥 from <Picture 1>, enters from frame right walking fast, one hand carrying a folded document, the other already raised. The camera trucks left at slow speed and settles as he stops at the counter.
+[Shot 2] At 00:01.600, the shot cuts to a medium two-shot across the counter with <Subject 1> (S1) leaning in on the customer side. He sets the folded document down, taps it twice, and says in a hurried, pressing middle-aged male voice, <d>[Chinese] 小姑娘，我卡上的额度太低了！我儿子下个月结婚，我要转一大笔过去，这可怎么办？</d> He spreads both hands out over the counter on the last question.
+[Shot 3] At 00:09.400, the shot cuts to a medium close-up of <Subject 2> (S2), 小刘 from <Picture 2>, on the staff side. She lifts one palm in a small placating gesture and says in the same gentle, steady, clear female voice at a measured pace, <d>[Chinese] 王先生，您的心情我十分理解！</d> Her expression stays warm and she keeps eye contact to the cut.
+
+overall_soundscape:
+Branch room tone with a low air-conditioning hum continues. Fast footsteps approach over the tiled floor, a folded document is set down on the stone counter, and 王大哥's sleeve rustles as he leans in.
+
+non_diegetic_music:
+The acoustic-guitar and marimba figure steps up slightly in tempo and adds a light hand-percussion pulse, still held at a low volume beneath the dialogue.

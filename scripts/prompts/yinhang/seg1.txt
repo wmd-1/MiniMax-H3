@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李阿姨, the customer in <Picture 1> (lay.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 小刘, the bank teller in <Picture 2> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video opens the story in a bright bank service hall: <Subject 1> hurries to the counter with a bank card that has stopped working and asks why, and <Subject 2> takes the card and ID card and begins checking the account on screen. Both characters keep the exact identities established in <Picture 1> and <Picture 2>.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - 李阿姨's identity from <Picture 1> is retained unchanged through the fast walk-in, the counter conversation, and the card handoff.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - 小刘's identity from <Picture 2> is retained unchanged behind the counter in both the two-shot and the close shot.
+
+detailed_description:
+The target video is live-action and realistic, shot like a warm everyday service drama: cool daylight from the entrance windows mixed with warm recessed ceiling light, clean neutral color, steady eye-level framing, and a direct, dialogue-driven cutting rhythm.
+[Shot 1] A medium-wide shot establishes the bank service hall: a long light-grey stone counter with a low glass divider runs across the frame, a monitor and card reader sit on the staff side, a queue-number screen glows on the back wall, and the floor-to-ceiling entrance windows let in bright daylight at frame left. <Subject 1> (S1), 李阿姨 from <Picture 1>, walks in quickly from the entrance, shoulders forward and brows tight, one hand already holding a bank card up at chest height. The camera trucks right at slow speed, keeping her centred as she crosses the tiled floor toward the counter.
+[Shot 2] At 00:02.000, the shot cuts to a medium two-shot across the counter. <Subject 1> (S1) stops in front of the counter, leans in slightly, and says in a hurried, anxious female voice, <d>[Chinese] 姑娘，我这卡怎么突然用不了了？卡里明明有钱，买瓶水都刷不了！</d> She taps the card twice against the stone top. Behind the counter, <Subject 2> (S2), 小刘 from <Picture 2>, looks up from the monitor with an attentive, unshaken smile.
+[Shot 3] At 00:08.100, the shot cuts to a close shot of the counter surface at a slight high angle. <Subject 1> (S1) pushes the card and an ID card forward; <Subject 2> (S2) reaches in, takes both with both hands, and turns the card over once to read it. She glances at the monitor, then back at <Subject 1> (S1) and says in a gentle, steady, clear female voice at a measured pace, <d>[Chinese] 阿姨您别急，我帮您看看。</d> The card reader beeps once as she sets the card down, and the frame holds to the cut.
+
+overall_soundscape:
+Bright indoor branch room tone with a low air-conditioning hum. Quick footsteps cross the tiled floor, fabric rustles as 李阿姨 leans against the counter, the card taps twice on stone, and the card reader beeps once.
+
+non_diegetic_music:
+A light acoustic-guitar figure with soft marimba notes at a moderate tempo, brushed percussion and a warm low bass underneath, held at a low volume beneath the dialogue.

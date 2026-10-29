@@ -1,0 +1,23 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 李阿姨, the customer in <Picture 2> (lay.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video closes the first act at the counter: <Subject 1> asks <Subject 2> to complete an identity check, a soft chime plays, <Subject 2> agrees with visible relief, and <Subject 1> slides the card back across the counter. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 2> (appears in [Shot 2], [Shot 3], [Shot 4]): fully_preserved - 李阿姨's identity from <Picture 2> is retained unchanged from the ID handover through her relieved reply and the card return.
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 4]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged in the close shots and the card-return two-shot.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A close shot at counter height shows the ID card reader on the staff side. <Subject 1>, 小刘 from <Picture 1>, lays 李阿姨's ID card flat on the reader glass; a small indicator light turns from white to green.
+[Shot 2] At 00:01.300, the shot cuts to a medium close-up of <Subject 1> behind the counter. <Subject 1> (S1) looks up from the reader and says in the same gentle, steady, clear female voice, <d>[Chinese] 您配合我做个身份核实，没问题马上就能恢复。</d> Her chin dips in a small encouraging nod and her hand gestures once toward the reader.
+[Shot 3] At 00:06.000, the shot cuts to a close-up of <Subject 2> (S2), 李阿姨 from <Picture 2>, on the customer side. Her tight expression opens; she exhales once through her nose, then says in a quieter, softened voice with a small embarrassed laugh at the start, <d>[Chinese] 哦……原来是保护我的钱，那行，我配合。</d>
+[Shot 4] At 00:09.300, the shot cuts to a medium two-shot from a slight side angle as a soft two-note chime plays from the counter speaker. <Subject 1> slides the bank card back across the stone counter with two fingers; <Subject 2> picks it up with both hands and gives a small nod. The frame holds on the two of them to the cut.
+
+overall_soundscape:
+Quiet branch room tone with a low air-conditioning hum continues. The ID card taps the reader glass, a soft two-note confirmation chime plays from the counter speaker, and the bank card slides with a light scrape across the stone before being picked up.
+
+non_diegetic_music:
+The acoustic-guitar pattern returns with a gentle upward lilt at a moderate tempo, joined by light marimba and a soft bass note that lands with the confirmation chime, then settles under the final hold.

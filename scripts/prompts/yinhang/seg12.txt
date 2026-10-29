@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 张女士, the customer in <Picture 2> (zns.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video continues the old-card explanation: <Subject 1> finishes the list of conditions, states that the system lowers the card's non-counter transfer limit, and explains that this follows the People's Bank of China requirement to protect the customer's funds. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged across both halves of the explanation.
+<Subject 2> (appears in [Shot 2]): fully_preserved - 张女士's identity from <Picture 2> is retained unchanged while she listens.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium close-up of <Subject 1> (S1), 小刘 from <Picture 1>, behind the counter, the account screen turned toward the customer side at frame right. She counts the conditions on her fingers, one per clause, and says in the same gentle, steady, clear female voice at a measured pace, <d>[Chinese] 或者没发生过主动支付交易，系统会自动调低非柜面转账限额。</d> The camera pushes in with small amplitude at slow speed.
+[Shot 2] At 00:06.200, the shot cuts to a medium two-shot across the counter with the two cards still lying side by side on the stone. <Subject 1> (S1) lays her palm flat on the counter and continues, <d>[Chinese] 这是根据人民银行要求，为了保护您的资金安全。</d> On the customer side, <Subject 2>, 张女士 from <Picture 2>, keeps her eyes on <Subject 1>, her head tilted slightly, and does not speak. The frame holds to the cut on <Subject 1>'s closed lips.
+
+overall_soundscape:
+Steady branch room tone with a low air-conditioning hum. A palm rests flat on the stone counter with a soft thud, cards shift slightly against each other, and a distant keyboard is audible in the background.
+
+non_diegetic_music:
+A muted acoustic-guitar pattern at a slow tempo with a soft sustained string pad, staying level and unobtrusive beneath the explanation.

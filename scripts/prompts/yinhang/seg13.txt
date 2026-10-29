@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 张女士, the customer in <Picture 2> (zns.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video closes the third act: <Subject 1> explains the loss-reduction benefit of a low limit and how to restore it, a subtitle bar states that the limit is protection, and <Subject 2> arrives at her own conclusion. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged through the closing explanation.
+<Subject 2> (appears in [Shot 2]): fully_preserved - 张女士's identity from <Picture 2> is retained unchanged in her final realisation.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium close-up of <Subject 1> (S1), 小刘 from <Picture 1>, behind the counter, her hands now resting together on the counter edge. She speaks in the same gentle, steady, clear female voice at a measured pace, <d>[Chinese] 万一卡片遗失或者信息泄露，限额低损失也小。您现在有需求，备齐资料联系网点，或者线上也能申请恢复。</d> Her tone stays even and reassuring throughout, and the camera holds a static shot with only a faint drift.
+[Shot 2] At 00:10.600, the shot cuts to a close-up of <Subject 2> (S2), 张女士 from <Picture 2>, on the customer side. Her expression opens into a small clear smile, she picks up both cards and says in a bright, convinced young female voice, <d>[Chinese] 原来这限额是保护我呢！我懂了。</d> A lower-third subtitle bar fades in at the bottom of the frame at 00:10.800 reading "限额不是限制，是保护" and holds to the final frame as she looks back toward <Subject 1>.
+
+overall_soundscape:
+Quiet branch room tone with a steady air-conditioning hum. Cards are lifted from the stone counter with a light tap, and fabric rustles as 张女士 shifts her stance.
+
+non_diegetic_music:
+The acoustic-guitar pattern returns with a warm rising phrase at a moderate tempo, joined by soft marimba and a light bass note that lands with the subtitle, then holds under the final frame.

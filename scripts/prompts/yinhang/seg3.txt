@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 李阿姨, the customer in <Picture 2> (lay.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video stays at the counter while <Subject 1> explains that the account control is a unified anti-fraud measure protecting the customer's money, and a lower-third subtitle bar states the same point; <Subject 2> listens and gradually relaxes. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - 李阿姨's identity from <Picture 2> is retained unchanged while she listens and reacts.
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged across the two-shot and the close-up.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium two-shot across the counter frames <Subject 1>, 小刘 from <Picture 1>, on the staff side with the monitor at her shoulder, and <Subject 2>, 李阿姨 from <Picture 2>, standing on the customer side with her hands still on the counter edge. <Subject 1> (S1) turns her palms slightly outward and says in a gentle, steady, clear female voice at a measured pace, <d>[Chinese] 这是银行为了拦截诈骗资金转移的统一风控措施。</d> The camera holds a static shot with only a whisper of drift.
+[Shot 2] At 00:05.200, the shot cuts to a medium close-up of <Subject 1> from the customer's eye line, the glass divider catching a thin reflection across the lower frame. <Subject 1> (S1) keeps her gaze on <Subject 2> and continues in the same warm, unhurried voice, <d>[Chinese] 电信诈骗手段很隐蔽，系统为了保护您的资金安全才这么做的。</d> She closes her lips and gives a single small nod on the last syllable.
+[Shot 3] At 00:11.400, the shot cuts to a slightly wider two-shot from the side, both figures lit by the entrance daylight. A lower-third subtitle bar slides in at the bottom of the frame with a soft fade at 00:11.500, reading "卡被管控 = 反诈保护，不是刁难您", and holds to the final frame. On the customer side, <Subject 2> lowers her shoulders and her grip on the counter edge loosens.
+
+overall_soundscape:
+Low air-conditioning hum and soft branch room tone continue throughout. A distant queue-number chime sounds once in the background, and the fabric of 李阿姨's sleeve brushes the counter as she shifts her weight.
+
+non_diegetic_music:
+The acoustic-guitar and marimba pattern thins out to sparse single notes at a slow tempo, with a soft sustained pad underneath, keeping well below the dialogue.

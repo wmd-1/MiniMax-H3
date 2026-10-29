@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 李阿姨, the customer in <Picture 2> (lay.png). Her face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video continues at the same counter: <Subject 1> reads the account screen and calmly explains that the account has triggered an anti-fraud protection mechanism, while <Subject 2> reacts with confusion and asks why. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - 李阿姨's identity from <Picture 2> is retained unchanged in the two-shot and in the reaction close-up.
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged while she works the screen and speaks.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look: soft mixed daylight and warm ceiling light, clean neutral color, steady eye-level framing.
+[Shot 1] A medium close shot from a slight side angle behind the counter shows <Subject 1>, 小刘 from <Picture 1>, seated in her teller chair, one hand on the mouse and the other holding 李阿姨's card against the reader. Her eyes travel down the screen and her expression settles into a careful, calm look; the card reader beeps again.
+[Shot 2] At 00:00.900, the shot cuts to a medium two-shot across the counter. <Subject 1> (S1) turns the monitor slightly toward the customer side and says in a gentle, steady, clear female voice at a measured pace, <d>[Chinese] 哦，您的账户触发了反诈风控保护。系统监测到近期有异常交易特征，自动启动了临时保护机制。</d> Her right hand makes a small, level, calming gesture above the counter. On the customer side, <Subject 2>, 李阿姨 from <Picture 2>, keeps both hands on the counter edge, her shoulders stiffening as she listens.
+[Shot 3] At 00:10.100, the shot cuts to a close-up of <Subject 2> (S2) at counter height with the counter edge blurred in the foreground. Her brows pull together, she blinks twice, then asks in a puzzled, slightly defensive voice, <d>[Chinese] 啊？我没干啥呀，怎么就触发保护了？</d> She lifts the card a few centimetres off the counter and lets it drop back down as the frame holds to the cut.
+
+overall_soundscape:
+Quiet branch ambience with a steady air-conditioning hum. Mouse clicks and a few light keyboard strokes come from the staff side, a second card-reader beep lands early in the shot, and the card taps softly on the stone counter at the end.
+
+non_diegetic_music:
+The same light acoustic-guitar and marimba figure continues at a moderate tempo with soft brushed percussion, dropping slightly in volume under the explanation and staying level to the end.

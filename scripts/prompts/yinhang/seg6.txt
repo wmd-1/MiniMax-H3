@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小刘, the bank teller in <Picture 1> (xl.png). Her face, hairstyle, build, and clothing follow <Picture 1> exactly and must not be redesigned or added to.
+<Subject 2> is 王大哥, the customer in <Picture 2> (wdg.png). His face, hairstyle, build, and clothing follow <Picture 2> exactly and must not be redesigned or added to.
+
+summary:
+[reference generation] The target video continues the second act: <Subject 1> explains that the limit can be raised with proof of use, <Subject 2> objects that he has no time to visit a branch, and <Subject 1> cuts in with her counter-argument. Identities from <Picture 1> and <Picture 2> are preserved exactly.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - 小刘's identity from <Picture 1> is retained unchanged in both of her speaking shots.
+<Subject 2> (appears in [Shot 2]): fully_preserved - 王大哥's identity from <Picture 2> is retained unchanged through his objection.
+
+detailed_description:
+The target video keeps the same live-action, realistic service-drama look with soft daylight, warm ceiling light, and steady eye-level framing.
+[Shot 1] A medium close-up of <Subject 1> (S1), 小刘 from <Picture 1>, on the staff side of the counter, the monitor edge visible at frame right. She taps two fingers on the folded document on the counter and says in the same gentle, steady, clear female voice, <d>[Chinese] 限额调整可以的，您提供用途证明材料，我们核实通过就给您调。</d> She keeps her posture upright and her tone even to the end of the line.
+[Shot 2] At 00:06.400, the shot cuts to a medium close-up of <Subject 2> (S2), 王大哥 from <Picture 2>, on the customer side. His shoulders drop, he tilts his head back slightly and asks in a deflated, complaining voice, <d>[Chinese] 还得跑网点啊？我平时上班忙，哪有时间啊。</d> He rubs the back of his neck with one hand.
+[Shot 3] At 00:10.600, the shot cuts back to a tighter close-up of <Subject 1> (S1), who lifts her index finger with a small smile and says quickly but clearly, <d>[Chinese] 不用专门跑网点！</d> She reaches for her own phone resting beside the keyboard, and the camera pushes in with small amplitude at slow speed to end the segment on the phone in her hand.
+
+overall_soundscape:
+Steady branch room tone with a low air-conditioning hum. Fingers tap twice on a paper document, fabric shifts as 王大哥 rubs his neck, and a phone is picked up from the counter with a light plastic click.
+
+non_diegetic_music:
+The acoustic-guitar pattern continues at a moderate tempo with soft brushed percussion, thinning to a single sustained note as the phone is lifted.
