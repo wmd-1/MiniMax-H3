@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+<Subject 2> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second closing clip in the office corridor. <Subject 1> sees <Subject 2> out and stands at the doorway watching him walk away, while a narrator sums up the handling principles and three consumer-protection reminders stack up as subtitles.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png.
+<Subject 2> (appears in [Shot 1]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png.
+
+detailed_description:
+The target video is live-action corporate realism in a bright office corridor with a pale grey floor, glass partitions on one side, and daylight from the far end.
+[Shot 1] A medium-wide shot frames the meeting-room door from inside the corridor. <Subject 1> 小刘 holds the door open with one hand and steps half out; <Subject 2> 李先生 walks past the camera into the corridor, his back to the lens, and continues toward the far end of the corridor. The camera holds a static shot at eye level. A steady, low-pitched male narrator (S1) says in an off-screen voiceover: <d>[Chinese] 针对总行转办信用卡还款纠纷投诉，我们坚持“现场面谈、共情服务、合规施策、全程留痕”的处置原则，从源头压降投诉风险。</d> Neither character's lips move.
+[Shot 2] At 00:08.800, the shot cuts to a medium close-up of <Subject 1> from behind and slightly to the side, standing at the doorway and watching him go. The camera pushes in with small amplitude at slow speed. Subtitle lines stack up along the bottom edge in sequence: at 00:09.000 "①信用卡逾期别慌，配合面谈即可了解政策", at 00:10.800 "②有困难可申请个性化分期，减轻还款压力", at 00:12.600 "③合规协商无隐形收费，全程留痕保障权益", and all three hold to the final frame. The narrator (S1) continues: <d>[Chinese] 筑牢金融消保服务防线。</d> 小刘's lips remain closed.
+
+overall_soundscape:
+Corridor room tone with a faint air-conditioning hum, the door hinge easing, measured footsteps receding on the hard floor, and distant muffled office activity.
+
+non_diegetic_music:
+A restrained piano figure at a slow tempo with sustained low strings, gradually rising in volume through the last two seconds and holding on the final frame.

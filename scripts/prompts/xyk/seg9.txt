@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+<Subject 2> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second clip in the same meeting room. <Subject 1> finishes explaining the adjusted repayment arrangement, and <Subject 2> leans forward and asks whether the interest will keep growing and whether there are any hidden charges; a subtitle about compliant installments appears at the end.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png.
+
+detailed_description:
+The target video is live-action corporate realism in the same bright meeting room, with a light-wood table, grey fabric chairs, and daylight from the glass partition.
+[Shot 1] A medium two-shot holds across the table corner. <Subject 1> 小刘 keeps one forearm on the table and continues straight on from her previous sentence in the same composed female voice (S1) at a measured pace: <d>[Chinese] 并且合规调整还款方案，避免罚息继续无限制地滚动。</d> She turns her palm flat toward him once to close the point. The camera holds a static shot.
+[Shot 2] At 00:05.900, the shot cuts to a medium close-up of <Subject 2> 李先生. His eyes brighten and he leans forward over the table edge, both hands closing on the tabletop. <Subject 2> (S2) asks in the same tired, slightly hoarse male voice, now quicker and more urgent: <d>[Chinese] 真的可以这样吗？那利息还会一直涨吗？会不会有别的隐形收费？</d> The camera pushes in with small amplitude at slow speed.
+[Shot 3] At 00:11.900, the shot cuts back to <Subject 1>, who meets his eyes and gives a firm, single nod. A subtitle appears along the bottom edge reading "合规分期，减轻压力，无隐形收费" and holds to the final frame. No one speaks in this shot.
+
+overall_soundscape:
+Quiet meeting-room room tone, a chair creaking as he leans forward, the soft bump of his hands against the wooden table, and a faint air-conditioning hum.
+
+non_diegetic_music:
+The restrained piano and low strings continue at a slow tempo and lift slightly in volume as he leans in, then settle under the subtitle.

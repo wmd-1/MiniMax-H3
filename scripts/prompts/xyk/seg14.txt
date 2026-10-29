@@ -1,0 +1,19 @@
+subject_definitions:
+<Subject 1> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A nine-second closing clip in the office corridor. <Subject 1> takes two steps away from the meeting-room doorway, stops, and turns back over his shoulder to speak his final line with a tired but relieved smile; the frame then freezes on that half-turned pose while the closing compliance slogan appears over it.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png; only his pose, expression, and the frame state change.
+
+detailed_description:
+The target video is live-action corporate realism in a bright office corridor with a pale grey floor and daylight from the far end, shot with a shallow depth of field.
+[Shot 1] A medium close-up opens from behind and slightly to the left of <Subject 1> 李先生, the corridor stretching away ahead of him in soft blur. He takes two measured steps away from the camera, then slows and stops; his shoulders rise once with a breath, and he turns his head and upper body back toward the camera until his face reads in three-quarter view. A tired but relieved smile forms as his shoulders drop. Beginning at 00:02.000, <Subject 1> (S1) says in a tired, slightly hoarse mid-range male voice at a relaxed, unhurried pace: <d>[Chinese] 原来有分期政策，早了解就好了！</d> His lips move with the line, and he ends on a short exhale through the nose. The camera holds a static shot at eye level throughout.
+[Shot 2] At 00:05.400, the image freezes on his half-turned pose at the exact moment the last syllable ends, and every element in the frame holds still for the remainder of the clip. A translucent white band slides up across the lower third, and the text "合规协商 柔性化解 守护您的金融权益" fades in on it, centered and legible, holding to 00:09.000. No movement, camera motion, or speech occurs after the freeze.
+
+overall_soundscape:
+Corridor room tone with a faint air-conditioning hum, two measured footsteps that come to a stop, the soft shift of clothing as he turns back, and a light exhale at the end of the line. The room tone holds unchanged through the freeze.
+
+non_diegetic_music:
+A single sustained piano chord at a slow tempo with a low string pad underneath, entering on the final word and decaying gently through the freeze to the last frame.

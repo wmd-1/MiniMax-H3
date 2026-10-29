@@ -1,0 +1,20 @@
+subject_definitions:
+<Subject 1> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second clip inside the credit-card department office. <Subject 1> sits at her desk sorting complaint files, a red transfer-work-order alert pops open on her monitor, her expression tightens and then firms up as she stands and straightens her jacket, while a calm narrator voiceover and a lower-third subtitle run across the whole shot.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png; only her pose, expression, and the camera distance change.
+
+detailed_description:
+The target video is live-action corporate realism, bright and orderly, with soft daylight from a window wall and a clean white-and-grey palette.
+[Shot 1] A medium-wide shot establishes the open-plan credit-card department: rows of desks, glass partitions, stacked complaint folders, daylight falling in from the left. <Subject 1> 小刘 sits at the nearest desk, typing on a keyboard with her eyes fixed on the monitor. The camera trucks right with small amplitude at slow speed into a medium shot over her shoulder. Keyboard clicks run fast and even. At 00:01.000 a steady, low-pitched male narrator (S1) says in an off-screen voiceover: <d>[Chinese] 信用卡逾期纠纷多因客户突发经济困难、不了解分期政策引发，是总行高频转办投诉。</d> 小刘's lips stay completely closed, and the voiceover continues uninterrupted across the following cuts.
+[Shot 2] At 00:03.800, the shot cuts to a close-up of the monitor. A red-bordered alert box pops open above the work-order list, reading "总行转办工单：李先生，信用卡逾期还款争议、罚息异议". The keyboard clicks stop on exactly that beat. The camera pushes in with small amplitude at slow speed toward the red box.
+[Shot 3] At 00:06.800, the shot cuts to a close-up of <Subject 1>'s face. Her brows draw together slightly, she breathes out once through her nose, then her gaze steadies. She pushes her chair back, stands up, and smooths her blazer with both hands; the camera pulls out to a medium shot as she rises. A lower-third subtitle appears along the bottom edge reading "三季度高频投诉场景：信用卡逾期还款争议、罚息异议、无力还款诉求纠纷" and holds to the final frame. Beginning at 00:09.200 the narrator (S1) continues: <d>[Chinese] 我行化“被动应付”为“主动破局”，通过现场面谈精准化解诉求。</d> Her lips remain closed throughout.
+
+overall_soundscape:
+Quiet open-office room tone with air-conditioning hum, fast keyboard clicks that cut off abruptly, a distant printer and muffled voices beyond the glass partition, then the soft creak of a chair and the rustle of fabric as she stands.
+
+non_diegetic_music:
+A restrained warm piano figure at a slow, even tempo with sustained low strings underneath, held low beneath the narration and rising slightly in volume as she stands.

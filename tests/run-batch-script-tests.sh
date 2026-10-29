@@ -5,7 +5,8 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-yinhang-a/b/c/d-sglang.sh（银行卡限额与管控，四服务并行）/
+# 被测对象：scripts/ref2va-xyk-a/b-sglang.sh（信用卡逾期还款纠纷化解 A/B）/
+#           scripts/ref2va-yinhang-a/b/c/d-sglang.sh（银行卡限额与管控，四服务并行）/
 #           scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
 #           scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
 #           ref2va-fengkong-a-sglang.sh / ref2va-fengkong-b-sglang.sh（对公风控研判官 A/B）/
@@ -559,6 +560,40 @@ done
 for x in a b c d; do
   ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-yinhang-$x-sglang.sh")
   assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/yhk/}"' "$ip" "T26 $x 默认 IMAGE_PREFIX 为 yhk/ 子目录"
+done
+
+# ================================= T27 =================================
+CASE="T27 信用卡逾期还款纠纷化解：双脚本双服务并行、合计 204s"
+echo "── ${CASE}"
+reset_posts; : > "$POSTS_B"
+run_script ref2va-xyk-a-sglang.sh t27 OUTPUT_PREFIX="${WORK}/xyk_"
+assert_eq "0" "$(rc_of t27)" "T27 A 退出码"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T27 A 段1-7 请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T27 画幅"
+assert_eq "15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T27 A 逐段时长"
+assert_eq "xl.png"        "$(imgs_of 1)" "T27 段1 单图"
+assert_eq "lxs.png,xl.png" "$(imgs_of 2)" "T27 段2 图序（李先生在前）"
+assert_eq "xl.png,lxs.png" "$(imgs_of 4)" "T27 段4 图序（同两人换序）"
+for i in 1 2 3 4 5 6 7; do assert_file "${WORK}/xyk_seg${i}.mp4" "T27 A 产出"; done
+
+run_script ref2va-xyk-b-sglang.sh t27b OUTPUT_PREFIX="${WORK}/xyk_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t27b)" "T27 B 退出码"
+assert_eq "7" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T27 B 段8-14 请求数（第二服务）"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T27 主服务请求数未变"
+assert_eq "15 15 15 15 15 15 9" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T27 B 逐段时长（段14=9s）"
+assert_eq "lxs.png,xl.png" "$(sed -n 5p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T27 段12 图序"
+assert_eq "lxs.png"        "$(sed -n 7p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T27 段14 定帧段单图"
+for i in 8 9 10 11 12 13 14; do assert_file "${WORK}/xyk_seg${i}.mp4" "T27 B 产出"; done
+
+assert_eq "14" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") ))" "T27 两服务合计请求数"
+assert_eq "204" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" | awk '{s+=$1} END{print s}')" "T27 全片总时长"
+assert_eq "14" "$(ls -1 "${WORK}"/xyk_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T27 seg1..14 产出齐全无覆盖"
+xa=$(grep -A15 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-xyk-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+xb=$(grep -A15 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-xyk-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+assert_eq "$xa" "$xb" "T27 A/B 映射表逐字一致"
+for x in a b; do
+  ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-xyk-$x-sglang.sh")
+  assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/xyk/}"' "$ip" "T27 $x 默认 IMAGE_PREFIX 为 xyk/ 子目录"
 done
 
 # ------------------------------- 汇总 -------------------------------

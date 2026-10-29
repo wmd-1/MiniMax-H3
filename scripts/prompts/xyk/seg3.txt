@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+<Subject 2> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second clip inside the meeting room from the previous beat. <Subject 2> asks <Subject 1> to drink some water and reassures him with steady empathy while he holds the cup with both hands; the shot stays close on their exchange and ends on a quiet pause.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png.
+<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png.
+
+detailed_description:
+The target video is live-action corporate realism in the same bright meeting room, with a light-wood table, grey fabric chairs, and soft daylight from the glass partition on the right.
+[Shot 1] A medium close-up two-shot holds across the corner of the table. <Subject 1> 李先生 lifts the paper cup of warm water with both hands and takes a small sip; his shoulders stay high and tense. <Subject 2> 小刘 sits at an angle to his left, forearms on the table, leaning slightly toward him. The camera holds a static shot. Beginning at 00:01.200, <Subject 2> (S1) says in the same warm, steady female voice at a measured pace: <d>[Chinese] 您先喝口水，咱们不着急，慢慢说。我非常理解您目前的处境，谁都有遇到突发困难的时候。</d>
+[Shot 2] At 00:08.400, the shot cuts to a close-up of <Subject 1> as he lowers the cup and sets it back on the table. He exhales slowly, his jaw loosens, and he looks down at the tabletop. The camera pushes in with small amplitude at slow speed toward his face. In the same shot, over his shoulder in soft focus, <Subject 2> stays leaning forward with her hands folded, nodding once, and holds the listening posture without speaking until the final frame.
+
+overall_soundscape:
+Quiet meeting-room room tone with a faint air-conditioning hum, the small sound of the paper cup touching the tabletop, a slow exhale, and the soft shift of fabric as he leans back.
+
+non_diegetic_music:
+The same restrained piano and low strings at a slow tempo, thinning to sparse single notes under the pause at the end of the shot.

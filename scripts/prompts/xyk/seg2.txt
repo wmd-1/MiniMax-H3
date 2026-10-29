@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+<Subject 2> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second clip inside a small bright meeting room. <Subject 1> pushes the door open and steps in, tired and guarded; <Subject 2> rises at once, smiles, guides him into a chair, and sets a paper cup of warm water in front of him before sitting down at an angle and leaning in to open the conversation.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png.
+
+detailed_description:
+The target video is live-action corporate realism in a bright, neutral meeting room with a light-wood table and daylight from a window behind the glass partition.
+[Shot 1] A medium-wide two-shot frames the room from the far side of the table: a light-wood table, two grey fabric chairs, a glass partition on the right. <Subject 2> 小刘 sits on the right of frame with a printed file open in front of her and a pen in her hand. The door at frame left opens and <Subject 1> 李先生 steps in, shoulders slightly forward, gaze tired and guarded; he stops two steps inside the doorway with one hand still on the handle. The camera holds a static shot. Corridor ambience leaks in through the open door.
+[Shot 2] At 00:02.600, the shot cuts to a medium shot from the side. <Subject 2> rises immediately, sets the pen down, smiles, and steps around the corner of the table with her open palm turned toward the near chair. The camera tracks right with small amplitude at slow speed to keep both of them in frame. <Subject 1> walks over and sits down, both hands resting on the edge of the table. <Subject 2> lifts a paper cup of warm water from a tray on the side cabinet, sets it down in front of him, then sits down at an angle to his left with her upper body leaning slightly forward. The door swings shut behind them.
+[Shot 3] At 00:04.900, the shot settles into a close two-shot across the table corner. <Subject 2> (S1) looks directly at him and says in a warm, steady female voice at a measured, unhurried pace: <d>[Chinese] 李先生您好，我是信用卡部投诉处置专员小刘。今天特意邀请您来面谈，就是为了专门对接您的诉求。</d> The camera pushes in with small amplitude at slow speed. <Subject 1> keeps his eyes down on the cup at first, then lifts them to her face as she finishes.
+
+overall_soundscape:
+Corridor room tone through the open door, the click of the door handle, the door swinging shut, chair legs shifting on the floor, warm water poured into a thin paper cup, and light fabric movement as they sit down.
+
+non_diegetic_music:
+A restrained warm piano figure at a slow tempo with sustained low strings underneath, kept well below the dialogue and steady in volume.

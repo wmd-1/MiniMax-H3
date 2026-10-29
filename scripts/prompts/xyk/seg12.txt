@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李先生 (lxs.png), the overdue credit-card customer; his facial features, hairstyle, and outfit follow lxs.png exactly in every shot, with no added or altered characteristics.
+<Subject 2> is 小刘 (xl.png), the credit-card complaint-handling specialist; her facial features, hairstyle, and outfit follow xl.png exactly in every shot, with no added or altered characteristics.
+
+summary:
+[reference generation] A fifteen-second clip in the same meeting room. <Subject 1> accepts the plan and withdraws his complaint; he signs the confirmation page, <Subject 2> closes the folder, and a closing compliance subtitle appears.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - his identity, face, hairstyle, and outfit stay identical to lxs.png.
+<Subject 2> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - her identity, face, hairstyle, and outfit stay identical to xl.png.
+
+detailed_description:
+The target video is live-action corporate realism in the same bright meeting room, with a light-wood table, grey fabric chairs, and daylight from the glass partition.
+[Shot 1] A medium close-up holds on <Subject 1> 李先生, who sits forward with both hands on the edge of the printed plan. <Subject 1> (S1) says in the same tired male voice, now steady and clear: <d>[Chinese] 今天听你这么一讲，我愿意接受方案，撤销投诉。</d> He lifts his eyes and looks straight at her. The camera holds a static shot.
+[Shot 2] At 00:05.000, the shot cuts to a medium two-shot. <Subject 2> 小刘 turns the page to the confirmation page, slides a pen across the table toward him, and taps the signature field. <Subject 1> takes the pen and signs his name in the lower right area of the page, then sets the pen down. The camera pushes in with small amplitude at slow speed toward the page and their hands.
+[Shot 3] At 00:09.200, the shot cuts to a medium close-up of <Subject 2>, who takes the page back, squares it against the folder, and closes the folder with both hands, then nods to him with a small, warm smile. A subtitle appears along the bottom edge reading "合规协商 柔性化解 守护您的金融权益" and holds to the final frame. Neither speaks in this shot.
+
+overall_soundscape:
+Quiet meeting-room room tone, paper turning on a wooden table, a pen rolling and then scratching briefly across the page, and the soft snap of a folder closing.
+
+non_diegetic_music:
+The restrained piano figure at a slow tempo resolving into longer held notes with the low strings settling underneath, kept low under the subtitle.
