@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly, unchanged from the previous call scene.
+<Subject 2> is 小刘, the collection agent on the other end of the line, whose appearance is taken directly from the reference image xl.png.
+
+summary:
+[reference generation] The target video is the second half of the night call. <Subject 1> shouts back at the phone and <Subject 2> answers flatly from his desk before <Subject 1> hangs up in anger.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the identity, face, hair and clothing from xl.png are retained.
+
+detailed_description:
+The target video is live-action, cinematic and realistic, alternating warm dim apartment light with cold collection-office light.
+[Shot 1] A medium close shot frames <Subject 1> (S1), 李大海, in the apartment, standing beside the sofa with the phone at his ear, carrying straight on from his last outburst. His free hand cuts through the air as he speaks in the same loud, breaking male voice at a fast, furious pace, <d>[Chinese] 你们天天打电话有意思吗？我老婆孩子都被你们骚扰多少次了？</d> He plants his feet once the line is out and his chest heaves.
+[Shot 2] At 00:07.000, the shot cuts to a close shot of <Subject 2> (S2), 小刘, at the collection desk, headset in place, eyes on the call list. He answers in the same brisk, flat, procedural male voice with no rise in volume, <d>[Chinese] 这是我们的工作职责与工作流程，按目前的情况只能走法律程序了！</d> He draws a short line on the list with his pen as he finishes.
+[Shot 3] At 00:13.400, the shot cuts back to <Subject 1> (S1) in the apartment. His thumb hits the screen hard to end the call, and he drops the phone onto the sofa cushion. The camera holds a static shot on his face as he breathes out and stares at nothing, his jaw still tight.
+
+overall_soundscape:
+The apartment room tone continues with a faint lamp hum. The phone's plastic casing knocks against the cushion, and a harsh double breath from <Subject 1> carries through the last beat. A low desk ambience and faint keyboard clicks sit under the cutaway.
+
+non_diegetic_music:
+The low electronic pulse accelerates slightly under the argument and stops dead on the hang-up, leaving only room tone.

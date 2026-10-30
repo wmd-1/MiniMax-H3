@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
+
+summary:
+[reference generation] The target video closes the story at the same desk. <Subject 1> hands over the trial result and assures him of follow-up support, <Subject 2> signs the commitment letter, and a closing caption appears over the last shot.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 3]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+
+detailed_description:
+The target video keeps the same live-action, cinematic, realistic bank-interior look, and the final shot brightens slightly as the camera settles.
+[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, sliding a printed repayment schedule and the completed form across the desk, a pen laid on top of them. She looks up and speaks in the same clear, even, professional female voice, now a little warmer and slower, <d>[Chinese] 有任何问题随时联系我。</d> She keeps her hand on the schedule until <Subject 2>'s fingers reach it, then withdraws it.
+[Shot 2] At 00:03.400, the shot cuts to a close shot of <Subject 2> (S2), 李大海, over the desk. He pulls the form square, picks up the pen, signs his name on the marked line in two slow strokes, replaces the cap and sets the pen down. He exhales once, sits back and pushes the form back across the desk.
+[Shot 3] At 00:07.200, the shot cuts to a static medium-wide shot of the consultation corner, both of them seated across the desk as <Subject 1> gathers the documents into a folder. White Chinese characters fade in at the lower third reading "贷款需理性，按时还款很重要。遇到困难时，请及时与银行沟通协商。" The caption holds to the final frame while the two figures stay in place and the camera does not move.
+
+overall_soundscape:
+Quiet bank-interior room tone with the ventilation hum underneath. The pen cap clicks, the nib scratches briefly across paper, and the folder closes with a soft slap as the ambience settles into the final seconds.
+
+non_diegetic_music:
+A warm piano figure at a slow tempo resolving upward, joined by a sustained low string note that fades out under the closing caption.

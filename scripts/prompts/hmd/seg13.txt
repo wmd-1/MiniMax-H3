@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
+
+summary:
+[reference generation] The target video states the conditions attached to the offline repayment route. <Subject 1> explains that suspension of litigation and collection only follows on-time monthly payment, and that the contract terms and credit reporting remain unchanged, while <Subject 2> absorbs the credit-report point.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
+<Subject 2> (appears in [Shot 2], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+
+detailed_description:
+The target video keeps the same live-action, cinematic, realistic bank-interior look and the same desk arrangement.
+[Shot 1] A close shot frames <Subject 1> (S1), 小王, her hands resting flat on either side of the form. She speaks in the same clear, professional female voice, dropping her volume slightly and keeping her delivery even, <d>[Chinese] 如能按月履行承诺，我行将暂停诉讼、催收。</d> She lifts one hand and presses it down once, flat, on the desk to mark the condition.
+[Shot 2] At 00:04.100, the shot cuts to a medium shot of <Subject 1> (S1) from the front, the frosted glass partition behind her. She keeps her hands together on the desk and continues in the same steady voice, giving each clause its own beat, <d>[Chinese] 线下协商还款不变更借款合同，应收利息、费用仍按照合同执行，逾期还款征信仍然上报。</d> On the last four words she holds <Subject 2>'s gaze deliberately and does not soften them. In the foreground edge of the frame, <Subject 2>'s posture goes still.
+[Shot 3] At 00:12.300, the shot cuts to a close shot of <Subject 2> (S2), 李大海. His lips part slightly, then he presses them together and gives one slow nod, his eyes dropping to the form in front of him. The camera holds a static shot to the end of the frame.
+
+overall_soundscape:
+The bank room tone stays even, with a ventilation hum and a faint printer running behind the partition. A chair shifts once and a soft exhale comes from <Subject 2>.
+
+non_diegetic_music:
+One sustained string note at a low volume that slowly descends a step and holds to the final frame.

@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly and stay unchanged from the previous scene.
+<Subject 2> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+
+summary:
+[reference generation] The target video stays at the same consultation desk. <Subject 2> explains that penalty interest cannot be waived and offers a negotiated repayment option, and <Subject 1> rejects it and starts comparing the bank with others. Identities come from the two reference images.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
+
+detailed_description:
+The target video continues the same live-action, cinematic, realistic bank-branch setting with the same cool ceiling light and blue-and-white counter line.
+[Shot 1] A medium close shot frames <Subject 2> (S1), 小王, behind the consultation desk, her hands folded on the surface in front of her, a pen resting beside them. The camera holds a static shot as she speaks in the same clear, even, professional female voice, keeping her tone level and her pace unhurried, <d>[Chinese] 但根据监管和总行规定，罚息复利确实无法减免。我们可以帮您申请协商还款方案。</d> She inclines her head slightly on the last clause and slides a blank application form an inch toward him.
+[Shot 2] At 00:07.600, the shot cuts to a close shot of <Subject 1> (S2), 李大海, from the opposite side of the desk. He lifts one hand palm-out to cut her off, then lets it fall onto the desk edge. He speaks in a raised, resentful male voice with a hard, clipped rhythm, <d>[Chinese] 我不想听，你们就知道收利息，根本不考虑我们的实际情况！</d> His jaw works and he turns his head half away from her.
+[Shot 3] At 00:12.800, the shot cuts to a medium two-shot across the desk. <Subject 2> keeps her hands folded and her eyes on him, holding her reply. <Subject 1> leans back with his arms crossed, breathing hard through his nose. The camera holds still until the end of the shot.
+
+overall_soundscape:
+The bank-hall ambience continues with the ventilation hum and a distant chime. Fabric rustles as <Subject 1> shifts his weight, and the application form drags softly across the desk surface.
+
+non_diegetic_music:
+A low sustained string note with a slow, sparse piano figure underneath, staying level and fading slightly toward the end.

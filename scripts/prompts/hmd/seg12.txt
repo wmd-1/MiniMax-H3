@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
+
+summary:
+[reference generation] The target video introduces the offline negotiated repayment route at the same desk. <Subject 1> explains that a signed commitment letter is required and pushes the blank form toward <Subject 2>, describing the monthly obligation and the final deadline clause by clause.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+
+detailed_description:
+The target video keeps the same live-action, cinematic, realistic bank-interior look, with the documents on the desk now including a single-page form printed with a bold heading.
+[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, setting the term sheet aside and drawing a fresh single-page form in front of her. She speaks in the same clear, even, professional female voice at a steady, measured pace, <d>[Chinese] 如果您确实无法结清目前逾期，我们可以提供线下协商还款，</d> She turns the form so its heading faces the far side of the desk.
+[Shot 2] At 00:05.600, the shot cuts to a close shot of the desk from the side, the form filling the lower frame with the heading "还款承诺书" across the top and several blank fields beneath. <Subject 1>'s (S1) index finger moves down the page, touching each blank field in turn while she continues in the same steady voice, <d>[Chinese] 需签署还款《承诺书》，承诺按月还款，每月某日前，至少偿还某元，并在某年某月前还清全部欠款。</d> Her finger stops on the final field, and she slides the form and a pen toward <Subject 2> (S2), whose hand comes into frame and rests on the edge of the paper without lifting it.
+
+overall_soundscape:
+Quiet bank-interior room tone with the ventilation hum continuing. The form slides across the desk with a dry paper sound, the pen rolls a few centimetres on the surface, and a soft breath is audible from <Subject 2>.
+
+non_diegetic_music:
+A slow piano figure in a lower register with one sustained string note, very quiet under the explanation.

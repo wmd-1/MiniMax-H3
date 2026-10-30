@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 小刘, the outsourced collection agent, whose appearance is taken directly from the reference image xl.png; his face, hair and clothing follow that image exactly.
+<Subject 2> is 李大海, the borrower, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly, matching the previous night scene at home.
+
+summary:
+[reference generation] The target video is a phone call at night. <Subject 2> listens in his dim living room while <Subject 1> delivers the overdue notice from a collection-office desk, the voice continuing uninterrupted across the cut between them, until <Subject 2> finally pushes back for the first time.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 2]): fully_preserved - the identity, face, hair and clothing from xl.png are retained.
+<Subject 2> (appears in [Shot 1], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
+
+detailed_description:
+The target video is live-action, cinematic and realistic, with a warm dim apartment interior and a cooler, harsher collection-office interior in the cutaway.
+[Shot 1] A close shot frames <Subject 2> (S2), 李大海, standing beside the coffee table at night with the phone pressed to his ear, a lamp glowing behind him out of focus. The camera holds a static shot. The caller's voice arrives through the earpiece with a slightly compressed phone timbre: a firm, brisk male voice belonging to <Subject 1> (S1), speaking evenly without pause, <d>[Chinese] 李先生，您贷款已经逾期22天了，根据合同规定，您必须在明天中午12点前归还全部欠款，</d> <Subject 2> keeps his eyes on the floor and his free hand closes slowly into a fist.
+[Shot 2] At 00:09.000, the shot cuts to a medium shot of <Subject 1> (S1), 小刘, seated at a cluttered desk with a headset microphone at his mouth and a printed call list in front of him, lit by cold overhead light. His voice carries over the cut without a break as he leans toward the microphone and continues with the same brisk delivery, <d>[Chinese] 否则我们将采取进一步措施！</d> He taps the call list once with a pen.
+[Shot 3] At 00:12.000, the shot cuts back to <Subject 2> (S2) in the apartment, framed slightly wider so his shoulders and free arm are visible. His expression hardens and he cuts in over the earpiece in a tight, rising male voice, <d>[Chinese] 我说了我现在没钱！</d> His free hand slaps down against his own thigh on the last word.
+
+overall_soundscape:
+A quiet apartment room tone with a faint electrical hum from the lamp. The earpiece leaks a thin, compressed voice, a hand slaps once against fabric, and the headset and paper rustle faintly in the collection-office cutaway.
+
+non_diegetic_music:
+A single low electronic pulse repeating at a slow, steady tempo under the call, with no melodic movement.

@@ -1,0 +1,21 @@
+subject_definitions:
+<Subject 1> is 李大海, the 45-year-old small-business owner and 惠民贷 borrower, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly, with nothing added or altered.
+<Subject 2> is 张晓敏, 李大海's wife, whose appearance is taken directly from the reference image zxm.png; her face, hair and clothing follow that image exactly, with nothing added or altered.
+
+summary:
+[reference generation] The target video is a single domestic exchange in the living room of 李大海's apartment in daylight. <Subject 1> paces while airing his loan worries, then <Subject 2> walks in from the kitchen and questions why the 惠民贷 balance keeps growing. Both identities come from their reference images and stay identical across the two shots.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained in both shots.
+<Subject 2> (appears in [Shot 2]): fully_preserved - the identity, face, hair and clothing from zxm.png are retained as she enters from the kitchen and speaks.
+
+detailed_description:
+The target video is live-action, cinematic and realistic in a modern Chinese family-drama register, lit by soft late-morning daylight through a balcony window, with warm wood tones and a shallow depth of field.
+[Shot 1] A medium-wide static shot frames a compact apartment living room: a fabric sofa with cushions on the left, a low wooden coffee table holding a stack of bank statements and a phone, a wall clock above the sofa, and the edge of a dining table at the right rear. <Subject 1> (S1), 李大海, walks back and forth in front of the coffee table, brows drawn together, one hand rubbing the back of his neck. The camera tracks him with small amplitude at slow speed as he turns toward the window mid-stride. He speaks in a low, tired, slightly hoarse male voice at a subdued, worried pace, <d>[Chinese] 现在生意这么难做，贷款利滚利都要还不上了，这月又逾期了，银行肯定又要来电话了。</d> He exhales, stops pacing, and stares down at the statements on the table.
+[Shot 2] At 00:08.300, the shot cuts to a medium shot from the kitchen-doorway side as <Subject 2> (S2), 张晓敏, steps out of the kitchen wiping her hands on a small towel. She slows at the edge of the living room, looks at the statements, then at <Subject 1>. The camera pushes in with small amplitude at slow speed. She speaks in a clear, slightly sharp female voice with an impatient but controlled tone, <d>[Chinese] 上个月刚还了2000，怎么又不够还利息了？这惠民贷怎么越还越多啊？</d> She lowers the towel and holds his gaze without looking away.
+
+overall_soundscape:
+Quiet apartment room tone with a faint refrigerator hum and a clock ticking steadily. Soft footsteps shift on the floor as <Subject 1> paces, and the towel rustles when <Subject 2> stops in the doorway.
+
+non_diegetic_music:
+A sparse low piano figure at a slow tempo with one sustained string note underneath, kept well below the dialogue.

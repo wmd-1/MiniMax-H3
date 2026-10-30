@@ -5,7 +5,8 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-xyk-a/b-sglang.sh（信用卡逾期还款纠纷化解 A/B）/
+# 被测对象：scripts/ref2va-hmd-a/b-sglang.sh（《惠民贷风波》A/B）/
+#           scripts/ref2va-xyk-a/b-sglang.sh（信用卡逾期还款纠纷化解 A/B）/
 #           scripts/ref2va-yinhang-a/b/c/d-sglang.sh（银行卡限额与管控，四服务并行）/
 #           scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
 #           scripts/ref2va-yingxiao-a-sglang.sh / ref2va-yingxiao-b-sglang.sh（对公营销情报官 A/B）/
@@ -147,6 +148,7 @@ echo "  mock    : 已就绪 (pid ${MOCK_PID})"
 for f in dxb.png hxr.png logo.png aaa.png bbb.png ccc.png \
          xc.png xz.png xl.png lz.png zxk.png zbx.png xw.png ts.png qbg.png \
          lay.png wdg.png zns.png \
+         ldh.png zxm.png \
          first_shot.png first_shot.PNG image1.png image2.png image3.png image4.png image5.png \
          image6.png image7.png image8.png image9.png image10.png \
          image133.png image134.png image135.png image136.png; do
@@ -595,6 +597,51 @@ for x in a b; do
   ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-xyk-$x-sglang.sh")
   assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/xyk/}"' "$ip" "T27 $x 默认 IMAGE_PREFIX 为 xyk/ 子目录"
 done
+
+# ================================= T28 =================================
+CASE="T28 《惠民贷风波》：双脚本双服务并行、合计 225s、图序易错点"
+echo "── ${CASE}"
+reset_posts; : > "$POSTS_B"
+run_script ref2va-hmd-a-sglang.sh t28 OUTPUT_PREFIX="${WORK}/hmd_"
+assert_eq "0" "$(rc_of t28)" "T28 A 退出码"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 A 段1-7 请求数"
+assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T28 画幅"
+assert_eq "15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T28 A 逐段时长"
+assert_eq "ldh.png,zxm.png" "$(imgs_of 1)" "T28 段1 图序"
+assert_eq "xl.png,ldh.png"  "$(imgs_of 6)" "T28 段6 图序（小刘在前，易错点）"
+assert_eq "ldh.png,xl.png"  "$(imgs_of 7)" "T28 段7 图序（与段6 相反）"
+for i in 1 2 3 4 5 6 7; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 A 产出"; done
+
+run_script ref2va-hmd-b-sglang.sh t28b OUTPUT_PREFIX="${WORK}/hmd_" PORT="${PORT_B}"
+assert_eq "0" "$(rc_of t28b)" "T28 B 退出码"
+assert_eq "8" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T28 B 段8-15 请求数（第二服务）"
+assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 主服务请求数未变"
+assert_eq "15 15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T28 B 逐段时长"
+assert_eq "xw.png,ldh.png" "$(sed -n 2p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段9 图序（小王在前）"
+assert_eq "ldh.png,xw.png" "$(sed -n 7p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段14 图序（与段9 相反）"
+for i in 8 9 10 11 12 13 14 15; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 B 产出"; done
+
+assert_eq "15" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") ))" "T28 两服务合计请求数"
+assert_eq "225" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" | awk '{s+=$1} END{print s}')" "T28 全片总时长"
+assert_eq "15" "$(ls -1 "${WORK}"/hmd_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T28 seg1..15 产出齐全无覆盖"
+ha=$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-hmd-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+hb=$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-hmd-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
+assert_eq "$ha" "$hb" "T28 A/B 映射表逐字一致"
+for x in a b; do
+  ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-hmd-$x-sglang.sh")
+  assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/hmd/}"' "$ip" "T28 $x 默认 IMAGE_PREFIX 为 hmd/ 子目录"
+done
+# 提示词自身：段内编号 1..k 连续，且 k == 脚本表里该段图数
+bad=0
+for i in $(seq 1 15); do
+  p="${ROOT_DIR}/scripts/prompts/hmd/seg${i}.txt"
+  n=$(grep -c '^<Subject [0-9][0-9]*> is' "$p")
+  mx=$(grep -o '^<Subject [0-9][0-9]*>' "$p" | grep -o '[0-9][0-9]*' | sort -n | tail -1)
+  tbl=$(grep -oE "^  \[$i\]=\"[^\"]*\"" "${ROOT_DIR}/scripts/ref2va-hmd-a-sglang.sh" | sed -E 's/^  \[[0-9]+\]="//; s/"$//')
+  tcnt=$(echo $tbl | wc -w | tr -d ' ')
+  [ "$n" = "$mx" ] && [ "$n" = "$tcnt" ] || { bad=$((bad+1)); echo "      ✗ 段$i defs=$n 最大=$mx 表=$tcnt"; }
+done
+if [ "$bad" -eq 0 ]; then ok "T28 15 段提示词编号连续且与脚本表图数一致"; else bad "T28 有 ${bad} 段不一致"; fi
 
 # ------------------------------- 汇总 -------------------------------
 echo "======================================================"

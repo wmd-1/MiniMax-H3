@@ -1,0 +1,22 @@
+subject_definitions:
+<Subject 1> is 李大海, the 45-year-old small-business owner, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly, including the same clothing as in the previous scene.
+<Subject 2> is 张晓敏, his wife, whose appearance is taken directly from the reference image zxm.png; her face, hair and clothing follow that image exactly.
+
+summary:
+[reference generation] The target video continues the same living room a few seconds later. <Subject 1> sits at the dining table working through the penalty interest on a repayment statement and pushes the paper toward <Subject 2>, who reads it in silence. All identity details come from the two reference images.
+
+retention_analysis:
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained through the shot changes.
+<Subject 2> (appears in [Shot 3]): fully_preserved - the identity, face, hair and clothing from zxm.png are retained.
+
+detailed_description:
+The target video keeps the same live-action, cinematic, realistic family-drama look, with soft daylight from the balcony window falling across the table and a shallow depth of field.
+[Shot 1] A medium two-shot frames the dining table from the side, with the living room sofa blurred in the background. <Subject 1> (S1), 李大海, sits down heavily, unfolds a repayment statement across the tabletop, pulls a small calculator toward himself and starts tapping keys with his index finger. <Subject 2>, 张晓敏, stands behind the opposite chair with one hand on its back. <Subject 1> (S1) speaks in the same tired, hoarse male voice, now with a sharper edge of grievance, <d>[Chinese] 我算了一下，光罚息一个月就涨1000多，</d> He stops typing and pushes the calculator aside with the back of his hand.
+[Shot 2] At 00:05.600, the shot cuts to a close insert over his shoulder: the statement lies flat with rows of printed figures, his index finger sliding down the column and stopping, the calculator screen reflecting the window light so the digits stay unreadable. <Subject 1> (S1) continues off this framing, his voice rising at the end of the sentence, <d>[Chinese] 这什么时候是个头啊！银行一点政策都没有，凭什么不给我们减免？</d> His finger taps the paper twice on the final word.
+[Shot 3] At 00:10.000, the shot cuts back to the medium two-shot. <Subject 2> (S2) pulls the statement toward herself, scans it, and lifts her eyes to <Subject 1> without speaking. He leans back in the chair and presses two fingers to his brow. The camera holds a static shot while the clock on the wall keeps ticking.
+
+overall_soundscape:
+The soft click of calculator keys and the dry rustle of paper against the tabletop carry through the room. A chair creaks as <Subject 1> leans back, and the wall clock keeps ticking underneath the quiet room tone.
+
+non_diegetic_music:
+The same sparse piano figure continues at a slow tempo, joined by a low sustained string note that fades out on the last frame.
