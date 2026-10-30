@@ -1,6 +1,6 @@
 subject_definitions:
 <Subject 1> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
-<Subject 2> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 2> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly.
 
 summary:
 [reference generation] The target video closes the negotiation. <Subject 1> accepts the offline negotiated repayment route and asks for a monthly figure with no litigation and no collection calls, and <Subject 2> agrees and starts the calculation.
@@ -12,7 +12,7 @@ retention_analysis:
 detailed_description:
 The target video keeps the same live-action, cinematic, realistic bank-interior look with cool ceiling light and a shallow depth of field over the desk.
 [Shot 1] A medium close shot frames <Subject 1> (S1), 李大海, leaning forward with one hand flat on the form in front of him. His earlier tension has dropped; he speaks in a lower, tired but steadier male voice at a normal, deliberate pace, <d>[Chinese] 那你给我办理一下线下协商还款吧，算一下我每月需还多少钱，这个期间不要起诉，不要催收了。</d> He taps the paper once with his index finger on each of the last two conditions.
-[Shot 2] At 00:09.200, the shot cuts to a medium close shot of <Subject 2> (S2), 小王, on the opposite side. She gives a short, businesslike nod, pulls the form and a printed repayment table toward herself, and speaks in the same clear, even, professional female voice, <d>[Chinese] 好的。我帮您试算一下，请您签字确认。</d> She sets the tip of her pen on the table and starts running down a column of figures, her eyes moving with the pen. The camera holds a static shot as her hand moves steadily to the end of the frame.
+[Shot 2] At 00:09.200, the shot cuts to a medium close shot of <Subject 2> (S2), 小王, on the opposite side. He gives a short, businesslike nod, pulls the form and a printed repayment table toward himself, and speaks in the same clear, even, professional male voice, <d>[Chinese] 好的。我帮您试算一下，请您签字确认。</d> He sets the tip of his pen on the table and starts running down a column of figures, his eyes moving with the pen. The camera holds a static shot as his hand moves steadily to the end of the frame.
 
 overall_soundscape:
 Quiet bank-interior room tone with the ventilation hum. Paper slides across the desk, and the soft tap of a pen tip on the tabletop repeats a few times in a steady rhythm.

@@ -1,5 +1,5 @@
 subject_definitions:
-<Subject 1> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 1> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly.
 <Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
 
 summary:
@@ -11,9 +11,9 @@ retention_analysis:
 
 detailed_description:
 The target video keeps the same live-action, cinematic, realistic bank-interior look with cool ceiling light and a shallow depth of field over the desk.
-[Shot 1] A medium shot frames <Subject 1> (S1), 小王, seated behind the desk with a printed form and a pen in front of her, angled slightly toward the man opposite. The camera pushes in with small amplitude at slow speed as she speaks in the same clear, professional female voice at an even, unhurried pace, <d>[Chinese] 但我们可以帮您申请个性化纾困方案，我们的纾困方案有四种，</d> She uncaps the pen and sets its tip on the form.
-[Shot 2] At 00:06.000, the shot cuts to a closer angle over the desk corner, framing the form and her hand. She writes four short lines down the page in order while naming each one in the same steady voice, <d>[Chinese] 续授信、无还本续贷、展期、线下协商还款。</d> The form now reads "续授信  无还本续贷  展期  线下协商还款". She turns the page a quarter turn and pushes it toward the far side of the desk.
-[Shot 3] At 00:10.000, the shot cuts to a close shot of <Subject 2> (S2), 李大海, on the opposite side. He looks down at the form, his brow loosening a little, then lifts his eyes back to her with his arms still crossed. The camera holds a static shot while his fingers drum once against his sleeve.
+[Shot 1] A medium shot frames <Subject 1> (S1), 小王, seated behind the desk with a printed form and a pen in front of him, angled slightly toward the man opposite. The camera pushes in with small amplitude at slow speed as he speaks in the same clear, professional male voice at an even, unhurried pace, <d>[Chinese] 但我们可以帮您申请个性化纾困方案，我们的纾困方案有四种，</d> He uncaps the pen and sets its tip on the form.
+[Shot 2] At 00:06.000, the shot cuts to a closer angle over the desk corner, framing the form and his hand. He writes four short lines down the page in order while naming each one in the same steady voice, <d>[Chinese] 续授信、无还本续贷、展期、线下协商还款。</d> The form now reads "续授信  无还本续贷  展期  线下协商还款". He turns the page a quarter turn and pushes it toward the far side of the desk.
+[Shot 3] At 00:10.000, the shot cuts to a close shot of <Subject 2> (S2), 李大海, on the opposite side. He looks down at the form, his brow loosening a little, then lifts his eyes back to <Subject 1> with his arms still crossed. The camera holds a static shot while his fingers drum once against his sleeve.
 
 overall_soundscape:
 Quiet bank-interior ambience with the ventilation hum continuing. The pen cap clicks off, the nib scratches lightly across the paper, and the form drags softly over the desk surface.

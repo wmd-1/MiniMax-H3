@@ -1,9 +1,9 @@
 subject_definitions:
 <Subject 1> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
-<Subject 2> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly, unchanged from the earlier branch scene.
+<Subject 2> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly, unchanged from the earlier branch scene.
 
 summary:
-[reference generation] The target video opens the in-branch appointment. <Subject 1> sits down and immediately threatens a complaint over the penalty interest, and <Subject 2> receives it calmly and restates her understanding of his demand. Identities come from the two reference images.
+[reference generation] The target video opens the in-branch appointment. <Subject 1> sits down and immediately threatens a complaint over the penalty interest, and <Subject 2> receives it calmly and acknowledges his demand. Identities come from the two reference images.
 
 retention_analysis:
 <Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
@@ -11,8 +11,8 @@ retention_analysis:
 
 detailed_description:
 The target video is live-action, cinematic and realistic, set in a bank branch consultation corner with cool white ceiling light, a light wooden desk and a frosted glass partition behind the manager's chair.
-[Shot 1] A medium-wide static shot frames the consultation desk. <Subject 2>, 小王, stands beside her chair and gestures with an open palm toward the seat opposite. <Subject 1> (S1), 李大海, sets his bag on the floor, sits down, drags the chair an inch closer and plants both forearms on the desk. He speaks at once in a loud, hard male voice with a rapid, confrontational rhythm, <d>[Chinese] 你好，再不给我减免，我就要投诉！而且这个利息涨得太离谱了，我们要求减免！</d> He jabs a finger at the desk surface on the final words. <Subject 2> sits down opposite him and settles her hands on the desk.
-[Shot 2] At 00:07.500, the shot cuts to a medium close shot of <Subject 2> (S2), 小王, facing him across the desk. She keeps her back straight, her gaze level, and her voice in the same clear, even, professional register at a measured pace, <d>[Chinese] 先生，我理解您的诉求。</d> She gives one slow nod and keeps her hands still on the desk. The camera holds a static shot through the end of the frame.
+[Shot 1] A medium-wide static shot frames the consultation desk. <Subject 2>, 小王, stands beside his chair and gestures with an open palm toward the seat opposite. <Subject 1> (S1), 李大海, sets his bag on the floor, sits down, drags the chair an inch closer and plants both forearms on the desk. He speaks at once in a loud, hard male voice with a rapid, confrontational rhythm, <d>[Chinese] 你好，再不给我减免，我就要投诉！而且这个利息涨得太离谱了，我们要求减免！</d> He jabs a finger at the desk surface on the final words. <Subject 2> sits down opposite him and settles his hands on the desk.
+[Shot 2] At 00:07.500, the shot cuts to a medium close shot of <Subject 2> (S2), 小王, facing him across the desk. He keeps his back straight, his gaze level, and his voice in the same clear, even, professional male register at a measured pace, <d>[Chinese] 先生，我理解您的诉求。</d> He gives one slow nod and keeps his hands still on the desk. The camera holds a static shot through the end of the frame.
 
 overall_soundscape:
 A quiet bank-interior ambience with a ventilation hum, distant footsteps and a faint printer running somewhere behind the partition. A chair leg scrapes once on the floor as <Subject 1> sits down.

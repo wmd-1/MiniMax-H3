@@ -1,18 +1,19 @@
 subject_definitions:
-<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly, unchanged from the previous shot.
+<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly, unchanged from the previous shot.
 <Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
 
 summary:
-[reference generation] The target video continues the extension explanation at the same desk. <Subject 1> sets out the term limits for loans under one year and over one year and closes with the overall cap, while <Subject 2> follows her pen on the sheet.
+[reference generation] The target video continues the extension explanation at the same desk. <Subject 1> sets out the term limits for loans under one year and over one year and closes with the overall cap, while <Subject 2> follows his pen on the sheet.
 
 retention_analysis:
-<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
+<Subject 1> (appears in [Shot 1], [Shot 2], [Shot 3]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
 <Subject 2> (appears in [Shot 2]): fully_preserved - the identity, face, hair and clothing from ldh.png are retained.
 
 detailed_description:
 The target video keeps the same live-action, cinematic, realistic bank-interior look and the same desk layout as the preceding shot.
-[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, holding the pen above a printed term sheet. She speaks in the same clear, even, professional female voice, slowing her pace slightly so each clause lands clearly, <d>[Chinese] 展期1年（含）以内的贷款，展期期限累计不得超过原贷款期限；</d> She draws a short vertical stroke on the sheet to mark the boundary of the first year.
-[Shot 2] At 00:06.000, the shot cuts to an over-the-shoulder two-shot from behind <Subject 2> (S2), 李大海, with his shoulder and the back of his head soft in the foreground and the term sheet in focus beyond. <Subject 1> (S1) draws a longer horizontal line beneath the first stroke and then a second line half its length, moving the pen as she speaks in the same steady voice, <d>[Chinese] 1年以上的贷款，展期期限累计不得超过原贷款期限的一半。展期后不超过贷款总期限。</d> <Subject 2> gives a single slow nod as the pen comes to a stop. The camera holds a static shot to the end of the frame.
+[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, holding the pen above a printed term sheet. He speaks in the same clear, even, professional male voice, slowing his pace slightly so each clause lands clearly, <d>[Chinese] 展期1年（含）以内的贷款，展期期限累计不得超过原贷款期限；</d> He draws a short vertical stroke on the sheet to mark the boundary of the first year.
+[Shot 2] At 00:06.000, the shot cuts to an over-the-shoulder two-shot from behind <Subject 2> (S2), 李大海, with his shoulder and the back of his head soft in the foreground and the term sheet in focus beyond. <Subject 1> (S1) draws a longer horizontal line beneath the first stroke and then a second line half its length, moving the pen as he speaks in the same steady voice, <d>[Chinese] 1年以上的贷款，展期期限累计不得超过原贷款期限的一半。</d> <Subject 2> gives a single slow nod as the pen comes to a stop.
+[Shot 3] At 00:12.000, the shot cuts to a closer angle on the term sheet and <Subject 1>'s (S1) hand resting flat beside the marked lines. He finishes in the same measured voice, <d>[Chinese] 展期后不超过贷款总期限。</d> His fingertip taps the end of the second line once, and the camera holds a static shot to the end of the frame.
 
 overall_soundscape:
 The bank room tone continues with a faint page turn and the light scratch of the pen on paper. A distant chair scrapes across stone flooring beyond the partition.

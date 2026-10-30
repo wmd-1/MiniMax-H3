@@ -1,9 +1,9 @@
 subject_definitions:
-<Subject 1> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 1> is 小王, the account manager, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly.
 <Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
 
 summary:
-[reference generation] The target video explains the extension option at the same desk. <Subject 1> states the precondition of clearing the current overdue amount and then lists the four required document sets while <Subject 2> watches the papers being laid out.
+[reference generation] The target video explains the extension option at the same desk. <Subject 1> states the precondition of clearing the current overdue amount and then lists the required document sets while <Subject 2> watches the papers being laid out.
 
 retention_analysis:
 <Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the identity, face, hair and clothing from xw.png are retained.
@@ -11,8 +11,8 @@ retention_analysis:
 
 detailed_description:
 The target video keeps the same live-action, cinematic, realistic bank-interior look, cool ceiling light falling on a clean desk with documents fanned out across it.
-[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, behind the desk, the written form still under her hand. She squares the form with her fingertips and speaks in the same clear, even, professional female voice at a steady, measured pace, <d>[Chinese] 如您能结清目前逾期，我们可以给您申请展期业务，</d> She raises her eyes from the paper to the man opposite and holds them there.
-[Shot 2] At 00:05.000, the shot cuts to a high-angle close shot of the desk surface, with <Subject 2>'s hands resting at the near edge of the frame. <Subject 1> (S1) slides four items into view one after another — an identification document, an income-proof folder, a credit report printout and a short stack of statements — and taps each with the tip of her pen as she names it in the same unhurried voice, <d>[Chinese] 需您提供身份证明材料、借款人（含配偶、共同借款人等）收入证明材料、征信报告、还款出现困难等资料。</d> The pen comes to rest at the edge of the last document. <Subject 2>'s right hand pulls back slightly from the desk.
+[Shot 1] A medium close shot frames <Subject 1> (S1), 小王, behind the desk, the written form still under his hand. He squares the form with his fingertips and speaks in the same clear, even, professional male voice at a steady, measured pace, <d>[Chinese] 如您能结清目前逾期，我们可以给您申请展期业务，</d> He raises his eyes from the paper to the man opposite and holds them there.
+[Shot 2] At 00:05.000, the shot cuts to a high-angle close shot of the desk surface, with <Subject 2>'s hands resting at the near edge of the frame. <Subject 1> (S1) slides documents into view one after another — an identification document, an income-proof folder — and taps each with the tip of his pen as he names it in the same unhurried voice, <d>[Chinese] 需您提供身份证明材料、借款人（含配偶、共同借款人等）收入证明材料</d> The pen comes to rest on the folder.
 
 overall_soundscape:
 Quiet bank-interior room tone with the ventilation hum underneath. Paper slides across the desk in separate soft strokes and the pen taps lightly on each document.

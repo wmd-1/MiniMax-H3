@@ -1,6 +1,6 @@
 subject_definitions:
 <Subject 1> is 李大海, the 45-year-old small-business owner, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
-<Subject 2> is 小王, the 交通银行 account manager, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly, with nothing added or altered.
+<Subject 2> is 小王, the 交通银行 account manager, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly, with nothing added or altered.
 
 summary:
 [reference generation] The target video moves to a consultation desk inside a 交通银行 branch, where <Subject 1> leans over the desk and pleads his case while <Subject 2> stays composed behind it and opens with an acknowledgement of his feelings. Both identities are taken from their reference images.
@@ -13,7 +13,7 @@ detailed_description:
 The target video is live-action, cinematic and realistic, shot inside a modern Chinese bank branch lobby with cool white ceiling light, light-grey stone flooring and a blue-and-white counter line behind the consultation desk.
 [Shot 1] A medium-wide static shot frames a consultation desk in the branch lobby. <Subject 1> (S1), 李大海, stands with both palms pressed flat on the desk edge and his upper body leaning forward, a folded set of documents under one hand. A queue-number slip and a name-card holder sit between him and the desk. He speaks in a loud, strained male voice with a fast, agitated rhythm, <d>[Chinese] 我不是不还钱，我是真的遇到困难了！</d> The camera pushes in with small amplitude at slow speed.
 [Shot 2] At 00:03.600, the shot cuts to a tighter angle on <Subject 1> (S1) from the desk side. His shoulders rise with each breath, and he strikes his own chest once with his fingertips before gesturing at the documents. He continues in the same strained voice, cracking slightly on the last words, <d>[Chinese] 你们银行能不能人性化一点？让我分期还，每个月少还点不行吗？</d> He taps the documents against the desk edge as the line ends.
-[Shot 3] At 00:09.800, the shot cuts to a medium shot of <Subject 2> (S2), 小王, seated behind the desk with her forearms resting on it and her hands loosely folded. Her posture stays upright and her expression is calm. She speaks in a clear, even, professional female voice at a measured pace, <d>[Chinese] 李先生，您的心情我理解。</d> She keeps eye contact the whole time. Across the desk, <Subject 1> pulls back a little and his jaw tightens.
+[Shot 3] At 00:09.800, the shot cuts to a medium shot of <Subject 2> (S2), 小王, seated behind the desk with his forearms resting on it and his hands loosely folded. His posture stays upright and his expression is calm. He speaks in a clear, even, professional male voice at a measured pace, <d>[Chinese] 李先生，您的心情我理解。</d> He keeps eye contact the whole time. Across the desk, <Subject 1> pulls back a little and his jaw tightens.
 
 overall_soundscape:
 A quiet bank-hall ambience with distant footsteps on the stone floor, a low ventilation hum and an occasional soft chime from the queue system. Paper shifts under <Subject 1>'s palm as he leans on the desk.

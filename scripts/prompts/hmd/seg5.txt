@@ -1,6 +1,6 @@
 subject_definitions:
 <Subject 1> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly in both the bank and the apartment.
-<Subject 2> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 2> is 小王, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly.
 
 summary:
 [reference generation] The target video closes the bank scene and opens the night scene at home. <Subject 1> throws one last accusation at <Subject 2> and walks out, then the same character stands in his dim apartment as his phone rings and he recognises the number. Identities come from the two reference images.
@@ -11,7 +11,7 @@ retention_analysis:
 
 detailed_description:
 The target video is live-action, cinematic and realistic, with the first shot keeping the cool bank-branch light and the second shot switching to warm dim apartment light.
-[Shot 1] A medium shot frames the consultation desk from the side. <Subject 1> (S1), 李大海, pushes his chair back with the backs of his legs, sweeps his documents off the desk and says in a harsh, loud male voice with a fast delivery, <d>[Chinese] 其他银行都能减免，凭什么你们不行？</d> He shoulders his bag and turns away from the desk. The camera pans right with large amplitude at slow speed, following him as he walks out of frame past the counter line. Behind him, <Subject 2> begins to rise from her chair with one hand lifted to explain, then stops.
+[Shot 1] A medium shot frames the consultation desk from the side. <Subject 1> (S1), 李大海, pushes his chair back with the backs of his legs, sweeps his documents off the desk and says in a harsh, loud male voice with a fast delivery, <d>[Chinese] 其他银行都能减免，凭什么你们不行？</d> He shoulders his bag and turns away from the desk. The camera pans right with large amplitude at slow speed, following him as he walks out of frame past the counter line. Behind him, <Subject 2> begins to rise from his chair with one hand lifted to explain, then stops.
 [Shot 2] At 00:07.000, the shot cuts to a medium shot of the apartment living room at night, lit only by a warm floor lamp and the blue glow of a television in standby. A phone lies face-up on the coffee table and starts vibrating, its screen lighting up with an incoming call. <Subject 1> (S1) walks in from the right in the same clothing, stops at the table and looks down at the screen. The camera tilts down with small amplitude at slow speed as he picks the phone up and reads the number. He exhales through his nose and says in a low, resigned voice, <d>[Chinese] 又来了，这都第几个电话了？</d> He swipes to answer and lifts the phone to his ear.
 
 overall_soundscape:

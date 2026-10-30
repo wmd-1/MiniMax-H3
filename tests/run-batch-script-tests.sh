@@ -5,7 +5,7 @@ set -uo pipefail
 # MiniMax-H3 分镜批量脚本冒烟测试
 # =============================================================================
 #
-# 被测对象：scripts/ref2va-hmd-a/b-sglang.sh（《惠民贷风波》A/B）/
+# 被测对象：scripts/ref2va-hmd-a/b/c/d-sglang.sh（《惠民贷风波》四服务 3/3/5/4）/
 #           scripts/ref2va-xyk-a/b-sglang.sh（信用卡逾期还款纠纷化解 A/B）/
 #           scripts/ref2va-yinhang-a/b/c/d-sglang.sh（银行卡限额与管控，四服务并行）/
 #           scripts/ref2va-fengkong2-a/b/c-sglang.sh（定稿版风控，三段区间并行三服务）/
@@ -599,35 +599,50 @@ for x in a b; do
 done
 
 # ================================= T28 =================================
-CASE="T28 《惠民贷风波》：双脚本双服务并行、合计 225s、图序易错点"
+CASE="T28 《惠民贷风波》：四脚本四服务并行（3/3/5/4）、合计 225s、图序易错点"
 echo "── ${CASE}"
-reset_posts; : > "$POSTS_B"
+reset_posts; : > "$POSTS_B"; : > "$POSTS_C"; : > "$POSTS_D"
 run_script ref2va-hmd-a-sglang.sh t28 OUTPUT_PREFIX="${WORK}/hmd_"
 assert_eq "0" "$(rc_of t28)" "T28 A 退出码"
-assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 A 段1-7 请求数"
+assert_eq "3" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 A 段1-3 请求数"
 assert_eq "16:9" "$(jq -r '.target.aspect_ratio' "$POSTS" | sort -u | tr '\n' ' ' | sed 's/ $//')" "T28 画幅"
-assert_eq "15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T28 A 逐段时长"
+assert_eq "15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS" | tr '\n' ' ' | sed 's/ $//')" "T28 A 逐段时长"
 assert_eq "ldh.png,zxm.png" "$(imgs_of 1)" "T28 段1 图序"
-assert_eq "xl.png,ldh.png"  "$(imgs_of 6)" "T28 段6 图序（小刘在前，易错点）"
-assert_eq "ldh.png,xl.png"  "$(imgs_of 7)" "T28 段7 图序（与段6 相反）"
-for i in 1 2 3 4 5 6 7; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 A 产出"; done
+assert_eq "ldh.png,xw.png"  "$(imgs_of 3)" "T28 段3 图序"
+for i in 1 2 3; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 A 产出"; done
 
 run_script ref2va-hmd-b-sglang.sh t28b OUTPUT_PREFIX="${WORK}/hmd_" PORT="${PORT_B}"
 assert_eq "0" "$(rc_of t28b)" "T28 B 退出码"
-assert_eq "8" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T28 B 段8-15 请求数（第二服务）"
-assert_eq "7" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 主服务请求数未变"
-assert_eq "15 15 15 15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T28 B 逐段时长"
-assert_eq "xw.png,ldh.png" "$(sed -n 2p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段9 图序（小王在前）"
-assert_eq "ldh.png,xw.png" "$(sed -n 7p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段14 图序（与段9 相反）"
-for i in 8 9 10 11 12 13 14 15; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 B 产出"; done
+assert_eq "3" "$(wc -l < "$POSTS_B" | tr -d ' ')" "T28 B 段4-6 请求数（第二服务）"
+assert_eq "3" "$(wc -l < "$POSTS" | tr -d ' ')" "T28 主服务请求数未变"
+assert_eq "15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_B" | tr '\n' ' ' | sed 's/ $//')" "T28 B 逐段时长"
+assert_eq "xl.png,ldh.png" "$(sed -n 3p "$POSTS_B" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段6 图序（小刘在前，易错点）"
+for i in 4 5 6; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 B 产出"; done
 
-assert_eq "15" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") ))" "T28 两服务合计请求数"
-assert_eq "225" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" | awk '{s+=$1} END{print s}')" "T28 全片总时长"
+run_script ref2va-hmd-c-sglang.sh t28c OUTPUT_PREFIX="${WORK}/hmd_" PORT="${PORT_C}"
+assert_eq "0" "$(rc_of t28c)" "T28 C 退出码"
+assert_eq "5" "$(wc -l < "$POSTS_C" | tr -d ' ')" "T28 C 段7-11 请求数（第三服务）"
+assert_eq "15 15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_C" | tr '\n' ' ' | sed 's/ $//')" "T28 C 逐段时长"
+assert_eq "ldh.png,xl.png" "$(sed -n 1p "$POSTS_C" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段7 图序（与段6 相反）"
+assert_eq "xw.png,ldh.png" "$(sed -n 3p "$POSTS_C" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段9 图序（小王在前）"
+for i in 7 8 9 10 11; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 C 产出"; done
+
+run_script ref2va-hmd-d-sglang.sh t28d OUTPUT_PREFIX="${WORK}/hmd_" PORT="${PORT_D}"
+assert_eq "0" "$(rc_of t28d)" "T28 D 退出码"
+assert_eq "4" "$(wc -l < "$POSTS_D" | tr -d ' ')" "T28 D 段12-15 请求数（第四服务）"
+assert_eq "15 15 15 15" "$(jq -r '.target.duration_seconds' "$POSTS_D" | tr '\n' ' ' | sed 's/ $//')" "T28 D 逐段时长"
+assert_eq "ldh.png,xw.png" "$(sed -n 3p "$POSTS_D" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段14 图序"
+assert_eq "xw.png,ldh.png" "$(sed -n 4p "$POSTS_D" | jq -r '[.conditions[].uri|split("/")|last]|join(",")')" "T28 段15 图序（与段14 相反）"
+for i in 12 13 14 15; do assert_file "${WORK}/hmd_seg${i}.mp4" "T28 D 产出"; done
+
+assert_eq "15" "$(( $(wc -l < "$POSTS") + $(wc -l < "$POSTS_B") + $(wc -l < "$POSTS_C") + $(wc -l < "$POSTS_D") ))" "T28 四服务合计请求数"
+assert_eq "225" "$(jq -r '.target.duration_seconds' "$POSTS" "$POSTS_B" "$POSTS_C" "$POSTS_D" | awk '{s+=$1} END{print s}')" "T28 全片总时长"
 assert_eq "15" "$(ls -1 "${WORK}"/hmd_seg*.mp4 2>/dev/null | wc -l | tr -d ' ')" "T28 seg1..15 产出齐全无覆盖"
 ha=$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-hmd-a-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
-hb=$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-hmd-b-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')
-assert_eq "$ha" "$hb" "T28 A/B 映射表逐字一致"
-for x in a b; do
+for x in b c d; do
+  assert_eq "$ha" "$(grep -A16 '^declare -A SEG_IMG_BY_IDX' "${ROOT_DIR}/scripts/ref2va-hmd-$x-sglang.sh" | sed -nE 's/^  \[[0-9]+\]=.*/&/p')" "T28 A/$x 映射表逐字一致"
+done
+for x in a b c d; do
   ip=$(grep -oE '^IMAGE_PREFIX="\$\{IMAGE_PREFIX-[^}]+\}"' "${ROOT_DIR}/scripts/ref2va-hmd-$x-sglang.sh")
   assert_eq 'IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/hmd/}"' "$ip" "T28 $x 默认 IMAGE_PREFIX 为 hmd/ 子目录"
 done

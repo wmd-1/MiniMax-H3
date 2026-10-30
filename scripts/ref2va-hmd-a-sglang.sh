@@ -17,30 +17,31 @@ command -v jq >/dev/null 2>&1 || {
 }
 
 # =========================
-# MiniMax-H3 sglang Ref2VA ——《惠民贷风波》【A：段1–7 → :30010】
-#   双脚本并行：A 段1–7（客厅→营业厅→催收夜） / B 段8–15（网点纾困洽谈），各打一个服务
+# MiniMax-H3 sglang Ref2VA ——《惠民贷风波》【A：段1–3 → :30010】
+#   四脚本并行：A 段1–3 / B 段4–6 / C 段7–11 / D 段12–15，各打一个服务实例
 # =========================
 #
 # 源文档：scripts/惠民贷风波_Ref2VA_分段生成脚本.md
 #   15 段 × 15s = 225s（3'45"），每段时长统一填 15（整数秒，不带小数）。
-#   本脚本跑 段1–7（105s）；B 跑 段8–15（120s）。两者输出同为 hmd_segN.mp4，互不覆盖。
+#   四脚本按 3/3/5/4 切分：A 45s、B 45s、C 75s、D 60s。输出同为 hmd_segN.mp4，互不覆盖。
 #
-# ⚠ 两个脚本的 SEG_IMG_BY_IDX / SEG_DUR_BY_IDX 是同一份剧本的完整 15 段映射，
-#   **改一个必须同步另一个**（冒烟测试里有逐字比对断言，改漏会立刻失败）。
+# ⚠ 四个脚本的 SEG_IMG_BY_IDX / SEG_DUR_BY_IDX 是同一份剧本的完整 15 段映射，
+#   **改一个必须同步另三个**（冒烟测试里有逐字比对断言，改漏会立刻失败）。
 #
-# ⚠⚠ 图片目录必须独立：本片 `xl.png` = **外包催收人员小刘（男性）**，而信用卡版 `xl.png`
-#   是女柜员小刘、风控版 `xl.png` 是小李；`xw.png` 在营销情报官版里也是「小王」但不同演员。
-#   共用目录会互相覆盖、直接串角色，故默认前缀写死为独立子目录 hmd/：
+# ⚠⚠ 图片目录必须独立：本片 `xl.png` = **外包催收人员小刘（男）**，而信用卡版/银行卡版
+#   `xl.png` 是女柜员小刘、风控版 `xl.png` 是小李；`xw.png` 在营销版与本片都是「小王」
+#   但不同演员。共用目录会互相覆盖、直接串角色，故默认前缀写死为独立子目录 hmd/：
 #     IMAGE_PREFIX 默认 = http://53.192.28.254:8210/images/hmd/
 #   本片 4 张角色图请放到该目录下：
 #     ldh.png（李大海，全 15 段）  zxm.png（张晓敏，段1–2）
-#     xw.png（小王，段3–5、8–15）   xl.png（小刘，仅段6–7）
+#     xw.png（小王，男，段3–5、8–15） xl.png（小刘，男，仅段6–7）
 #   要换路径仍可用环境变量覆盖：IMAGE_PREFIX=http://其他/目录/  或  IMAGE_PREFIX=/abs/目录/
 #
 # ── 编号规则：剧本已是「每段从 1 起编」，抽取时未做任何改写 ──────────────
 #   每段第 1 张上传图 = <Subject 1>，该人说话即 (S1)；段内 Subject / 图片 / (Sx) 三套编号对齐。
-#   已逐段核对（15/15 通过）：段内编号 1..k 连续、k == 该段上传图数、每句 <d> 都有显式 (Sx)。
-#   权威依据是各段 subject_definitions；段6、9、10、11、12、13、15 的「素材」行顺序已随之对齐。
+#   已逐段核对（15/15 通过）：段内编号 1..k 连续、k == 该段上传图数、每句 <d> 都有显式 (Sx)、
+#   各段「素材」行顺序与 subject_definitions 一致（段6、9、10、11、12、13、15 已对齐）。
+#   小王性别全片统一为男（his / male voice），与素材映射一致。
 #
 # ── 段号 ↔ 时长 ↔ 上传图顺序 ────────────────────────────────────────
 #   段1  15s  ldh  zxm        段2  15s  ldh  zxm     段3  15s  ldh  xw
@@ -48,16 +49,17 @@ command -v jq >/dev/null 2>&1 || {
 #   段7  15s  ldh  xl         段8  15s  ldh  xw      段9  15s  xw   ldh
 #   段10 15s  xw   ldh       段11 15s  xw   ldh     段12 15s  xw   ldh
 #   段13 15s  xw   ldh       段14 15s  ldh  xw      段15 15s  xw   ldh
-#   注意段6 与段7、段8 与段9 的先后相反，别按「李大海永远第一张」的习惯传图，会串人。
+#   注意段6↔段7、段8↔段9、段14↔段15 的先后相反，别按「李大海永远第一张」的习惯传图，会串人。
 #
-# ⚠ 生成前必做（源文档检查清单第 1 条）：段12《承诺书》台词里的占位值
-#   「每月某日前，至少偿还某元，并在某年某月前还清全部欠款」需替换为实际约定数值，
-#   否则 TTS 会念成含糊占位。替换改在 prompts/hmd/seg12.txt（并同步源 md）即可。
+# ⚠ 生成前必做（源文档「必要修正」第 3 条）：段12《承诺书》台词里的占位值
+#   「每月XX日前，至少偿还XX元，并在X年X月前还清全部欠款」仍是 XX，送 TTS 会念成「叉叉」。
+#   替换示例（源文档给的）：每月15日前，至少偿还2000元，并在2027年6月前还清全部欠款。
+#   改在 prompts/hmd/seg12.txt（并同步源 md）即可，本脚本不做自动替换。
 #
 # 视觉基调全片统一：真人实拍、写实短剧、浅景深；家中暖色生活光，营业厅冷白顶光。
 # subject_definitions 只声明「外形取自图片」，不要再往 prompt 里加发色/服装等外貌描述。
 #
-# ⚠ 画幅：源文档未写明比例，本脚本默认 16:9；若要竖屏，A/B 两个必须一起改，否则无法 concat。
+# ⚠ 画幅：源文档未写明比例，四个脚本一律默认 16:9；若改竖屏必须 A/B/C/D 一起改，否则无法 concat。
 #
 # 参考图硬性约束（迁移服务器实测）：宽高比必须落在 1:4 ~ 4:1，否则服务端直接 400。
 # 结尾字幕「贷款需理性，按时还款很重要…」按源文档作为画面字幕处理（不做配音），已在段15 内。
@@ -65,11 +67,16 @@ command -v jq >/dev/null 2>&1 || {
 # 协议（sglang 服务端）：
 #   POST /v1/videos (JSON body) -> 取 .id -> 轮询 GET /v1/videos/{id} -> 下载 GET /v1/videos/{id}/content
 #
-# 用法：
-#   bash scripts/ref2va-hmd-a-sglang.sh &   # 段1–7  → :30010
-#   bash scripts/ref2va-hmd-b-sglang.sh &   # 段8–15 → :30011
+# 用法（四个终端/后台并跑，各占一个端口）：
+#   bash scripts/ref2va-hmd-a-sglang.sh &   # 段1–3   → :30010
+#   bash scripts/ref2va-hmd-b-sglang.sh &   # 段4–6   → :30011
+#   bash scripts/ref2va-hmd-c-sglang.sh &   # 段7–11  → :30012
+#   bash scripts/ref2va-hmd-d-sglang.sh &   # 段12–15 → :30013
 #   # 换服务地址/端口：HOST=127.0.0.1 PORT=30021 bash scripts/ref2va-hmd-a-sglang.sh
 #   # 只重跑其中几段：直接改下面「段提示词文件」处的 for i in ... 段号
+#
+# ⚠ 端口 30010–30013 与《银行卡限额与管控》yinhang A/B/C/D 的默认端口相同：
+#   同一时刻只跑一个场景没问题；两个场景要同时跑时，请把其中一个换端口。
 #
 # 其它：DURATION(未设=按段取时长；显式设定=所有段统一)
 #   SHORT_EDGE(768) / ASPECT_RATIO(16:9) / SEED(3101) / HOST(127.0.0.1) / PORT(30010)
@@ -97,7 +104,7 @@ IMAGE_PREFIX="${IMAGE_PREFIX-http://53.192.28.254:8210/images/hmd/}"
 # -------------------------
 # 全部 15 段的角色图与时长：按「段号」索引（段号取自提示词文件名 stem）
 #   图顺序即该段 <Subject 1..k>；只写文件名，脚本自动拼到 IMAGE_PREFIX 下。
-#   ⚠ 必须与 ref2va-hmd-b-sglang.sh 中的同名表保持一致。
+#   ⚠ 必须与 ref2va-hmd-b/c/d-sglang.sh 中的同名表保持一致。
 # -------------------------
 declare -A SEG_IMG_BY_IDX=(
   [1]="ldh.png zxm.png"
@@ -135,14 +142,14 @@ else
 fi
 
 # -------------------------
-# 段提示词文件 —— 本脚本负责 段1–7（客厅 → 营业厅 → 催收夜）
+# 段提示词文件 —— 本脚本负责 段1–3（客厅 → 营业厅开场）
 # -------------------------
 if [ -z "${SEGMENT_FILES:-}" ]; then
   SEGMENT_DIR="${SEGMENT_DIR:-scripts/prompts/hmd}"
   SEGMENT_FILES=()
-  # 本脚本出片范围 段1–7；只重跑失败段时临时改这里的段号（图与时长按段号自动对上，输出名不变）。
-  # 段8–15（网点纾困）用 ref2va-hmd-b-sglang.sh；想一次跑完可改成 1..15。
-  for i in 1 2 3 4 5 6 7; do SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt"); done
+  # 本脚本出片范围 段1–3；只重跑失败段时临时改这里的段号（图与时长按段号自动对上，输出名不变）。
+  # 段4–6 用 -b，段7–11 用 -c，段12–15 用 -d；想一次跑完可改成 1..15。
+  for i in 1 2 3; do SEGMENT_FILES+=("${SEGMENT_DIR}/seg${i}.txt"); done
 else
   # 环境里传的是空格分隔字符串（bash 数组无法经环境传递），直接切分成数组。
   # 不要对这种标量用 ${#VAR[@]} 或 ${VAR[0]}：set -u 下会报 unbound variable。
@@ -208,7 +215,7 @@ build_conditions() {
   printf '%s' "$json"
 }
 
-# 输出名由段提示词文件名推导（不用循环序号）：stem(seg6.txt)=seg6 -> ${OUTPUT_PREFIX}seg6.mp4
+# 输出名由段提示词文件名推导（不用循环序号）：stem(seg2.txt)=seg2 -> ${OUTPUT_PREFIX}seg2.mp4
 seg_out() {  # $1=prompt_file
   local stem; stem="$(basename "$1")"; stem="${stem%.*}"
   printf '%s%s.mp4' "${OUTPUT_PREFIX}" "${stem}"
@@ -245,7 +252,7 @@ build_body() {
     "$1"
 }
 
-# 从段提示词文件名推段号：seg6.txt -> 6；取不到数字时回退为位置序号
+# 从段提示词文件名推段号：seg2.txt -> 2；取不到数字时回退为位置序号
 seg_idx() {  # $1=prompt_file  $2=0-based position
   local stem num
   stem="$(basename "$1")"; stem="${stem%.*}"
@@ -269,7 +276,7 @@ seg_dur() {  # $1=prompt_file  $2=0-based position
 }
 
 echo "========================================"
-echo "MiniMax-H3 sglang Ref2VA ——《惠民贷风波》A（段1–7 → ${BASE_URL}）"
+echo "MiniMax-H3 sglang Ref2VA ——《惠民贷风波》A（段1–3 → ${BASE_URL}）"
 echo "========================================"
 
 TOTAL_DUR=0
@@ -468,9 +475,9 @@ done
 echo
 echo "========================================"
 if [ "${#FAILED[@]}" -eq 0 ]; then
-  echo "A（段1–7）${N_SEG} 段完成："
+  echo "A（段1–3）${N_SEG} 段完成："
   for o in "${OUT_FILES[@]}"; do echo "  ${o}"; done
-  echo "  注：与 B（段8–15）的产物按 seg1..seg15 顺序合并后再 concat。"
+  echo "  注：与 B（段4–6）、C（段7–11）、D（段12–15）的产物按 seg1..seg15 顺序合并后再 concat。"
 else
   echo "完成，但以下段失败：${FAILED[*]}"
   echo "  可单独重跑对应段（输出名跟段提示词文件名走，不会错位）：SEGMENT_FILES=<该段.txt> bash $0"

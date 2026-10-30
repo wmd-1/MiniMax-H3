@@ -1,5 +1,5 @@
 subject_definitions:
-<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; her face, hair and clothing follow that image exactly.
+<Subject 1> is 小王, whose appearance is taken directly from the reference image xw.png; his face, hair and clothing follow that image exactly.
 <Subject 2> is 李大海, whose appearance is taken directly from the reference image ldh.png; his face, hair and clothing follow that image exactly.
 
 summary:
@@ -11,8 +11,8 @@ retention_analysis:
 
 detailed_description:
 The target video keeps the same live-action, cinematic, realistic bank-interior look and the same desk arrangement.
-[Shot 1] A close shot frames <Subject 1> (S1), 小王, her hands resting flat on either side of the form. She speaks in the same clear, professional female voice, dropping her volume slightly and keeping her delivery even, <d>[Chinese] 如能按月履行承诺，我行将暂停诉讼、催收。</d> She lifts one hand and presses it down once, flat, on the desk to mark the condition.
-[Shot 2] At 00:04.100, the shot cuts to a medium shot of <Subject 1> (S1) from the front, the frosted glass partition behind her. She keeps her hands together on the desk and continues in the same steady voice, giving each clause its own beat, <d>[Chinese] 线下协商还款不变更借款合同，应收利息、费用仍按照合同执行，逾期还款征信仍然上报。</d> On the last four words she holds <Subject 2>'s gaze deliberately and does not soften them. In the foreground edge of the frame, <Subject 2>'s posture goes still.
+[Shot 1] A close shot frames <Subject 1> (S1), 小王, his hands resting flat on either side of the form. He speaks in the same clear, professional male voice, dropping his volume slightly and keeping his delivery even, <d>[Chinese] 如能按月履行承诺，我行将暂停诉讼、催收。</d> He lifts one hand and presses it down once, flat, on the desk to mark the condition.
+[Shot 2] At 00:04.100, the shot cuts to a medium shot of <Subject 1> (S1) from the front, the frosted glass partition behind him. He keeps his hands together on the desk and continues in the same steady voice, giving each clause its own beat, <d>[Chinese] 线下协商还款不变更借款合同，应收利息、费用仍按照合同执行，逾期还款征信仍然上报。</d> On the last four words he holds <Subject 2>'s gaze deliberately and does not soften them. In the foreground edge of the frame, <Subject 2>'s posture goes still.
 [Shot 3] At 00:12.300, the shot cuts to a close shot of <Subject 2> (S2), 李大海. His lips part slightly, then he presses them together and gives one slow nod, his eyes dropping to the form in front of him. The camera holds a static shot to the end of the frame.
 
 overall_soundscape:
