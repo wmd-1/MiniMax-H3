@@ -131,3 +131,75 @@ ls -d /model_nas/models/MiniMax-H3/Ref2VA/transformer \
       /model_nas/models/h3-acc-loras \
       /model_nas/hf-cache
 ```
+
+---
+
+## 7. 新增：Pika-H3-Flex 与 FastH3-Omni-8-Step-V1
+
+> 这两个模型**现有镜像都不支持**（`minimax-h3-sglang:v0.5.22` 只注册了
+> FastH3-V2/base/VDN；`minimax-h3-vllm:v0.32.0rc1` 只有 FastH3-V2）。需要新镜像。
+
+### 7.1 引擎 / 版本 / 镜像
+
+| 服务目录 | 模型 | 引擎 | 镜像 tag | FROM | 说明 |
+|---|---|---|---|---|---|
+| `deploy/pika-h3-flex` | Pika-Labs/Pika-H3-Flex | SGLang | `minimax-h3-sglang:pika-dev` | `lmsysorg/sglang:dev` | vLLM 全树 0 命中 Pika，只能 SGLang；Pika 支持（#47378，10-31）晚于 v0.5.23 切点，**任何已发布 tag 都没有**，只能 dev/nightly，等 v0.5.24 再定版 |
+| `deploy/fasth3-omni-8step-v1-sglang` | FastVideo/FastVideo-FastH3-Omni-8-Step-V1 | SGLang | `minimax-h3-sglang:v0.5.23` | `lmsysorg/sglang:v0.5.23` | Omni 支持（#45530，10-22）已进 v0.5.23；A100 走稠密 `transformer=fa`（报告推荐的 A100 路径） |
+| `deploy/fasth3-omni-8step-v1-vllm` | 同上 | vLLM-Omni | `minimax-h3-vllm:v0.33.0rc1` | `vllm/vllm-omni:v0.33.0rc1` | Omni 的 vLLM 支持首个进 v0.33.0rc1；镜像加装 `fastvideo-kernel==0.3.4`（`.[vsa]`）；A100 走 **triton** VSA + BF16 |
+
+Dockerfile 均在 `deploy/images/`：`Dockerfile.sglang-dev`、`Dockerfile.sglang-v0.5.23`、
+`Dockerfile.vllm-v0.33.0rc1`。构建例：
+```bash
+docker build -f deploy/images/Dockerfile.sglang-v0.5.23   -t minimax-h3-sglang:v0.5.23    deploy/images
+docker build -f deploy/images/Dockerfile.sglang-dev       -t minimax-h3-sglang:pika-dev   deploy/images
+docker build -f deploy/images/Dockerfile.vllm-v0.33.0rc1  -t minimax-h3-vllm:v0.33.0rc1   deploy/images
+```
+
+### 7.2 落位（全部走 HF cache，与 FastH3-V2 同套路）
+
+| 模型 | 宿主机路径 | 容器内 | 读写 |
+|---|---|---|---|
+| Pika-Labs/Pika-H3-Flex | `/model_nas/hf-cache`（HF cache 布局） | `/hf-cache` | rw |
+| FastVideo/FastVideo-FastH3-Omni-8-Step-V1 | `/model_nas/hf-cache` | `/hf-cache` | rw |
+| base 组件（两者的 overlay 都链接 pinned `MiniMaxAI/MiniMax-H3`，**gated**） | `/model_nas/hf-cache` | `/hf-cache` | rw |
+
+运行时 overlay 产物目录（各服务独立子目录，避免互相踩）：
+- Pika：`/hf-cache/sglang-pika`（→ 宿主 `/model_nas/hf-cache/sglang-pika`）
+- Omni-SGLang：`/hf-cache/sglang-omni`
+- Omni-vLLM：直接用 `/hf-cache`（vLLM 自管）
+
+### 7.3 下载（HF；base 为 gated，需 `HF_TOKEN` 且已接受 MiniMax-H3 条款）
+
+```bash
+# 两个新模型各自权重
+HF_HOME=/model_nas/hf-cache HF_TOKEN=... hf download Pika-Labs/Pika-H3-Flex
+HF_HOME=/model_nas/hf-cache HF_TOKEN=... hf download FastVideo/FastVideo-FastH3-Omni-8-Step-V1
+
+# 两者都要链接的 base（Pika 是 base+LoRA，Omni 链接 pinned Ref2VA 的 TE/VAE）
+HF_HOME=/model_nas/hf-cache HF_TOKEN=... hf download MiniMaxAI/MiniMax-H3
+```
+> Pika overlay 只下 ~5.5GB 适配器并校验 sha256，其余链接 base；base 已在本地
+> `/model_nas/models/MiniMax-H3` 时，仍需让 HF resolver 在 `/model_nas/hf-cache` 找到它
+> （离线就预热同一 HF_HOME）。
+
+### 7.4 端口段（接 §1 之后，互不撞车）
+
+| 服务 | 宿主端口（4 实例） | 容器内 |
+|---|---|---|
+| Pika-H3-Flex | 30050-30053 | 30010 |
+| FastH3-Omni（SGLang） | 30060-30063 | 30010 |
+| FastH3-Omni（vLLM） | 8020-8023 | 8000 |
+
+### 7.5 契约与 A100 注意
+
+- **Pika**：`--model-variant ref2va`；请求 `num_inference_steps=6`（只接受 6）、
+  shift 保持 12/3、`quality` 用默认 lossless（**禁 high**）；适配器 `--lora-merge-mode dynamic`
+  **不合并**（BF16 merge 削掉约 1/3 更新量）；`--lora-path` 不能替换自带适配器。
+- **FastH3-Omni（SGLang）**：**仅 ref2va**、8 步、默认 shift 12/3、clean references；
+  拒绝 `--model-variant`；A100 显式 `--component-attention-backends transformer=fa`
+  （无 VSA-H3 内核，比 SM90 的 VSA 慢约 25%）；overlay 自动融合 32→8 头，无需手工 fuse。
+- **FastH3-Omni（vLLM）**：`--task-type ref2va`、8 步、guidance 1；VSA provider 必须
+  **triton**（SM80+；cudnn 仅 SM90+）；**BF16 不加 fp8**（A100 无原生 FP8）。
+  ⚠️ 官方只基准过 1 卡 DLO 与 8 卡 USP+HSDP；本仓库的 **2 卡 USP2+DLO** 契约合法但
+  **未在 A100 实测**，报错/显存尖峰就退化为每 GPU 单卡实例（`--num-gpus 1 --usp 1`+DLO，8 实例）。
+- 三者首启都拉 gated 权重，4 实例共用 HF/overlay cache → **先单起实例 0 预热，再 up -d 拉其余**。

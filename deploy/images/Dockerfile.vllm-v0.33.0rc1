@@ -1,0 +1,33 @@
+# MiniMax-H3 变体 · vLLM-Omni v0.33.0rc1 —— FastH3-Omni-8-Step-V1（vLLM 路线）
+#
+# 为什么 v0.33.0rc1：FastH3-Omni 的 vLLM 支持（FastH3OmniCheckpointSpec + recipe）
+# 首个进入的 tag 是 v0.33.0rc1（2026-11-04，预发布）；v0.32.0rc1 / v0.32.0 都没有。
+# 产物：minimax-h3-vllm:v0.33.0rc1，供 deploy/fasth3-omni-8step-v1-vllm 使用。
+#
+# A100(SM80) 关键：Omni 契约硬性要求 FASTVIDEO_VSA，但 provider 用 triton 时
+# 门槛是 SM80+（triton_block_sparse.py: `capability < (8,0)` 才拒绝），A100 可过；
+# cudnn provider 仅 SM90+，A100 不可用。triton provider 由 fastvideo-kernel 提供，
+# 即上游 `.[vsa]` extra 的唯一依赖，这里直接 pip 装，无需 clone 源码。
+FROM vllm/vllm-omni:v0.33.0rc1
+
+ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+ENV PIP_INDEX_URL=${PIP_INDEX_URL}
+
+# .[vsa] extra 的全部内容（pyproject.toml: vsa = ["fastvideo-kernel==0.3.4"]）
+RUN pip install fastvideo-kernel==0.3.4
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+# 早失败：确认 vllm_omni 装了且带 FastH3-Omni checkpoint 类（不 import CUDA，纯文本扫描）
+RUN python -c "import importlib.util, pathlib; \
+p = pathlib.Path(importlib.util.find_spec('vllm_omni').origin).parent; \
+assert any('FastH3OmniCheckpointSpec' in f.read_text(errors='ignore') \
+for f in p.rglob('fasth3_checkpoint.py')), 'FastH3-Omni not in this vllm-omni build'"
+
+ENV HF_HOME=/hf-cache
+WORKDIR /workspace
+
+# 构建：
+#   docker build -f deploy/images/Dockerfile.vllm-v0.33.0rc1 -t minimax-h3-vllm:v0.33.0rc1 deploy/images
