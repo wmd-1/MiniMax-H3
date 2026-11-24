@@ -42,9 +42,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 构建（仅 base；tag 与 FROM 版本对齐）：
-#   docker build -f Dockerfile -t minimax-h3-sglang:v0.5.22 .
+#   docker build -f Dockerfile -t video-sglang:v0.5.22 .
 # 四套共用（base + FastH3 V2 + VDN + PDD）请建这一份，它多了三套变体的构建断言：
-#   docker build -f Dockerfile.sglang -t minimax-h3-sglang:v0.5.22 .
+#   docker build -f Dockerfile.sglang -t video-sglang:v0.5.22 .
 #   （deploy/images/Dockerfile.sglang 与根目录 Dockerfile.sglang 是同一份内容，
 #     deploy 下三个变体 compose 的 build: 指向后者；改一份要同步另一份）
 # 见 docs/HANDOFF-4-variants.md。

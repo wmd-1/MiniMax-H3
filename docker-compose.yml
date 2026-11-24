@@ -69,7 +69,7 @@
 #   - /models/MiniMax-H3:ro 为兜底挂载（当前 --model-path 走仓库 ID 实际不依赖它）。
 #
 # 前置条件：
-#   - 已构建镜像 minimax-h3-sglang:v0.5.22（与同目录 Dockerfile 的 FROM 对齐，
+#   - 已构建镜像 video-sglang:v0.5.22（与同目录 Dockerfile 的 FROM 对齐，
 #     需含 sglang diffusion 后端）。旧的 :latest 是 nightly-dev-20260803 构建，不要再用。
 #   - 模型已在宿主机 /model_nas/models/MiniMax-H3，且离线 legacy cache 已存在于
 #     /model_nas/modelscope_cache（ModelScope 1.39.0 已能离线复用，无需 register 脚本）。
@@ -104,7 +104,7 @@
 # 注意：下面所有「内存 / SWAP / 挂载 / 环境变量」都是「每实例」口径。
 # ───────────────────────────────────────────────────────────────────────────
 x-h3-common: &h3-common
-  image: minimax-h3-sglang:v0.5.22
+  image: video-sglang:v0.5.22
   ipc: host
   pid: host
   shm_size: 512gb            # ipc: host 时 /dev/shm 即宿主机 shm，本项不生效，保留仅为兼容

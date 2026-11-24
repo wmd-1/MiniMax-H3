@@ -44,7 +44,7 @@
 # 只有宿主端口与 GPU 对写在各自的 service 上。
 # ───────────────────────────────────────────────────────────────────────────
 x-vdn-common: &vdn-common
-  image: minimax-h3-sglang:v0.5.22
+  image: video-sglang:v0.5.22
   build:
     context: ../images
     dockerfile: Dockerfile.sglang

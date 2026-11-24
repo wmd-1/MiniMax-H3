@@ -33,7 +33,7 @@ set -uo pipefail
 #
 #   # h3-test 不存在时，用项目自有镜像建一个常驻测试容器（不新建镜像，jq 仅装在容器可写层）：
 #   docker run -d --name h3-test --entrypoint bash \
-#     -v "$(pwd)":/work:ro minimax-h3-sglang:latest -c 'sleep infinity'
+#     -v "$(pwd)":/work:ro video-sglang:latest -c 'sleep infinity'
 #   docker exec h3-test bash -lc 'apt-get update -qq && apt-get install -y -qq jq'
 #
 # 可调：PORT（mock 监听端口，默认 30010）；KEEP_WORK=1 保留临时目录便于排查。

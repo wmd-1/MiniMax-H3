@@ -1,9 +1,10 @@
-# MiniMax-H3 (vLLM-Omni)
+# MiniMax-H3 (vLLM-Omni) —— 统一镜像：base H3 Ref2VA + FastH3-Omni-8-Step-V1
 # 2× NVIDIA A100 40GB
 #
 # 目标：
 # - TP2
 # - Ref2VA（默认 --task-type ref2va；FL2VA 需改 CMD 或由 compose 覆盖 command）
+# - FastH3-Omni-8-Step-V1（compose 覆盖 command/模型；需 FASTVIDEO_VSA）
 # - Distributed Layerwise Offload (DLO) 24 层
 # - 尽可能利用 A100 40GB 的额外显存
 # - 降低 CPU offload / Swap 压力
@@ -17,18 +18,24 @@
 # 后续根据实际显存峰值继续提高（24 → 28 → 32 ...）。
 # 不建议一开始直接拉满。
 
-# vllm-omni 版本化预发布镜像（对齐 vLLM 0.32.0rc1），已内置模块化 pipeline (#5720) 与 MiniMax-H3 支持。
+# vllm-omni 版本化镜像（对齐 vLLM 0.34.0），已内置模块化 pipeline (#5720) 与 MiniMax-H3 支持。
 # 相对 0.31：H3 LoRA 去掉 rebind（vLLM-Omni #7195）、新增 VDNH3_ATTN；两版的
 # MiniMax-H3 artifact / LoRA 契约一致（见 docs/HANDOFF-4-variants.md §7.1）。
-# x86 默认 tag 为 v0.32.0rc1；若要改用定版 v0.32.0 或 aarch64 变体，先确认上游已发布再替换。
-FROM vllm/vllm-omni:v0.32.0rc1
+# x86 默认 tag 为 v0.34.0；若要改用 aarch64 变体，先确认上游已发布再替换。
+FROM vllm/vllm-omni:v0.34.0
+
+ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
 # ----------------------------------------------------------------------
 # Runtime dependencies
 #
-# vllm-omni 与 MiniMax-H3 handler 均由基础镜像 vllm/vllm-omni:v0.32.0rc1 内置，
+# vllm-omni 与 MiniMax-H3 handler 均由基础镜像 vllm/vllm-omni:v0.34.0 内置，
 # 不再 checkout 源码 / 覆盖 PYTHONPATH，以保证构建可复现（版本随镜像 tag 固定）。
-# 仅补装 ffmpeg（参考视频预处理与 MP4 混流所需）。
+# 补装：
+# - ffmpeg：参考视频预处理与 MP4 混流所需
+# - fastvideo-kernel==0.3.4：FastH3-Omni 的 FASTVIDEO_VSA（.[vsa] extra）所需；
+#   A100(SM80) 走 triton provider（cudnn provider 仅 SM90+）。
 # ----------------------------------------------------------------------
 
 RUN apt-get update && \
@@ -36,9 +43,17 @@ RUN apt-get update && \
         ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
+RUN pip install fastvideo-kernel==0.3.4
+
 # 早失败：确认 vllm_omni 已安装且带 MiniMax-H3 handler。
 # 用 find_spec + rglob，不 import 模块，避免构建期（无 GPU）触发 CUDA 初始化。
 RUN python -c "import importlib.util,pathlib,sys; r=pathlib.Path(list(importlib.util.find_spec('vllm_omni').submodule_search_locations)[0]); h=list(r.rglob('minimax_h3*')); print('minimax_h3 files:', len(h)); sys.exit(0 if h else 1)"
+
+# 早失败：确认带 FastH3-Omni checkpoint 类（纯文本扫描，不 import CUDA）。
+RUN python -c "import importlib.util, pathlib; \
+p = pathlib.Path(importlib.util.find_spec('vllm_omni').origin).parent; \
+assert any('FastH3OmniCheckpointSpec' in f.read_text(errors='ignore') \
+for f in p.rglob('fasth3_checkpoint.py')), 'FastH3-Omni not in this vllm-omni build'"
 
 # ----------------------------------------------------------------------
 # MiniMax-H3 / A100 40GB profile
@@ -62,6 +77,9 @@ ENV DLO_RESIDENT_LAYERS=24
 # 官方 5090 profile 的起始分辨率
 ENV WIDTH=1344
 ENV HEIGHT=768
+
+# FastH3-Omni 走 HF cache（compose 也注入同值；裸 docker run 时容器内有默认值）
+ENV HF_HOME=/hf-cache
 
 WORKDIR /workspace
 
@@ -94,11 +112,10 @@ vllm serve /models/MiniMax-H3 \
   --diffusion-attention-backend CUDNN_ATTN \
 "]
 
-# 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.32.0rc1 固定，不再 clone 源码）：
-#   docker build -f Dockerfile.vllm -t minimax-h3-vllm:v0.32.0rc1 .
-#   （如需严格可复现，建议把 FROM 改为镜像 digest：vllm/vllm-omni@sha256:<digest>，
-#     rc 预发布 tag 后续可能被重新 push）
+# 构建（vllm-omni 版本随基础镜像 vllm/vllm-omni:v0.34.0 固定，不再 clone 源码）：
+#   docker build -f Dockerfile.vllm -t video-vllm:v0.34.0 .
+#   （如需严格可复现，建议把 FROM 改为镜像 digest：vllm/vllm-omni@sha256:<digest>）
 # 运行（模型本体只读挂到 /models/MiniMax-H3）：
 #   docker run --gpus all --ipc=host --shm-size=512gb \
 #     -v /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro \
-#     -p 8000:8000 minimax-h3-vllm:v0.32.0rc1
+#     -p 8000:8000 video-vllm:v0.34.0

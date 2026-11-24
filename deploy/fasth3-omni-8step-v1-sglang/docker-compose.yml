@@ -30,7 +30,7 @@
 #   至少一个视觉参考；quality 默认 lossless。
 
 x-omni-common: &omni-common
-  image: minimax-h3-sglang:v0.5.23
+  image: video-sglang:v0.5.23
   build:
     context: ../images
     dockerfile: Dockerfile.sglang-v0.5.23

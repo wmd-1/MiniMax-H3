@@ -1,4 +1,4 @@
-# FastVideo/FastVideo-FastH3-Omni-8-Step-V1 — vLLM-Omni v0.33.0rc1 —— 4 实例（每实例 2 卡）
+# FastVideo/FastVideo-FastH3-Omni-8-Step-V1 — vLLM-Omni v0.34.0 —— 4 实例（每实例 2 卡）
 #
 # ── 多实例（一进程一实例，一次起 4 个）──────────────────────────────────────
 #   minimax-h3-0  GPU 0,1  →  http://<host>:8020
@@ -11,8 +11,8 @@
 # 这是 FastH3-Omni 的 **vLLM 路线**（SGLang 路线见 fasth3-omni-8step-v1-sglang，
 # 是报告推荐的 A100 路径）。按"vLLM 优先"提供此版，但注意下面的 A100 警告。
 #
-# 版本：Omni 的 vLLM 支持首个进 v0.33.0rc1（2026-11-04，预发布）；v0.32.x 没有。
-# 镜像 minimax-h3-vllm:v0.33.0rc1 已装 fastvideo-kernel==0.3.4（.[vsa] extra）。
+# 版本：Omni 的 vLLM 支持自 v0.33.0rc1 进入，现统一基于 vllm/vllm-omni:v0.34.0。
+# 统一镜像 video-vllm:v0.34.0（根目录 Dockerfile.vllm）已装 fastvideo-kernel==0.3.4（.[vsa] extra）。
 #
 # ⚠️ A100(SM80) 关键与未验证项：
 #   - Omni 契约硬性要求 FASTVIDEO_VSA；provider 必须用 **triton**（门槛 SM80+，
@@ -34,10 +34,10 @@
 #   num_inference_steps/guidance 已由 default-sampling-params 定为 8/1。
 
 x-omni-vllm-common: &omni-vllm-common
-  image: minimax-h3-vllm:v0.33.0rc1
+  image: video-vllm:v0.34.0
   build:
-    context: ../images
-    dockerfile: Dockerfile.vllm-v0.33.0rc1
+    context: ../..
+    dockerfile: Dockerfile.vllm
 
   ipc: host
   shm_size: 64gb
