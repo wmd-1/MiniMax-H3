@@ -15,7 +15,7 @@
 #
 # 选 SGLang 的原因：vLLM-Omni 全树 0 次提到 Pika，**不支持**；SGLang 一等支持
 # （PR #47378，2026-10-31）。但 Pika 晚于 v0.5.23 的 release 切点，任何已发布 tag
-# 都没有它 → 本服务用 video-sglang:pika-dev（见 images/Dockerfile.sglang-dev）。
+# 都没有它 → 本服务用 video-sglang:dev（见 images/Dockerfile.sglang-dev）。
 # 等 v0.5.24 发布后把镜像与 FROM 换成定版 tag。
 #
 # 能力边界：FL2VA + Ref2VA 两个适配器；本服务用 --model-variant ref2va 只服务 ref2va。
@@ -35,7 +35,7 @@
 #   quality 默认 lossless（勿写 high）。参考素材数量/尺寸是 Ref2VA 墙钟主因，先治理素材。
 
 x-pika-common: &pika-common
-  image: video-sglang:pika-dev
+  image: video-sglang:dev
   build:
     context: ../images
     dockerfile: Dockerfile.sglang-dev
