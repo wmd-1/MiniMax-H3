@@ -12,7 +12,8 @@
 # 是报告推荐的 A100 路径）。按"vLLM 优先"提供此版，但注意下面的 A100 警告。
 #
 # 版本：Omni 的 vLLM 支持自 v0.33.0rc1 进入，现统一基于 vllm/vllm-omni:v0.34.0。
-# 统一镜像 video-vllm:v0.34.0（根目录 Dockerfile.vllm）已装 fastvideo-kernel==0.3.4（.[vsa] extra）。
+# 统一镜像 video-vllm:v0.34.0（由根目录 Dockerfile.vllm 构建后迁移）已装 fastvideo-kernel==0.3.4。
+# 迁移服务器完全离线：本 Compose 不构建、不拉取镜像，也不下载模型。
 #
 # ⚠️ A100(SM80) 关键与未验证项：
 #   - Omni 契约硬性要求 FASTVIDEO_VSA；provider 必须用 **triton**（门槛 SM80+，
@@ -25,9 +26,11 @@
 #
 # 能力边界：仅 ref2va（至少一个视觉参考）；固定 8 步、guidance 1、shift 12/3。
 #
-# 权重（HF，gated base）：
-#   HF_HOME=/model_nas/hf-cache HF_TOKEN=... hf download FastVideo/FastVideo-FastH3-Omni-8-Step-V1
-#   HF_HOME=/model_nas/hf-cache HF_TOKEN=... hf download MiniMaxAI/MiniMax-H3
+# 权重（迁移服务器上的 ModelScope 本地目录）：
+#   FastH3-Omni: /model_nas/models/minimax_models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1
+#   base:        /model_nas/models/MiniMax-H3
+#   base 通过 /model_nas/hf-cache/hub/.../snapshots/9bfb6693f2cf6de171db46d1aa586f67d773a1da
+#   的符号链接映射到容器内 /model_nas/models/MiniMax-H3。
 #
 # 请求（/v1/videos/sync）：
 #   -F 'prompt=...' -F 'input_reference=@ref.png' -F 'size=1344x768' -F 'seconds=5'
@@ -35,9 +38,7 @@
 
 x-omni-vllm-common: &omni-vllm-common
   image: video-vllm:v0.34.0
-  build:
-    context: ../..
-    dockerfile: Dockerfile.vllm
+  pull_policy: never
 
   ipc: host
   shm_size: 64gb
@@ -52,7 +53,7 @@ x-omni-vllm-common: &omni-vllm-common
   command:
     - vllm
     - serve
-    - FastVideo/FastVideo-FastH3-Omni-8-Step-V1
+    - /models/FastH3-Omni
     - --omni
     - --task-type
     - ref2va
@@ -93,21 +94,26 @@ x-omni-vllm-common: &omni-vllm-common
     - '{"0":{"num_inference_steps":8,"guidance_scale":1}}'
 
   volumes:
+    # HF cache 中的 snapshot 符号链接指向容器内 /model_nas/models/MiniMax-H3
     - /model_nas/hf-cache:/hf-cache:rw
-    - /data/minimax-h3:/data/minimax-h3:ro
+    - /model_nas/models/MiniMax-H3:/model_nas/models/MiniMax-H3:ro
+    - /model_nas/models/minimax_models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1:/models/FastH3-Omni:ro
 
   environment:
     - VLLM_WORKER_MULTIPROC_METHOD=spawn
     - VLLM_OMNI_VIDEO_SYNC_TIMEOUT=14400
     - HF_HOME=/hf-cache
-    - HF_TOKEN=${HF_TOKEN:-}
+    - HF_HUB_CACHE=/hf-cache/hub
+    - HF_HUB_OFFLINE=1
+    - TRANSFORMERS_OFFLINE=1
+    - VLLM_USE_MODELSCOPE=false
 
   healthcheck:
     test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health').status==200 else 1)"]
     interval: 300s
     timeout: 10s
     retries: 2
-    # 首启拉 gated 权重 + 建 DLO + triton 内核首编译；给足 30min
+    # 首启加载本地权重 + 建 DLO + triton 内核首编译；给足 30min
     start_period: 1800s
 
 services:
