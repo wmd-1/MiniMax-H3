@@ -2,10 +2,10 @@
 
 > 适用场景：MiniMax-H3 单段生成（如 15s / 9:16 / 768 短边、A100 40GB + layerwise offload）耗时逼近或超过 100 分钟。
 > 本文给出问题定位、两侧（sglang / vLLM-Omni）超时机制差异，以及**重建镜像时必须落地的改动与验收步骤**。
-> 结论均在旧镜像 `video-sglang:latest`（base `lmsysorg/sglang:nightly-dev-20260803`）与 `video-vllm:latest`（旧 base `vllm/vllm-omni`）内实测确认，非推测；镜像切版后请按 §6 复核。
+> 结论均在旧镜像 `sglang-video:latest`（base `lmsysorg/sglang:nightly-dev-20260803`）与 `video-vllm:latest`（旧 base `vllm/vllm-omni`）内实测确认，非推测；镜像切版后请按 §6 复核。
 >
 > ⚠️ **2026-10-18 起 base 已固定版本，部分结论只对旧镜像成立：**
-> - SGLang：`video-sglang:v0.5.21` 已把硬编码的 `zmq.RCVTIMEO, 6000000` 换成可配的
+> - SGLang：`sglang-video:v0.5.21` 已把硬编码的 `zmq.RCVTIMEO, 6000000` 换成可配的
 >   `--scheduler-rpc-timeout <秒>`（默认 `None` = 不设 transport 层超时，上限 2147483s；
 >   见 `multimodal_gen/runtime/server_args/server_args.py:2377`、`scheduler_client.py:76`）。
 >   因此 §6 的 `SGLANG_DIFFUSION_SCHED_RCVTIMEO_MS` 源码 patch **在 v0.5.21 上不再需要**，

@@ -1,0 +1,23 @@
+{
+  "source_model_id": "FastVideo/FastVideo-FastH3-Omni-8-Step-V1",
+  "source_revision": "53e0d26a1691aa473b6262d8196a8feb2c297df0",
+  "materializer_version": "v1",
+  "custom_materializer": "_overlay/materialize.py",
+  "source_allow_patterns": [
+    "fastvideo_inference.json",
+    "transformer_ref/**",
+    "README.md"
+  ],
+  "required_source_files": [
+    "fastvideo_inference.json",
+    "transformer_ref/config.json",
+    "transformer_ref/diffusion_pytorch_model.safetensors.index.json"
+  ],
+  "file_mappings": [
+    {
+      "type": "tree",
+      "src": "transformer_ref",
+      "dst_dir": "transformer"
+    }
+  ]
+}

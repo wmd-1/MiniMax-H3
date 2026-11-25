@@ -2,7 +2,7 @@
 #
 # 为什么单独一个 tag：FastH3-Omni（Ref2VA 8-step PDD）的支持在 SGLang
 # PR #45530（2026-10-22）落地，进了 v0.5.23（2026-11-02）；v0.5.22 没有。
-# 产物：video-sglang:v0.5.23，供 deploy/fasth3-omni-8step-v1-sglang 使用。
+# 产物：sglang-video:v0.5.23，供 deploy/fasth3-omni-8step-v1-sglang 使用。
 FROM lmsysorg/sglang:v0.5.23
 
 ARG PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
@@ -25,4 +25,4 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 构建：
-#   docker build -f deploy/images/Dockerfile.sglang-v0.5.23 -t video-sglang:v0.5.23 deploy/images
+#   docker build -f deploy/images/Dockerfile.sglang-v0.5.23 -t sglang-video:v0.5.23 deploy/images

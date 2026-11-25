@@ -9,6 +9,13 @@
 #   RAM/SWAP 每实例一份，默认 384g/386g；8×A100/768GiB 用 H3_SGL_MEM_* 下调。
 #   ⚠️ 4 实例共用 HF cache 与 overlay cache；首启先单起实例 0 预热再拉其余。
 #
+# 【推荐用法】按实例拆分的 4 个文件：docker-compose.0.yml … docker-compose.3.yml
+#   首次部署（或改过 ./overlay 下文件后）先跑一次单进程物化：
+#     bash prepare-overlay.sh
+#   再分别起：docker compose -f docker-compose.<i>.yml up -d
+#   本文件保留为「一次起全部」的合订版，语义等价，但仍须先跑 prepare-overlay.sh，
+#   否则多个实例会同时物化 /sglang-cache/omni，互相删 <key>.tmp 导致 FileNotFoundError。
+#
 # 这是 FastH3-Omni 的 **SGLang 路线**（另有 vLLM 路线见 fasth3-omni-8step-v1-vllm）。
 # 选 SGLang 的依据：Omni 支持在 SGLang PR #45530（2026-10-22）落地，进了 v0.5.23；
 # A100(SM80) 拿不到 VSA-H3 内核（tcgen05 SM100/103、Triton tile-64 SM90），SGLang
@@ -30,10 +37,10 @@
 #   至少一个视觉参考；quality 默认 lossless。
 
 x-omni-common: &omni-common
-  image: video-sglang:v0.5.23
-  build:
-    context: ../images
-    dockerfile: Dockerfile.sglang-v0.5.23
+  image: sglang-video:v0.5.23
+  # build:
+  #   context: ../images
+  #   dockerfile: Dockerfile.sglang-v0.5.23
 
   ipc: host
   pid: host
@@ -50,7 +57,7 @@ x-omni-common: &omni-common
     - sglang
     - serve
     - --model-path
-    - FastVideo/FastVideo-FastH3-Omni-8-Step-V1
+    - /models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1
     # 不传 --model-variant：Omni 自带唯一 ref2va 分区，传了会被拒
     - --num-gpus
     - "2"
@@ -83,13 +90,47 @@ x-omni-common: &omni-common
     - "30010"
 
   volumes:
+    # FastH3-Omni 源权重：ModelScope 下载后打包迁移到迁移服务器的目录（ro 即可）
+    - /model_nas/models/minimax_models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1:/models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1:ro
+    # overlay 元数据：随仓库提供（./overlay 内含 model_index.json +
+    # _overlay/overlay_manifest.json + _overlay/materialize.py，后者打了
+    # local_files_only=True 补丁），服务器上无需再单独下载/手工修改。
+    # download_overlay_metadata() 里有 `if os.path.exists(overlay_repo_id)` 短路，
+    # 配合下面 SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY 指向本路径即完全离线。
+    - ./overlay:/models/FastH3-Omni-overlay:ro
+    # base MiniMax-H3：作为 ModelScope legacy cache 挂进容器（与根 compose 同款；
+    # 宿主机 modelscope_cache 为空是正常的，legacy cache 就是这个 bind 目录）
+    - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
+    - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
+    # 同一条 base 以普通路径再挂一份：物化脚本 _overlay/materialize.py 从这里
+    # 直接 link Ref2VA 的 text_encoder/tokenizer/processor/video_vae/audio_vae
+    - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
+    # overlay 物化产物目录（要可与源目录 hardlink，放 /model_nas 内避免整份复制）
+    - /model_nas/sglang-cache:/sglang-cache:rw
+    # HF cache：base 的 pinned revision 由 sglang 权重解析（HfApi/snapshot_download）
+    # 按 HF 布局查找，命中与否决定是否联网 → 见下面 HF_HUB_OFFLINE 说明
     - /model_nas/hf-cache:/hf-cache:rw
+    # 纯离线方案：把本地 base 冒充成 HF cache 里 MiniMaxAI/MiniMax-H3 的
+    # 9bfb6693… 快照（runtime/weights/source.py 只认 huggingface_hub，
+    # 命中这个目录就不再调 HfApi，也不再联网）
+    - /model_nas/models/MiniMax-H3:/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/snapshots/9bfb6693f2cf6de171db46d1aa586f67d773a1da:ro
     - /data/minimax-h3:/data/minimax-h3:ro
 
   environment:
+    # base 走 ModelScope（离线 legacy cache 复用，无需 HF cache）
+    - SGLANG_USE_MODELSCOPE=true
+    - MODELSCOPE_CACHE=/root/.cache/modelscope
     - HF_HOME=/hf-cache
-    - HF_TOKEN=${HF_TOKEN:-}
-    - SGLANG_DIFFUSION_CACHE_ROOT=/hf-cache/sglang-omni
+    # 服务器能联外网时：临时注释掉本行 + 配好 HF_TOKEN，首启把 base 的 pinned
+    # revision 拉进 /model_nas/hf-cache（之后可再加回来做纯离线复用）
+    - HF_HUB_OFFLINE=1
+    # 把内置 registry 里的 overlay_repo_id 覆盖成容器内本地目录（离线关键）
+    - 'SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY={"FastVideo/FastVideo-FastH3-Omni-8-Step-V1":{"overlay_repo_id":"/models/FastH3-Omni-overlay","overlay_revision":"953ede55daf20a70cc6f0b59464293e2f408608c","source_revision":"53e0d26a1691aa473b6262d8196a8feb2c297df0"}}'
+    # 物化脚本里 base 组件的来源（未设置时脚本仍走 huggingface_hub 下载）
+    - FASTH3_OMNI_LOCAL_BASE=/models/MiniMax-H3
+    # overlay 目录是 ro 挂载，避免 import materialize.py 时尝试写 __pycache__
+    - PYTHONDONTWRITEBYTECODE=1
+    - SGLANG_DIFFUSION_CACHE_ROOT=/sglang-cache/omni
     - SGLANG_HEALTH_CHECK_TIMEOUT=120
 
   healthcheck:
@@ -129,30 +170,30 @@ services:
               device_ids: ["2", "3"]
               capabilities: [gpu]
 
-  minimax-h3-2:
-    <<: *omni-common
-    container_name: minimax-h3-fh3omni-sgl-2
-    ports:
-      - "30062:30010"
-    deploy:
-      resources:
-        reservations:
-          memory: ${H3_SGL_MEM_RESERVATION:-256g}
-          devices:
-            - driver: nvidia
-              device_ids: ["4", "5"]
-              capabilities: [gpu]
+  # minimax-h3-2:
+  #   <<: *omni-common
+  #   container_name: minimax-h3-fh3omni-sgl-2
+  #   ports:
+  #     - "30062:30010"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         memory: ${H3_SGL_MEM_RESERVATION:-256g}
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids: ["4", "5"]
+  #             capabilities: [gpu]
 
-  minimax-h3-3:
-    <<: *omni-common
-    container_name: minimax-h3-fh3omni-sgl-3
-    ports:
-      - "30063:30010"
-    deploy:
-      resources:
-        reservations:
-          memory: ${H3_SGL_MEM_RESERVATION:-256g}
-          devices:
-            - driver: nvidia
-              device_ids: ["6", "7"]
-              capabilities: [gpu]
+  # minimax-h3-3:
+  #   <<: *omni-common
+  #   container_name: minimax-h3-fh3omni-sgl-3
+  #   ports:
+  #     - "30063:30010"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         memory: ${H3_SGL_MEM_RESERVATION:-256g}
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids: ["6", "7"]
+  #             capabilities: [gpu]

@@ -15,8 +15,16 @@
 #
 # 选 SGLang 的原因：vLLM-Omni 全树 0 次提到 Pika，**不支持**；SGLang 一等支持
 # （PR #47378，2026-10-31）。但 Pika 晚于 v0.5.23 的 release 切点，任何已发布 tag
-# 都没有它 → 本服务用 video-sglang:dev（见 images/Dockerfile.sglang-dev）。
+# 都没有它 → 本服务用 sglang-video:dev（见 images/Dockerfile.sglang-dev）。
 # 等 v0.5.24 发布后把镜像与 FROM 换成定版 tag。
+#
+# ⚠️ 现状（2026-11-24）：本文件已按当前部署统一成 image: sglang-video:v0.5.23。
+#    挂载源按迁移服务器实际落位：模型在 /models_nas/models/minimax_models/…，
+#    base 在 /model_nas/models/MiniMax-H3。
+#    但 v0.5.23 镜像内 multimodal_gen 的 Pika 命中数为 0，且 Pika 路径不在
+#    KNOWN_NON_DIFFUSERS_DIFFUSION_MODEL_PATTERNS 里 → sglang serve 会判成 LLM backend，
+#    --model-variant/--warmup-num-frames 仍是 unrecognized arguments。
+#    要真正启动 Pika：改回 image: sglang-video:dev 并启用 build 段。
 #
 # 能力边界：FL2VA + Ref2VA 两个适配器；本服务用 --model-variant ref2va 只服务 ref2va。
 # 契约（PikaH3FlexSamplingParams / PipelineConfig）：
@@ -35,10 +43,13 @@
 #   quality 默认 lossless（勿写 high）。参考素材数量/尺寸是 Ref2VA 墙钟主因，先治理素材。
 
 x-pika-common: &pika-common
-  image: video-sglang:dev
-  build:
-    context: ../images
-    dockerfile: Dockerfile.sglang-dev
+  image: sglang-video:v0.5.23
+  # ⚠️ 用 v0.5.23 镜像时下面的 build 段必须保持注释：Dockerfile.sglang-dev 是
+  # FROM lmsysorg/sglang:dev 的滚动构建，一旦执行会把 sglang-video:v0.5.23 重打成 dev。
+  # 需要真正跑 Pika 时改回 image: sglang-video:dev 并启用 build。
+  # build:
+  #   context: ../images
+  #   dockerfile: Dockerfile.sglang-dev
 
   ipc: host
   pid: host
@@ -55,7 +66,7 @@ x-pika-common: &pika-common
     - sglang
     - serve
     - --model-path
-    - Pika-Labs/Pika-H3-Flex
+    - /models/Pika-H3-Flex
     - --model-variant
     - ref2va
     - --num-gpus
@@ -90,8 +101,11 @@ x-pika-common: &pika-common
     - "30010"
 
   volumes:
-    # HF cache 承载 Pika 适配器 + 链接的 base 组件 + overlay 产物
+    # HF cache 承载 Pika 适配器 + 链接的 base 组件 + overlay 产物（需 rw）
     - /model_nas/hf-cache:/hf-cache:rw
+    # ModelScope 下载后打包迁移到迁移服务器的 Pika 目录
+    - /model_nas/models/minimax_models/Pika-H3-Flex:/models/Pika-H3-Flex:ro
+    - /model_nas/models/MiniMax-H3:/models/MiniMax-H3:ro
     - /data/minimax-h3:/data/minimax-h3:ro
 
   environment:

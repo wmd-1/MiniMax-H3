@@ -6,12 +6,12 @@
 #   - PAI PDD（build/fuse 工具在 v0.5.22 仍保留）
 #
 # 与根目录 Dockerfile 的关系：本文件是它的超集（多三套变体断言），
-# 构建产物同为 video-sglang:v0.5.22，四套 compose 共用；
+# 构建产物同为 sglang-video:v0.5.22，四套 compose 共用；
 # 只装根目录 Dockerfile 也能起 base，但跳变体时会缺这层早失败断言。
 #
 # 镜像内是 editable 安装，源码树即运行模块；切版只需换 FROM tag 后重跑
 # pip install -e "python[diffusion]"。
-FROM lmsysorg/sglang:v0.5.22
+FROM lmsysorg/sglang:v0.5.23
 
 # PyPI 官方源在当前网络下首字节延迟高（ttfb 秒级），会让 pip 的构建隔离依赖解析
 # （setuptools/setuptools-rust/setuptools-scm/wheel）与 [diffusion] 大依赖树龟速卡住。
@@ -49,7 +49,7 @@ RUN apt-get update && \
 
 # 四套共用（base + 三套变体，tag 与 FROM 版本对齐）。两份副本内容一致，改一处要同步另一处：
 #   deploy 侧（deploy/ 下三个变体 compose 的 build: 指向那份）：
-#     docker build -f deploy/images/Dockerfile.sglang -t video-sglang:v0.5.22 deploy/images
+#     docker build -f deploy/images/Dockerfile.sglang -t sglang-video:v0.5.22 deploy/images
 #   根目录副本：
-#     docker build -f Dockerfile.sglang -t video-sglang:v0.5.22 .
+#     docker build -f Dockerfile.sglang -t sglang-video:v0.5.22 .
 # 注：根目录 Dockerfile 产出同一个 tag，但内容是本文件的子集（只够 base）；日常只需建其中一份。

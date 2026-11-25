@@ -11,10 +11,10 @@
 
 | 模型 | 引擎 | 镜像 tag | 拓扑 | 端口（宿主，4 实例） | 任务能力 |
 |---|---|---|---|---|---|
-| FastVideo-FastH3-8-Step-V2 | SGLang v0.5.22 | `video-sglang:v0.5.22` | TP2 | 30030-30033 | 仅 T2VA |
+| FastVideo-FastH3-8-Step-V2 | SGLang v0.5.22 | `sglang-video:v0.5.22` | TP2 | 30030-30033 | 仅 T2VA |
 | lightx2v/Minimax-h3-Turbo | vLLM-Omni v0.32.0rc1 | `video-vllm:v0.32.0rc1` | TP2 + DLO | 8010-8013 | Ref2VA（8step 768p） |
-| OpenVDN/vdn-minimax-h3 | SGLang v0.5.22 | `video-sglang:v0.5.22` | TP2 | 30040-30043 | T2VA / FL2VA |
-| alibaba-pai/MiniMax-H3-Acc-LoRAs | SGLang v0.5.22 | `video-sglang:v0.5.22` | TP2 | 30020-30023 | Ref2VA（PDD 8step） |
+| OpenVDN/vdn-minimax-h3 | SGLang v0.5.22 | `sglang-video:v0.5.22` | TP2 | 30040-30043 | T2VA / FL2VA |
+| alibaba-pai/MiniMax-H3-Acc-LoRAs | SGLang v0.5.22 | `sglang-video:v0.5.22` | TP2 | 30020-30023 | Ref2VA（PDD 8step） |
 
 > 每套都是 4 实例（每实例 TP2），容器内端口固定（SGLang 30010 / vLLM 8000），
 > 只把宿主发布端口区段错开。base 服务另占 SGLang 30010-30013 / vLLM 8000-8003。
@@ -33,7 +33,7 @@
   这两个工具只在 SGLang 的 `sglang.multimodal_gen.tools` 里。
 - **LightX2V**：vLLM-Omni 官方支持，请求级 LoRA，不需要离线融合，因此优先 vLLM。
 
-**镜像策略：**base 与三套 SGLang 变体共用 `video-sglang:v0.5.22`
+**镜像策略：**base 与三套 SGLang 变体共用 `sglang-video:v0.5.22`
 （根目录 `Dockerfile` 与 `deploy/images/Dockerfile.sglang` 产出同一 tag，后者多三套
 变体的构建断言，建一次即可）。vLLM 侧 **不新建镜像**：LightX2V 与 base 共用
 `video-vllm:v0.32.0rc1`（根目录 `Dockerfile.vllm` 产出的 tag），差别只在命令行
@@ -403,7 +403,7 @@ nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv -l 1
 ## 8. 待办（A100 机器上）
 
 - [ ] 确认 `lmsysorg/sglang:v0.5.22` 与 `vllm/vllm-omni:v0.32.0rc1` 可 pull。
-- [ ] 构建 `video-sglang:v0.5.22` 一个镜像，记录 digest。
+- [ ] 构建 `sglang-video:v0.5.22` 一个镜像，记录 digest。
 - [ ] 构建 `video-vllm:v0.32.0rc1`（`docker build -f Dockerfile.vllm -t video-vllm:v0.32.0rc1 .`），记录 digest。
 - [ ] 下载四套权重（LightX2V、PDD、VDN、FastH3 V2）。
 - [ ] 逐套启动：FastH3 V2 → VDN → PDD → LightX2V，记录首次启动耗时。

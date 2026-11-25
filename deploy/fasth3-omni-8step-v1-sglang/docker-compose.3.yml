@@ -1,0 +1,108 @@
+# FastH3-Omni（SGLang / FastH3Pipeline）· 单实例 3 专用 compose
+#
+# 只部署 1 个实例：GPU 6,7 → 宿主 30063（容器内固定 30010）。
+# 起法：docker compose -f docker-compose.3.yml up -d
+#
+# ⚠️ 首次部署、或改过 ./overlay 下任何文件之后，先跑一次单进程物化：
+#      bash prepare-overlay.sh
+#   否则同机多个实例会同时物化 /sglang-cache/omni，互相删 .tmp 导致失败。
+#
+# overlay 元数据随仓库提供（./overlay 内含 model_index.json、
+# _overlay/overlay_manifest.json、_overlay/materialize.py（已加
+# local_files_only=True）），服务器不用再下载 Niehen6174/FastH3-Omni-overlay。
+#
+# 完全离线：base 的 pinned revision 用「伪造 HF 快照」提供（见 snapshots/9bfb6693… 挂载）
+x-omni-common: &omni-common
+  image: sglang-video:v0.5.23
+  ipc: host
+  pid: host
+  shm_size: 512gb
+  restart: unless-stopped
+
+  mem_limit: ${H3_SGL_MEM_LIMIT:-384g}
+  memswap_limit: ${H3_SGL_MEMSWAP_LIMIT:-386g}
+  mem_swappiness: 0
+  mem_reservation: ${H3_SGL_MEM_RESERVATION:-256g}
+
+  command:
+    - sglang
+    - serve
+    - --model-path
+    - /models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1
+    # 不传 --model-variant：Omni 自带唯一 ref2va 分区，传了会被拒
+    - --num-gpus
+    - "2"
+    - --tp-size
+    - "2"
+    - --ulysses-degree
+    - "1"
+    # SM80 无 VSA-H3 内核；显式稠密 FA（比 VSA 慢约 25%）
+    - --component-attention-backends
+    - transformer=fa
+    - --performance-mode
+    - memory
+    - --layerwise-offload-components
+    - dit,text_encoder,vae
+    - --dit-offload-prefetch-size
+    - "1"
+    - --dit-layerwise-resident-layers
+    - "24"
+    - --enable-torch-compile
+    - "false"
+    - --warmup-resolutions
+    - 1344x768
+    - --warmup-num-frames
+    - "124"
+    - --host
+    - 0.0.0.0
+    - --port
+    - "30010"
+
+  volumes:
+    # overlay 元数据（随仓库提供，只读）
+    - ./overlay:/models/FastH3-Omni-overlay:ro
+    # Omni 源权重（ModelScope 下载后打包迁移过来的目录）
+    - /model_nas/models/minimax_models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1:/models/FastVideo/FastVideo-FastH3-Omni-8-Step-V1:ro
+    # base 作为 ModelScope legacy cache（与根目录 docker-compose.yml 同款）
+    - /model_nas/models/MiniMax-H3:/root/.cache/modelscope/models/MiniMaxAI/MiniMax-H3:rw
+    - /model_nas/modelscope_cache:/root/.cache/modelscope:rw
+    # 物化产物（4 个实例共享，必须先 prepare-overlay.sh 生成一次）
+    - /model_nas/sglang-cache:/sglang-cache:rw
+    # HF cache（离线；只用于 sglang 的 huggingface_hub 解析路径）
+    - /model_nas/hf-cache:/hf-cache:rw
+    # base 的 pinned revision 伪造成 HF 快照（离线关键，缺了会去 huggingface.co）
+    - /model_nas/models/MiniMax-H3:/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/snapshots/9bfb6693f2cf6de171db46d1aa586f67d773a1da:ro
+    - /data/minimax-h3:/data/minimax-h3:ro
+
+  environment:
+    - SGLANG_USE_MODELSCOPE=true
+    - MODELSCOPE_CACHE=/root/.cache/modelscope
+    - HF_HOME=/hf-cache
+    - HF_HUB_OFFLINE=1
+    # overlay 仓库指向本地目录（离线关键；不设就会去 HF 下 Niehen6174/…）
+    - 'SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY={"FastVideo/FastVideo-FastH3-Omni-8-Step-V1":{"overlay_repo_id":"/models/FastH3-Omni-overlay","overlay_revision":"953ede55daf20a70cc6f0b59464293e2f408608c","source_revision":"53e0d26a1691aa473b6262d8196a8feb2c297df0"}}'
+    - PYTHONDONTWRITEBYTECODE=1
+    - SGLANG_DIFFUSION_CACHE_ROOT=/sglang-cache/omni
+    - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+    interval: 300s
+    timeout: 30s
+    retries: 2
+    start_period: 1800s
+
+services:
+  minimax-h3-omni-3:
+    <<: *omni-common
+    container_name: minimax-h3-fh3omni-sgl-3
+    ports:
+      - "30063:30010"
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["6", "7"]
+              capabilities: [gpu]
