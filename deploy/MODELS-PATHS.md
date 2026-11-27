@@ -143,7 +143,7 @@ ls -d /model_nas/models/MiniMax-H3/Ref2VA/transformer \
 
 | 服务目录 | 模型 | 引擎 | 镜像 tag | FROM | 说明 |
 |---|---|---|---|---|---|
-| `deploy/pika-h3-flex` | Pika-Labs/Pika-H3-Flex | SGLang | `sglang-video:dev` | `lmsysorg/sglang:dev` | vLLM 全树 0 命中 Pika，只能 SGLang；Pika 支持（#47378，10-31）晚于 v0.5.23 切点，**任何已发布 tag 都没有**，只能 dev/nightly，等 v0.5.24 再定版 |
+| `deploy/pika-h3-flex` | Pika-Labs/Pika-H3-Flex | SGLang | `video-sglang:dev` | `lmsysorg/sglang:dev` | vLLM 全树 0 命中 Pika，只能 SGLang；Pika 支持（#47378，10-31）晚于 v0.5.23 切点，**任何已发布 tag 都没有**，只能 dev/nightly，等 v0.5.24 再定版 |
 | `deploy/fasth3-omni-8step-v1-sglang` | FastVideo/FastVideo-FastH3-Omni-8-Step-V1 | SGLang | `sglang-video:v0.5.23` | `lmsysorg/sglang:v0.5.23` | Omni 支持（#45530，10-22）已进 v0.5.23；A100 走稠密 `transformer=fa`（报告推荐的 A100 路径） |
 | `deploy/fasth3-omni-8step-v1-vllm` | 同上 | vLLM-Omni | `video-vllm:v0.34.0` | `vllm/vllm-omni:v0.34.0` | 与 base H3 共用根目录 `Dockerfile.vllm` 的统一镜像；已装 `fastvideo-kernel==0.3.4`（`.[vsa]`）；A100 走 **triton** VSA + BF16 |
 
@@ -151,7 +151,7 @@ SGLang Dockerfile 在 `deploy/images/`：`Dockerfile.sglang-dev`、`Dockerfile.s
 vLLM 统一镜像用根目录 `Dockerfile.vllm`。构建例：
 ```bash
 docker build -f deploy/images/Dockerfile.sglang-v0.5.23  -t sglang-video:v0.5.23  deploy/images
-docker build -f deploy/images/Dockerfile.sglang-dev      -t sglang-video:dev deploy/images
+docker build -f deploy/images/Dockerfile.sglang-dev      -t video-sglang:dev deploy/images
 docker build -f Dockerfile.vllm                          -t video-vllm:v0.34.0    .
 ```
 

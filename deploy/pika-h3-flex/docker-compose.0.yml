@@ -1,0 +1,142 @@
+# Pika-Labs/Pika-H3-Flex — SGLang（dev）· 实例 0 ｜ GPU 0,1 → 宿主 30050
+#
+# ── 布局：拆成 docker-compose.0/1/2/3.yml，四个互相独立的 compose 项目 ───────
+#   每份文件有独立项目名（name: pika-h3-flex-N），up/down/logs 只作用于自己，
+#   不会“孤儿容器”警告，也不会顺手停掉别的实例。
+#   启动顺序必须**串行**（见下面 ⚠️）：
+#     docker compose -f docker-compose.0.yml up -d      # 本文件，先起
+#     # 等它 healthy
+#     docker compose -f docker-compose.1.yml up -d
+#     docker compose -f docker-compose.2.yml up -d      # 暂不部署可跳过
+#     docker compose -f docker-compose.3.yml up -d      # 暂不部署可跳过
+#   等 0 号 healthy 的命令：
+#     until [ "$(docker inspect -f '{{.State.Health.Status}}' minimax-h3-pika-0)" = healthy ]; do sleep 10; done
+#
+# ⚠️ 为什么必须串行：sglang 的物化锁（weight_utils.get_lock）落在 tempfile.gettempdir()
+#   = 容器内 /tmp，跨容器不共享。两个容器同时物化会互相删
+#   <cache>/materialized_models/Pika-Labs__Pika-H3-Flex-<hash>.tmp → FileNotFoundError。
+#   0 号物化完成会留下 .sglang_overlay_materialized.json 标记，之后 1/2/3 直接复用
+#   /model_nas/sglang-cache/pika/materialized_models/ 下的产物，不再物化。
+#
+# ── 离线要点（四个文件一致，改一处要同步四份）────────────────────────────────
+#   - Pika 适配器 → 冒充 HF cache 快照（overlay 按 revision=3ff1664… 解析 source_dir）
+#   - base → 冒充 HF 快照（42ed227e…）；另外挂一份到 /models/MiniMax-H3，物化时
+#     通过 PIKA_H3_LOCAL_BASE 直接链接本地组件，完全不经过 Hub
+#   - /model_nas/hf-cache 里必须有 hub/models--MiniMaxAI--MiniMax-H3/refs/main：
+#       sudo mkdir -p /model_nas/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/refs
+#       printf '42ed227ee7df40d41602854ae760620d6eb651fe' | \
+#         sudo tee /model_nas/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/refs/main
+#     缺它会在初始化时抛 OfflineModeIsEnabled: …/MiniMaxAI/MiniMax-H3/tree/main
+#   - overlay 元数据随本目录 ./overlay/ 携带，registry 指向容器内该目录
+#   - 路径可用 PIKA_MODEL_DIR / H3_BASE_DIR / PIKA_CACHE_DIR / PIKA_HF_CACHE_DIR 覆盖
+#
+# ── 请求契约 ────────────────────────────────────────────────────────────────
+#   num_inference_steps 只能是 6；不要写 flow_shift / audio_flow_shift；
+#   不要 quality:"high"；--lora-path 不能替换自带适配器。
+
+name: pika-h3-flex-0
+
+services:
+  minimax-h3-0:
+    image: video-sglang:dev
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang-dev
+    container_name: minimax-h3-pika-0
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+    restart: unless-stopped
+
+    mem_limit: ${H3_SGL_MEM_LIMIT:-384g}
+    memswap_limit: ${H3_SGL_MEMSWAP_LIMIT:-386g}
+    mem_swappiness: 0
+    mem_reservation: ${H3_SGL_MEM_RESERVATION:-256g}
+
+    command:
+      - sglang
+      - serve
+      # 必须是注册表里的仓库 ID；传本地目录不会触发 overlay（is_model_overlay 只认
+      # registry 精确命中的 ID 或自带 _overlay/overlay_manifest.json 的目录）
+      - --model-path
+      - Pika-Labs/Pika-H3-Flex
+      - --model-variant
+      - ref2va
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      # 不传 --lora-merge-mode：PikaH3FlexPipelineConfig 默认 dynamic（不合并）
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      - --enable-torch-compile
+      - "false"
+      # 预热参数在 dev 镜像 + 6 步契约下未验证，先保持关闭
+      # - --warmup-resolutions
+      # - 1344x768
+      # - --warmup-num-frames
+      # - "124"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    volumes:
+      # HF cache 根（rw）：保存 refs/ 与 lock
+      - ${PIKA_HF_CACHE_DIR:-/model_nas/hf-cache}:/hf-cache:rw
+      # ① Pika 适配器 → 冒充 HF cache 里 Pika 源仓库的快照
+      - ${PIKA_MODEL_DIR:-/model_nas/models/minimax_models/Pika-H3-Flex}:/hf-cache/hub/models--Pika-Labs--Pika-H3-Flex/snapshots/3ff166447d5edb1406107ab8370c42000ce173e4:ro
+      # ② base → 冒充适配器 manifest 里 pin 的 base 快照（权重清单解析用）
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/snapshots/42ed227ee7df40d41602854ae760620d6eb651fe:ro
+      # ②b 同一条 base 的普通路径：物化时 PIKA_H3_LOCAL_BASE 从这里链接
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/models/MiniMax-H3:ro
+      # ③ overlay 元数据（随本目录携带）
+      - ./overlay:/models/Pika-H3-Flex-overlay:ro
+      # ④ 物化产物目录（可写；与 base 同盘时 hardlink，跨盘退化为 symlink）
+      - ${PIKA_CACHE_DIR:-/model_nas/sglang-cache/pika}:/sglang-cache/pika:rw
+      # 参考素材
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - HF_HOME=/hf-cache
+      - HF_HUB_OFFLINE=1
+      - TRANSFORMERS_OFFLINE=1
+      - PIKA_H3_LOCAL_BASE=/models/MiniMax-H3
+      - SGLANG_DIFFUSION_CACHE_ROOT=/sglang-cache/pika
+      - 'SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY={"Pika-Labs/Pika-H3-Flex":{"overlay_repo_id":"/models/Pika-H3-Flex-overlay","overlay_revision":"2d8d5e4d81d2ad0ba4b0bbcf7049231bfbe3e9c2","source_revision":"3ff166447d5edb1406107ab8370c42000ce173e4"}}'
+      - PYTHONDONTWRITEBYTECODE=1
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    ports:
+      - "30050:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              # 必须写字符串：Compose 5.6.x 对整数直接校验失败
+              device_ids: ["0", "1"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 30s
+      # 宽限期后仍失败的容忍次数：10 × 30s ≈ 5 分钟缓冲
+      retries: 10
+      # 首启：物化（链接 60GB+ 分区）+ 加载 61.7GiB transformer + 层卸载到主机内存，
+      # A100 + TP2 实测可能 >30min。Docker 没有“延迟首次探测”的开关，start_period
+      # 就是官方语义的宽限期：期间探测照常每 30s 跑一次，但失败不计入 retries、
+      # 状态保持 "starting"。这里给到 60 分钟，避免加载期被误判 unhealthy。
+      start_period: 3600s

@@ -1,0 +1,19 @@
+{
+  "source_model_id": "Pika-Labs/Pika-H3-Flex",
+  "source_revision": "3ff166447d5edb1406107ab8370c42000ce173e4",
+  "materializer_version": "v1",
+  "custom_materializer": "_overlay/materialize.py",
+  "source_allow_patterns": [
+    "fl2va/*",
+    "ref2va/*",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "required_source_files": [
+    "fl2va/manifest.json",
+    "fl2va/adapter.safetensors",
+    "ref2va/manifest.json",
+    "ref2va/adapter.safetensors"
+  ]
+}

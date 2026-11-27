@@ -1,0 +1,105 @@
+# Pika-Labs/Pika-H3-Flex — SGLang（dev）· 实例 1 ｜ GPU 2,3 → 宿主 30051
+#
+# ⚠️ 启动前提：实例 0 已经 healthy（物化产物已落盘）。两个容器同时物化会互相删
+#   <hash>.tmp → FileNotFoundError（物化锁在容器内 /tmp，跨容器不互斥）。
+#   等 0 号：until [ "$(docker inspect -f '{{.State.Health.Status}}' minimax-h3-pika-0)" = healthy ]; do sleep 10; done
+#
+# 启停（独立项目 pika-h3-flex-1，不影响其它实例）：
+#   docker compose -f docker-compose.1.yml up -d
+#   docker compose -f docker-compose.1.yml logs -f
+#   docker compose -f docker-compose.1.yml down
+#
+# 离线挂载/环境变量与本目录 docker-compose.0.yml 逐字一致（改一处要同步四份）：
+#   - 适配器冒充 HF 快照 3ff1664…；base 冒充快照 42ed227e… 并另挂 /models/MiniMax-H3
+#   - /model_nas/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/refs/main 必须存在
+#   - overlay 元数据用 ./overlay/ + SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY
+#   - 请求契约：num_inference_steps=6，不写 flow_shift，不用 quality:"high"
+
+name: pika-h3-flex-1
+
+services:
+  minimax-h3-1:
+    image: video-sglang:dev
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang-dev
+    container_name: minimax-h3-pika-1
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+    restart: unless-stopped
+
+    mem_limit: ${H3_SGL_MEM_LIMIT:-384g}
+    memswap_limit: ${H3_SGL_MEMSWAP_LIMIT:-386g}
+    mem_swappiness: 0
+    mem_reservation: ${H3_SGL_MEM_RESERVATION:-256g}
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - Pika-Labs/Pika-H3-Flex
+      - --model-variant
+      - ref2va
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      - --enable-torch-compile
+      - "false"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    volumes:
+      - ${PIKA_HF_CACHE_DIR:-/model_nas/hf-cache}:/hf-cache:rw
+      - ${PIKA_MODEL_DIR:-/model_nas/models/minimax_models/Pika-H3-Flex}:/hf-cache/hub/models--Pika-Labs--Pika-H3-Flex/snapshots/3ff166447d5edb1406107ab8370c42000ce173e4:ro
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/snapshots/42ed227ee7df40d41602854ae760620d6eb651fe:ro
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/models/MiniMax-H3:ro
+      - ./overlay:/models/Pika-H3-Flex-overlay:ro
+      - ${PIKA_CACHE_DIR:-/model_nas/sglang-cache/pika}:/sglang-cache/pika:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - HF_HOME=/hf-cache
+      - HF_HUB_OFFLINE=1
+      - TRANSFORMERS_OFFLINE=1
+      - PIKA_H3_LOCAL_BASE=/models/MiniMax-H3
+      - SGLANG_DIFFUSION_CACHE_ROOT=/sglang-cache/pika
+      - 'SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY={"Pika-Labs/Pika-H3-Flex":{"overlay_repo_id":"/models/Pika-H3-Flex-overlay","overlay_revision":"2d8d5e4d81d2ad0ba4b0bbcf7049231bfbe3e9c2","source_revision":"3ff166447d5edb1406107ab8370c42000ce173e4"}}'
+      - PYTHONDONTWRITEBYTECODE=1
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    ports:
+      - "30051:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["2", "3"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 30s
+      # 宽限期后仍失败的容忍次数：10 × 30s ≈ 5 分钟缓冲
+      retries: 10
+      # 见 docker-compose.0.yml 说明：start_period 是宽限期（期间失败不计入 retries），
+      # 不是延迟首次探测；加载 61.7GiB transformer 期间给足 60 分钟。
+      start_period: 3600s

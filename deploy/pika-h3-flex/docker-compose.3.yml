@@ -1,0 +1,95 @@
+# Pika-Labs/Pika-H3-Flex — SGLang（dev）· 实例 3 ｜ GPU 6,7 → 宿主 30053
+#
+# 【暂不部署】GPU 6,7 另作他用时不启动本文件即可；将来启用：
+#   docker compose -f docker-compose.3.yml up -d
+# ⚠️ 前提：实例 0 已 healthy（物化产物已落盘），否则并发物化会撞 <hash>.tmp 错误。
+#
+# 离线挂载/环境变量与本目录 docker-compose.0.yml 逐字一致（改一处要同步四份）。
+# 请求契约：num_inference_steps=6，不写 flow_shift，不用 quality:"high"。
+
+name: pika-h3-flex-3
+
+services:
+  minimax-h3-3:
+    image: video-sglang:dev
+    build:
+      context: ../images
+      dockerfile: Dockerfile.sglang-dev
+    container_name: minimax-h3-pika-3
+
+    ipc: host
+    pid: host
+    shm_size: 512gb
+    restart: unless-stopped
+
+    mem_limit: ${H3_SGL_MEM_LIMIT:-384g}
+    memswap_limit: ${H3_SGL_MEMSWAP_LIMIT:-386g}
+    mem_swappiness: 0
+    mem_reservation: ${H3_SGL_MEM_RESERVATION:-256g}
+
+    command:
+      - sglang
+      - serve
+      - --model-path
+      - Pika-Labs/Pika-H3-Flex
+      - --model-variant
+      - ref2va
+      - --num-gpus
+      - "2"
+      - --tp-size
+      - "2"
+      - --ulysses-degree
+      - "1"
+      - --performance-mode
+      - memory
+      - --layerwise-offload-components
+      - dit,text_encoder,vae
+      - --dit-offload-prefetch-size
+      - "1"
+      - --dit-layerwise-resident-layers
+      - "24"
+      - --enable-torch-compile
+      - "false"
+      - --host
+      - 0.0.0.0
+      - --port
+      - "30010"
+
+    volumes:
+      - ${PIKA_HF_CACHE_DIR:-/model_nas/hf-cache}:/hf-cache:rw
+      - ${PIKA_MODEL_DIR:-/model_nas/models/minimax_models/Pika-H3-Flex}:/hf-cache/hub/models--Pika-Labs--Pika-H3-Flex/snapshots/3ff166447d5edb1406107ab8370c42000ce173e4:ro
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/hf-cache/hub/models--MiniMaxAI--MiniMax-H3/snapshots/42ed227ee7df40d41602854ae760620d6eb651fe:ro
+      - ${H3_BASE_DIR:-/model_nas/models/MiniMax-H3}:/models/MiniMax-H3:ro
+      - ./overlay:/models/Pika-H3-Flex-overlay:ro
+      - ${PIKA_CACHE_DIR:-/model_nas/sglang-cache/pika}:/sglang-cache/pika:rw
+      - /data/minimax-h3:/data/minimax-h3:ro
+
+    environment:
+      - HF_HOME=/hf-cache
+      - HF_HUB_OFFLINE=1
+      - TRANSFORMERS_OFFLINE=1
+      - PIKA_H3_LOCAL_BASE=/models/MiniMax-H3
+      - SGLANG_DIFFUSION_CACHE_ROOT=/sglang-cache/pika
+      - 'SGLANG_DIFFUSION_MODEL_OVERLAY_REGISTRY={"Pika-Labs/Pika-H3-Flex":{"overlay_repo_id":"/models/Pika-H3-Flex-overlay","overlay_revision":"2d8d5e4d81d2ad0ba4b0bbcf7049231bfbe3e9c2","source_revision":"3ff166447d5edb1406107ab8370c42000ce173e4"}}'
+      - PYTHONDONTWRITEBYTECODE=1
+      - SGLANG_HEALTH_CHECK_TIMEOUT=120
+
+    ports:
+      - "30053:30010"
+
+    deploy:
+      resources:
+        reservations:
+          memory: ${H3_SGL_MEM_RESERVATION:-256g}
+          devices:
+            - driver: nvidia
+              device_ids: ["6", "7"]
+              capabilities: [gpu]
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:30010/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      # 与 docker-compose.0.yml 一致：宽限期 60 分钟
+      start_period: 3600s
