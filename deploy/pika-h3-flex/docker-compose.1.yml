@@ -23,7 +23,7 @@ services:
     build:
       context: ../images
       dockerfile: Dockerfile.sglang-dev
-    container_name: minimax-h3-pika-1
+    container_name: video-p-1
 
     ipc: host
     pid: host

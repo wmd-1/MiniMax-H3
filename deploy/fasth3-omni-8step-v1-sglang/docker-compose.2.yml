@@ -95,7 +95,7 @@ x-omni-common: &omni-common
 services:
   minimax-h3-omni-2:
     <<: *omni-common
-    container_name: minimax-h3-fh3omni-sgl-2
+    container_name: video-o-2
     ports:
       - "30062:30010"
     deploy:
